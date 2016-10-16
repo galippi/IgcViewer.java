@@ -5,6 +5,9 @@
  */
 package my.numberaddition;
 
+import java.util.Timer;
+import java.util.TimerTask;
+
 /**
  *
  * @author liptakok
@@ -16,6 +19,19 @@ public class NumberAdditionUI extends javax.swing.JFrame {
      */
     public NumberAdditionUI() {
         initComponents();
+        Timer timer = new Timer();
+        timer.schedule(new TimerTask(){
+
+            @Override
+            public void run() {
+                timerCallBack();
+            }
+        }  , 3000);
+    }
+    public void timerCallBack()
+    {
+      System.out.println("timerCallBack");
+      jLabel1.setText("timerCallBack");
     }
 
     /**
