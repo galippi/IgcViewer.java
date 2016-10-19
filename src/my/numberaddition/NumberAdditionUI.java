@@ -7,7 +7,7 @@ package my.numberaddition;
 
 import java.util.Timer;
 import java.util.TimerTask;
-
+import javax.swing.JFileChooser;
 /**
  *
  * @author liptakok
@@ -215,6 +215,23 @@ public class NumberAdditionUI extends javax.swing.JFrame {
 
   private void m_FileOpenActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_m_FileOpenActionPerformed
     System.out.println("m_FileOpenActionPerformed");
+    //Create a file chooser
+    final JFileChooser fc = new JFileChooser();
+    javax.swing.filechooser.FileNameExtensionFilter filter =
+            new javax.swing.filechooser.FileNameExtensionFilter(
+        "IGC file", "igc");
+    fc.setFileFilter(filter);
+    //In response to a button click:
+    int returnVal = fc.showOpenDialog(this);
+    if (returnVal == JFileChooser.APPROVE_OPTION)
+    {
+      java.io.File file = fc.getSelectedFile();
+      //This is where a real application would open the file.
+      System.out.println("Opening: " + file.getName() + ".");
+    } else
+    {
+      System.out.println("Open command cancelled by user.");
+    }
   }//GEN-LAST:event_m_FileOpenActionPerformed
 
     /**
