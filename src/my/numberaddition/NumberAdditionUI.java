@@ -12,37 +12,86 @@ import java.util.TimerTask;
  *
  * @author liptakok
  */
-class MyJPanel extends javax.swing.JPanel
+class MapPanel extends javax.swing.JPanel
 {
+    public MapPanel()
+    {
+      ctr = 0;
+    }
     @Override
     public void paintComponent(java.awt.Graphics g) {
         super.paintComponent(g);
 
-        g.drawString("BLAH", 20, 20);
+        g.drawString("ctr=" + ctr, 20, 20);
+        ctr++;
         g.drawRect(200, 200, 200, 200);
     }
+    int ctr;
 }
 
 public class NumberAdditionUI extends javax.swing.JFrame {
+
+    // Display a message, preceded by
+    // the name of the current thread
+    static void threadMessage(String message) {
+        String threadName =
+            Thread.currentThread().getName();
+        System.out.format("%s: %s%n",
+                          threadName,
+                          message);
+    }
+
+    private static class MessageLoop
+        implements Runnable {
+        public void run() {
+            try {
+                for (int i = 0;
+                     i < 10;
+                     i++) {
+                    // Pause for 4 seconds
+                    Thread.sleep(1000);
+                    // Print a message
+                    String info = "Counter=" + i;
+                    threadMessage(info);
+                }
+            } catch (InterruptedException e) {
+                threadMessage("I wasn't done!");
+            }
+        }
+    }
 
     /**
      * Creates new form NumberAdditionUI
      */
     public NumberAdditionUI() {
         initComponents();
-        Timer timer = new Timer();
+        timer = new Timer();
+        t = new Thread(new MessageLoop());
         timer.schedule(new TimerTask(){
-
             @Override
             public void run() {
                 timerCallBack();
             }
-        }  , 3000);
+        }  , 1000, 1000);
+        threadMessage("Starting MessageLoop thread");
+        long startTime = System.currentTimeMillis();
+        t.start();
+        timerCtr = 0;
     }
+
     public void timerCallBack()
     {
-      System.out.println("timerCallBack");
-      jLabel1.setText("timerCallBack");
+      System.out.println("timerCallBack ctr=" + timerCtr);
+      jLabel1.setText("timerCallBack ctr=" + timerCtr);
+      if (t.isAlive())
+      {
+        System.out.println("t thread is running");
+      }else
+      {
+        System.out.println("t thread is stopped");
+        timer.cancel();
+      }
+      timerCtr++;
     }
 
     /**
@@ -55,7 +104,7 @@ public class NumberAdditionUI extends javax.swing.JFrame {
   private void initComponents() {
 
     jSplitPane1 = new javax.swing.JSplitPane();
-    jPanel1 = new MyJPanel();
+    jPanel1 = new MapPanel();
     jLabel1 = new javax.swing.JLabel();
     jScrollPane1 = new javax.swing.JScrollPane();
     jTable1 = new javax.swing.JTable();
@@ -70,6 +119,7 @@ public class NumberAdditionUI extends javax.swing.JFrame {
 
     jSplitPane1.setDividerLocation(150);
     jSplitPane1.setOrientation(javax.swing.JSplitPane.VERTICAL_SPLIT);
+    jSplitPane1.setResizeWeight(1.0);
     jSplitPane1.setMinimumSize(new java.awt.Dimension(400, 300));
 
     jPanel1.setMinimumSize(new java.awt.Dimension(95, 97));
@@ -95,6 +145,7 @@ public class NumberAdditionUI extends javax.swing.JFrame {
 
     jSplitPane1.setTopComponent(jPanel1);
 
+    jScrollPane1.setMaximumSize(new java.awt.Dimension(32767, 200));
     jScrollPane1.setMinimumSize(new java.awt.Dimension(50, 50));
     jScrollPane1.setNextFocusableComponent(jSplitPane1);
 
@@ -201,6 +252,10 @@ public class NumberAdditionUI extends javax.swing.JFrame {
         });
     }
 
+  // Variables
+  Timer timer;
+  Thread t;
+  int timerCtr;
   // Variables declaration - do not modify//GEN-BEGIN:variables
   private javax.swing.JLabel jLabel1;
   private javax.swing.JMenu jMenu1;
