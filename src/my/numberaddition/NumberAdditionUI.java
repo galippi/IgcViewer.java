@@ -12,6 +12,17 @@ import java.util.TimerTask;
  *
  * @author liptakok
  */
+class MyJPanel extends javax.swing.JPanel
+{
+    @Override
+    public void paintComponent(java.awt.Graphics g) {
+        super.paintComponent(g);
+
+        g.drawString("BLAH", 20, 20);
+        g.drawRect(200, 200, 200, 200);
+    }
+}
+
 public class NumberAdditionUI extends javax.swing.JFrame {
 
     /**
@@ -43,11 +54,9 @@ public class NumberAdditionUI extends javax.swing.JFrame {
   // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
   private void initComponents() {
 
-    jLabel1 = new javax.swing.JLabel();
-    jLabel2 = new javax.swing.JLabel();
-    jLabel3 = new javax.swing.JLabel();
     jSplitPane1 = new javax.swing.JSplitPane();
-    jPanel1 = new javax.swing.JPanel();
+    jPanel1 = new MyJPanel();
+    jLabel1 = new javax.swing.JLabel();
     jScrollPane1 = new javax.swing.JScrollPane();
     jTable1 = new javax.swing.JTable();
     jMenuBar1 = new javax.swing.JMenuBar();
@@ -59,27 +68,29 @@ public class NumberAdditionUI extends javax.swing.JFrame {
 
     setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
-    jLabel1.setText("jLabel1");
-
-    jLabel2.setText("jLabel2");
-
-    jLabel3.setText("jLabel3");
-
     jSplitPane1.setDividerLocation(150);
     jSplitPane1.setOrientation(javax.swing.JSplitPane.VERTICAL_SPLIT);
     jSplitPane1.setMinimumSize(new java.awt.Dimension(400, 300));
 
     jPanel1.setMinimumSize(new java.awt.Dimension(95, 97));
 
+    jLabel1.setText("jLabel1");
+
     javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
     jPanel1.setLayout(jPanel1Layout);
     jPanel1Layout.setHorizontalGroup(
       jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-      .addGap(0, 0, Short.MAX_VALUE)
+      .addGroup(jPanel1Layout.createSequentialGroup()
+        .addGap(26, 26, 26)
+        .addComponent(jLabel1)
+        .addContainerGap(538, Short.MAX_VALUE))
     );
     jPanel1Layout.setVerticalGroup(
       jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-      .addGap(0, 0, Short.MAX_VALUE)
+      .addGroup(jPanel1Layout.createSequentialGroup()
+        .addGap(53, 53, 53)
+        .addComponent(jLabel1)
+        .addContainerGap(82, Short.MAX_VALUE))
     );
 
     jSplitPane1.setTopComponent(jPanel1);
@@ -87,7 +98,6 @@ public class NumberAdditionUI extends javax.swing.JFrame {
     jScrollPane1.setMinimumSize(new java.awt.Dimension(50, 50));
     jScrollPane1.setNextFocusableComponent(jSplitPane1);
 
-    jTable1.setAutoCreateColumnsFromModel(false);
     jTable1.setModel(new javax.swing.table.DefaultTableModel(
       new Object [][] {
         {null, null, null, null},
@@ -138,26 +148,11 @@ public class NumberAdditionUI extends javax.swing.JFrame {
     getContentPane().setLayout(layout);
     layout.setHorizontalGroup(
       layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-      .addGroup(layout.createSequentialGroup()
-        .addGap(26, 26, 26)
-        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-          .addComponent(jLabel1)
-          .addComponent(jLabel2)
-          .addComponent(jLabel3))
-        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-      .addComponent(jSplitPane1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 600, Short.MAX_VALUE)
+      .addComponent(jSplitPane1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
     );
     layout.setVerticalGroup(
       layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-      .addGroup(layout.createSequentialGroup()
-        .addGap(40, 40, 40)
-        .addComponent(jLabel1)
-        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-        .addComponent(jLabel2)
-        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-        .addComponent(jLabel3)
-        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 82, Short.MAX_VALUE)
-        .addComponent(jSplitPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 274, javax.swing.GroupLayout.PREFERRED_SIZE))
+      .addComponent(jSplitPane1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 450, Short.MAX_VALUE)
     );
 
     pack();
@@ -208,8 +203,6 @@ public class NumberAdditionUI extends javax.swing.JFrame {
 
   // Variables declaration - do not modify//GEN-BEGIN:variables
   private javax.swing.JLabel jLabel1;
-  private javax.swing.JLabel jLabel2;
-  private javax.swing.JLabel jLabel3;
   private javax.swing.JMenu jMenu1;
   private javax.swing.JMenu jMenu2;
   private javax.swing.JMenuBar jMenuBar1;
