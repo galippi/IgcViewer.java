@@ -5,6 +5,7 @@
  */
 package my.numberaddition;
 
+import java.awt.Color;
 import java.util.Timer;
 import java.util.TimerTask;
 import javax.swing.JFileChooser;
@@ -12,6 +13,12 @@ import javax.swing.JFileChooser;
  *
  * @author liptakok
  */
+class threadImage 
+{
+  public Boolean ready;
+  public java.awt.Image img;
+}
+
 class MapPanel extends javax.swing.JPanel
 {
     public MapPanel()
@@ -25,6 +32,15 @@ class MapPanel extends javax.swing.JPanel
         g.drawString("ctr=" + ctr, 20, 20);
         ctr++;
         g.drawRect(200, 200, 200, 200);
+        //java.awt.Graphics gc = java.awt.GraphicsConfiguration.createCompatibleImage(600, 400);
+        //java.awt.Image img = new java.awt.Image();
+        java.awt.image.BufferedImage img =
+                new java.awt.image.BufferedImage(100, 50,
+                    java.awt.image.BufferedImage.TYPE_INT_ARGB);
+        java.awt.Graphics2D g2 = img.createGraphics();
+        g2.setColor(Color.red);
+        g2.fillOval(50, 25, 20, 15);
+        g.drawImage(img, 100, 100, null);
     }
     int ctr;
 }
@@ -211,6 +227,7 @@ public class NumberAdditionUI extends javax.swing.JFrame {
 
   private void m_FileExitActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_m_FileExitActionPerformed
     System.out.println("m_FileExitActionPerformed");
+    System.exit(0);
   }//GEN-LAST:event_m_FileExitActionPerformed
 
   private void m_FileOpenActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_m_FileOpenActionPerformed
@@ -273,6 +290,7 @@ public class NumberAdditionUI extends javax.swing.JFrame {
   Timer timer;
   Thread t;
   int timerCtr;
+  threadImage mapImage;
   // Variables declaration - do not modify//GEN-BEGIN:variables
   private javax.swing.JLabel jLabel1;
   private javax.swing.JMenu jMenu1;
