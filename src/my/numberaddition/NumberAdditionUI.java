@@ -5,47 +5,148 @@
  */
 package my.numberaddition;
 
+//import igc.IGC_Altitude;
+//import igc.IGC_Coordinate;
+//import igc.IGC_Time;
+import utils.threadImage;
 import java.awt.Color;
 import java.util.Timer;
 import java.util.TimerTask;
 import javax.swing.JFileChooser;
+import javax.swing.JOptionPane;
+
+import igc.igc;
+import java.util.ArrayList;
+import utils.threadImage;
+
+import utils.dbg;
+
 /**
  *
  * @author liptakok
  */
-class threadImage 
+class IgcFiles
 {
-  public Boolean ready;
-  public java.awt.Image img;
+  ArrayList<igc> igcFiles;
+  public IgcFiles()
+  {
+    igcFiles = new ArrayList<igc>();
+    reinit();
+  }
+  public void add(igc file)
+  {
+    igcFiles.add(file);
+  }
+  public int size()
+  {
+    return igcFiles.size();
+  }
+  public void reinit()
+  {
+    igcFiles.clear();
+    t_min = 0;
+    t_max = 0;
+    lon_min = 0;
+    lon_max = 0;
+    lat_min = 0;
+    lat_max = 0;
+    alt_min = 0;
+    alt_max = 0;
+  }
+  public double t_min, t_max;
+  public double lon_min, lon_max;
+  public double lat_min, lat_max;
+  public double alt_min, alt_max;
+  static final double SNA_doubleLimit = 1e98;
+  static final public double SNA_double = (SNA_doubleLimit * 2);
+  static public boolean isSna(double val)
+  {
+    return (val > SNA_doubleLimit);
+  }
+}
+
+class igcImage extends threadImage
+{
+  public igcImage(java.awt.Component parent, java.awt.Graphics g, IgcFiles igcFiles)
+  {
+    super(parent, g);
+    this.igcFiles = igcFiles;
+    ctr = 0;
+  }
+  IgcFiles igcFiles;
+  @Override
+    protected void Drawing()
+  {
+    java.awt.Graphics2D g = img.createGraphics();
+    g.setColor(Color.red);
+    g.fillOval(img.getWidth() / 2, img.getHeight() / 2, img.getWidth() / 2 - 5, img.getHeight() / 2 - 5);
+    g.setColor(Color.white);
+    g.fillRect(40,30,200, 100);
+    g.setColor(Color.green);
+    g.drawString("igcImage.drawString ctr=" + ctr, 40, 40);ctr++;
+    g.dispose();
+  }
+  int ctr;
+}
+
+class MapImage extends threadImage
+{
+  public MapImage(java.awt.Graphics g, IgcFiles igcFiles)
+  {
+    super(g);
+    this.igcFiles = igcFiles;
+  }
+  IgcFiles igcFiles;
 }
 
 class MapPanel extends javax.swing.JPanel
 {
-    public MapPanel()
+    IgcFiles igcFiles;
+    public MapPanel(IgcFiles igcFiles)
     {
+      this.igcFiles = igcFiles;
       ctr = 0;
+      img = new java.awt.image.BufferedImage(100, 50,
+                 java.awt.image.BufferedImage.TYPE_INT_ARGB);
+      java.awt.Graphics2D g2 = img.createGraphics();
+      g2.setColor(Color.red);
+      g2.fillOval(img.getWidth() / 2, img.getHeight() / 2, img.getWidth() / 2 - 5, img.getHeight() / 2 - 5);
+      g2.dispose();
+      igc = new igcImage(this, img.getGraphics(), null);
+      Timer timer = new Timer();
+      timer.schedule(new TimerTask() {
+        @Override
+          public void run() {
+            //repaint();
+            igc.ready = false;
+          }
+      }, 5000);
     }
     @Override
     public void paintComponent(java.awt.Graphics g) {
         super.paintComponent(g);
 
-        g.drawString("ctr=" + ctr, 20, 20);
+        g.drawString("ctr=" + ctr + " size=" + igcFiles.size(), 20, 20);
         ctr++;
         g.drawRect(200, 200, 200, 200);
         //java.awt.Graphics gc = java.awt.GraphicsConfiguration.createCompatibleImage(600, 400);
         //java.awt.Image img = new java.awt.Image();
-        java.awt.image.BufferedImage img =
-                new java.awt.image.BufferedImage(100, 50,
-                    java.awt.image.BufferedImage.TYPE_INT_ARGB);
-        java.awt.Graphics2D g2 = img.createGraphics();
-        g2.setColor(Color.red);
-        g2.fillOval(50, 25, 20, 15);
         g.drawImage(img, 100, 100, null);
+        g.drawImage(igc.img, 200, 200, null);
+        if (ctr % 10 == 0) igc.ready = false;
+    }
+    public void Repaint()
+    {
+      igc.ready = false;
     }
     int ctr;
+    java.awt.image.BufferedImage img;
+    igcImage igc;
 }
 
 public class NumberAdditionUI extends javax.swing.JFrame {
+
+  IgcFiles igcFiles;
 
     // Display a message, preceded by
     // the name of the current thread
@@ -80,6 +181,7 @@ public class NumberAdditionUI extends javax.swing.JFrame {
      * Creates new form NumberAdditionUI
      */
     public NumberAdditionUI() {
+        igcFiles = new IgcFiles();
         initComponents();
         timer = new Timer();
         t = new Thread(new MessageLoop());
@@ -109,6 +211,11 @@ public class NumberAdditionUI extends javax.swing.JFrame {
       }
       timerCtr++;
     }
+    void repaintMap()
+    {
+      //jPanel1.Repaint();
+      repaint();
+    }
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -120,7 +227,7 @@ public class NumberAdditionUI extends javax.swing.JFrame {
   private void initComponents() {
 
     jSplitPane1 = new javax.swing.JSplitPane();
-    jPanel1 = new MapPanel();
+    jPanel1 = new MapPanel(igcFiles);
     jLabel1 = new javax.swing.JLabel();
     jScrollPane1 = new javax.swing.JScrollPane();
     jTable1 = new javax.swing.JTable();
@@ -245,6 +352,15 @@ public class NumberAdditionUI extends javax.swing.JFrame {
       java.io.File file = fc.getSelectedFile();
       //This is where a real application would open the file.
       System.out.println("Opening: " + file.getName() + ".");
+      igc igco = new igc(file.getPath());
+      if (!igco.isValid())
+      { /* error message */
+        JOptionPane.showMessageDialog(this, "Unable to load file " + file.getName());
+      }else
+      { /* file is loaded -> add it to the list */
+        igcFiles.add(igco);
+        repaintMap();
+      }
     } else
     {
       System.out.println("Open command cancelled by user.");
@@ -255,7 +371,8 @@ public class NumberAdditionUI extends javax.swing.JFrame {
      * @param args the command line arguments
      */
     public static void main(String args[]) {
-        /* Set the Nimbus look and feel */
+      dbg.set(9); /* enable debug */
+      /* Set the Nimbus look and feel */
         //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
         /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
          * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
@@ -290,7 +407,6 @@ public class NumberAdditionUI extends javax.swing.JFrame {
   Timer timer;
   Thread t;
   int timerCtr;
-  threadImage mapImage;
   // Variables declaration - do not modify//GEN-BEGIN:variables
   private javax.swing.JLabel jLabel1;
   private javax.swing.JMenu jMenu1;
