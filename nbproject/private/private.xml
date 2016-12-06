@@ -3,8 +3,11 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
+            <file>file:/D:/Gabor/Java/NumberAddition/src/igcViewer/MapPanel.java</file>
             <file>file:/D:/Gabor/Java/NumberAddition/src/utils/threadImage.java</file>
-            <file>file:/D:/Gabor/Java/NumberAddition/src/my/numberaddition/NumberAdditionUI.java</file>
+            <file>file:/D:/Gabor/Java/NumberAddition/src/igcViewer/MapPanelBeanInfo.java</file>
+            <file>file:/D:/Gabor/Java/NumberAddition/src/igcViewer/igcImage.java</file>
+            <file>file:/D:/Gabor/Java/NumberAddition/src/igcViewer/NumberAdditionUI.java</file>
         </group>
     </open-files>
 </project-private>

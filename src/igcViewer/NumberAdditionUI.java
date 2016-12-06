@@ -8,8 +8,6 @@ package igcViewer;
 //import igc.IGC_Altitude;
 //import igc.IGC_Coordinate;
 //import igc.IGC_Time;
-import utils.threadImage;
-import java.awt.Color;
 import java.util.Timer;
 import java.util.TimerTask;
 import javax.swing.JFileChooser;
@@ -17,7 +15,6 @@ import javax.swing.JOptionPane;
 
 import igc.igc;
 import java.util.ArrayList;
-import utils.threadImage;
 
 import utils.dbg;
 
@@ -30,7 +27,7 @@ class IgcFiles
   ArrayList<igc> igcFiles;
   public IgcFiles()
   {
-    igcFiles = new ArrayList<igc>();
+    igcFiles = new ArrayList<>();
     reinit();
   }
   public void add(igc file)
@@ -52,6 +49,10 @@ class IgcFiles
     lat_max = 0;
     alt_min = 0;
     alt_max = 0;
+  }
+  public igc get(int idx)
+  {
+    return igcFiles.get(idx);
   }
   public double t_min, t_max;
   public double lon_min, lon_max;
@@ -135,7 +136,16 @@ public class NumberAdditionUI extends javax.swing.JFrame {
     void repaintMap()
     {
       //jPanel1.Repaint();
-      repaint();
+      mapPanel.repaint();
+      dbg.println(9, "repaintMap() size=" + igcFiles.size());
+      for (int i=0; i < igcFiles.size(); i++)
+      {
+        jTable1.setValueAt("index " + i, i, 0);
+        jTable1.setValueAt(igcFiles.get(i).getPilotsName(), i, 1);
+        jTable1.setValueAt(igcFiles.get(i).getGliderId(), i, 2);
+        jTable1.setValueAt(igcFiles.get(i).getGliderType(), i, 3);
+        dbg.println(9, "igcFiles.get("+i+").getPilotsName()=" + igcFiles.get(i).getPilotsName());
+      }
     }
 
     /**
@@ -148,7 +158,7 @@ public class NumberAdditionUI extends javax.swing.JFrame {
   private void initComponents() {
 
     jSplitPane1 = new javax.swing.JSplitPane();
-    jPanel1 = new MapPanel(igcFiles);
+    jPanel1 = mapPanel = new MapPanel(igcFiles);
     jLabel1 = new javax.swing.JLabel();
     jScrollPane1 = new javax.swing.JScrollPane();
     jTable1 = new javax.swing.JTable();
@@ -328,6 +338,7 @@ public class NumberAdditionUI extends javax.swing.JFrame {
   Timer timer;
   Thread t;
   int timerCtr;
+  MapPanel mapPanel;
   // Variables declaration - do not modify//GEN-BEGIN:variables
   private javax.swing.JLabel jLabel1;
   private javax.swing.JMenu jMenu1;
