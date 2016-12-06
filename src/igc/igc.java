@@ -126,6 +126,10 @@ class IGC_FileException extends Exception
   {
     super(1000);
   }
+  public IGC_point get(int idx)
+  {
+    return (IGC_point)super.get(idx);
+  }
 }
 
 class c_TaskPoint
@@ -167,6 +171,18 @@ public class igc {
   {
     return IGC_points.size();
   }
+  public String getPilotsName()
+  {
+    return PilotsName.var;
+  }
+  public String getGliderType()
+  {
+    return GliderType.var;
+  }
+  public String getGliderId()
+  {
+    return GliderId.var;
+  }
 
   boolean keyword(String line, String keyword, String var)
   {
@@ -175,7 +191,8 @@ public class igc {
   boolean keyword(String line, String keyword, String_ref var)
   {
     int len = keyword.length();
-    if (line.startsWith(keyword))
+    //if (line.startsWith(keyword))
+    if ((line.length() >= len) && (line.substring(0, len).equalsIgnoreCase(keyword)))
     {
       var.set(line.substring(len).trim());
       return true;
@@ -216,6 +233,8 @@ public class igc {
         if (line.charAt(0) == 'H')
         { /* H-record - not yet processed */
             if (keyword(line, "HFPLTPILOT:", PilotsName)) ;
+            else
+            if (keyword(line, "HFPLTPilotincharge:", PilotsName)) ;
             else
             if (keyword(line, "HFGTYGLIDERTYPE:", GliderType)) ;
             else
