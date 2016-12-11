@@ -1,6 +1,5 @@
 package utils;
 
-
 /*
  * To change this license header, choose License Headers in Project Properties.
  * To change this template file, choose Tools | Templates
@@ -16,14 +15,10 @@ import java.awt.Graphics;
  */
 public class threadImage
 {
-  public threadImage(java.awt.Component parent, java.awt.Graphics g)
+  public threadImage(java.awt.Component parent)
   {
     this.parent = parent;
-    //Object o = g.getClipBounds();
-    //img = new java.awt.image.BufferedImage(g.getClipBounds().width, g.getClipBounds().height,
-    img = new java.awt.image.BufferedImage(320, 200,
-                                           java.awt.image.BufferedImage.TYPE_INT_RGB);
-    ready = false;
+    ready = true;
     stop = false;
     cancel = false;
     t = new Thread(new DrawingLoop());
@@ -74,12 +69,55 @@ public class threadImage
     }
     return false;
   }
+  boolean isReady()
+  {
+    return ready;
+  }
   public void Cancel()
   {
     cancel = true;
+    while(!ready)
+    { /* waiting to stop drawing thread */
+      try
+      {
+         Thread.sleep(10);
+      } catch (InterruptedException e) {
+            //threadMessage("I wasn't done!");
+      }
+    }
   }
-  public Boolean ready;
-  public java.awt.image.BufferedImage img;
-  public Boolean stop;
+  public void setImage(int width, int height)
+  {
+    if ((img == null) || (img.getWidth() != width) || (img.getHeight() != height))
+    {
+      Cancel();
+      img = new java.awt.image.BufferedImage(width, height, imageType);
+    }
+  }
+  public void repaint()
+  {
+    if (img != null)
+    {
+      Cancel();
+      cancel = false;
+      ready = false;
+    }
+  }
+  public java.awt.image.BufferedImage getImage()
+  {
+    return img;
+  }
+  public void setType(int type)
+  {
+    imageType = type;
+  }
+  public void stop()
+  {
+    stop = true;
+  }
+  protected java.awt.image.BufferedImage img;
+  int imageType = java.awt.image.BufferedImage.TYPE_INT_RGB;
+  protected Boolean ready;
   Boolean cancel;
+  Boolean stop;
 }

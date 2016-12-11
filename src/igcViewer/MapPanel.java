@@ -26,13 +26,13 @@ public class MapPanel extends javax.swing.JPanel
       g2.setColor(Color.red);
       g2.fillOval(img.getWidth() / 2, img.getHeight() / 2, img.getWidth() / 2 - 5, img.getHeight() / 2 - 5);
       g2.dispose();
-      igc = new igcImage(this, img.getGraphics(), null);
+      igc = new igcImage(this, null);
       Timer timer = new Timer();
       timer.schedule(new TimerTask() {
         @Override
           public void run() {
             //repaint();
-            igc.ready = false;
+            igc.repaint();
           }
       }, 5000);
     }
@@ -46,12 +46,18 @@ public class MapPanel extends javax.swing.JPanel
         //java.awt.Graphics gc = java.awt.GraphicsConfiguration.createCompatibleImage(600, 400);
         //java.awt.Image img = new java.awt.Image();
         g.drawImage(img, 100, 100, null);
-        g.drawImage(igc.img, 200, 200, null);
-        if (ctr % 10 == 0) igc.ready = false;
+        java.awt.image.BufferedImage img = igc.getImage();
+        if (img != null)
+          g.drawImage(img, 200, 200, null);
+        if (ctr % 10 == 0)
+        {
+          igc.setImage(getWidth(), getHeight());
+          igc.repaint();
+        }
     }
     public void Repaint()
     {
-      igc.ready = false;
+      igc.repaint();
     }
     int ctr;
     java.awt.image.BufferedImage img;

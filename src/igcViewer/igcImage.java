@@ -14,9 +14,9 @@ import utils.threadImage;
  */
 public class igcImage extends threadImage
 {
-  public igcImage(java.awt.Component parent, java.awt.Graphics g, IgcFiles igcFiles)
+  public igcImage(java.awt.Component parent, IgcFiles igcFiles)
   {
-    super(parent, g);
+    super(parent);
     this.igcFiles = igcFiles;
     ctr = 0;
   }
