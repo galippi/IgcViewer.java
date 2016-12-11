@@ -5,10 +5,15 @@
  */
 package igcViewer;
 
+import java.awt.event.MouseWheelEvent;
+import java.awt.event.MouseWheelListener;
+
 import igc.GeoUtil;
 import java.awt.Color;
 import java.util.Timer;
 import java.util.TimerTask;
+
+import utils.dbg;
 
 /**
  *
@@ -36,6 +41,15 @@ public class MapPanel extends javax.swing.JPanel
             }
         }, 5000);
       }
+      //Register for mouse-wheel events on the text area.
+      addMouseWheelListener(new MouseWheelListener() {
+        public void mouseWheelMoved(MouseWheelEvent e) {
+          mouseWheelMovedHandler(e);
+        }
+      });
+    }
+    public void mouseWheelMovedHandler(MouseWheelEvent e) {
+          dbg.println(9, "mouseWheelMovedHandler="+e.getWheelRotation());
     }
     @Override
     public void paintComponent(java.awt.Graphics g) {
