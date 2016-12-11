@@ -33,6 +33,19 @@ class IgcFiles
   public void add(igc file)
   {
     igcFiles.add(file);
+    if (igcFiles.size() == 1)
+    {
+      lon_min = file.lon_min.val();
+      lon_max = file.lon_max.val();
+      lat_min = file.lat_min.val();
+      lat_max = file.lat_max.val();
+    }else
+    {
+      lon_min = Math.min(lon_min, file.lon_min.val());
+      lon_max = Math.max(lon_max, file.lon_max.val());
+      lat_min = Math.min(lat_min, file.lat_min.val());
+      lat_max = Math.max(lat_max, file.lat_max.val());
+    }
   }
   public int size()
   {

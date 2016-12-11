@@ -51,32 +51,6 @@ class IGC_FileException extends Exception
   }
 }
 
-/*public*/ class IGC_Coordinate {
-  double coor;
-  public IGC_Coordinate(double val)
-  {
-    coor = val;
-  }
-  public IGC_Coordinate neg()
-  {
-    return new IGC_Coordinate(-coor);
-  }
-  public void min(IGC_Coordinate val)
-  {
-    if (val.coor < coor)
-      coor = val.coor;
-  }
-  public void max(IGC_Coordinate val)
-  {
-    if (val.coor > coor)
-      coor = val.coor;
-  }
-  public double abs()
-  {
-    return Math.abs(coor);
-  }
-}
-
 /*public*/ class IGC_Time {
     public long t;
     public IGC_Time(long val)
@@ -152,8 +126,8 @@ public class igc {
   String_ref DateStr;
   IGC_Points IGC_points;
   IGC_Time t_min, t_max;
-  IGC_Coordinate lon_min, lon_max;
-  IGC_Coordinate lat_min, lat_max;
+  public IGC_Coordinate lon_min, lon_max;
+  public IGC_Coordinate lat_min, lat_max;
   IGC_Altitude alt_min, alt_max;
   ArrayList<c_TaskPoint> TaskPoints;
 
@@ -295,10 +269,10 @@ public class igc {
           { /* not the first point -> update the limits of the file */
             t_min.min(point_data.t);
             t_max.max(point_data.t);
-            lon_min.min(point_data.lon);
-            lon_max.max(point_data.lon);
-            lat_min.min(point_data.lat);
-            lat_max.max(point_data.lat);
+            lon_min = lon_min.min(point_data.lon);
+            lon_max = lon_max.max(point_data.lon);
+            lat_min = lat_min.min(point_data.lat);
+            lat_max = lat_max.max(point_data.lat);
             alt_min.min(point_data.Altitude);
             alt_max.max(point_data.Altitude);
           }

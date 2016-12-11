@@ -5,6 +5,7 @@
  */
 package igcViewer;
 
+import igc.GeoUtil;
 import java.awt.Color;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -16,10 +17,12 @@ import java.util.TimerTask;
 public class MapPanel extends javax.swing.JPanel
 {
     IgcFiles igcFiles;
+    int igcFileCnt = 0;
     public MapPanel(IgcFiles igcFiles)
     {
       super();
       this.igcFiles = igcFiles;
+      gu = new GeoUtil();
       ctr = 0;
       igc = new igcImage(this, this.igcFiles);
       if (false)
@@ -40,17 +43,23 @@ public class MapPanel extends javax.swing.JPanel
 
         g.drawString("mapPanel ctr=" + ctr + " size=" + igcFiles.size(), 5, 10);
         ctr++;
-        {
-          if (igc.setImage(getWidth(), getHeight()))
-            igc.repaint();
-        }
+        gu.setSize(getWidth(), getHeight());
+        igc.setGeoUtil(gu);
+        if (igc.setImage(getWidth(), getHeight()))
+          igc.repaint();
         if (igc.isReady())
           g.drawImage(igc.getImage(), 0, 30, null);
     }
     public void Repaint()
     {
+      if ((igcFileCnt != igcFiles.size()) && (igcFiles.size() != 0))
+      {
+        gu.Set(igcFiles.lon_min, igcFiles.lon_max, igcFiles.lat_min, igcFiles.lat_max, getWidth(), getHeight());
+        igcFileCnt = igcFiles.size();
+      }
       igc.repaint();
     }
     int ctr;
     igcImage igc;
+    GeoUtil gu;
 }

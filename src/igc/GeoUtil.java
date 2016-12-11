@@ -1,9 +1,11 @@
+package igc;
+
 /*
  * To change this license header, choose License Headers in Project Properties.
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-
+import java.lang.Math;
 import utils.dbg;
 
 /**
@@ -36,13 +38,15 @@ public class GeoUtil
     Set(_lon_min, _lon_max, _lat_min, _lat_max, width, height);
   }
 
-  void Set(double _lon_min, double _lon_max, double _lat_min, double _lat_max, int width, int height)
+  public void Set(double _lon_min, double _lon_max, double _lat_min, double _lat_max, int width, int height)
   {
     x_offs = 0;
     y_offs = 0;
     redraw_forced = true;
-    double zoom_x = width / (_lon_max - _lon_min);
-    double zoom_y = height / (_lat_max - _lat_min);
+    double diff = Math.max(_lon_max - _lon_min, 0.01);
+    double zoom_x = width / diff;
+    diff = Math.max((_lat_max - _lat_min), 0.01);
+    double zoom_y = height / diff;
     if (zoom_x < zoom_y)
     {
       zoom = zoom_x;
@@ -65,6 +69,10 @@ public class GeoUtil
     h = (int)(zoom * (lat_max - lat_min) + 0.5);
     dbg.println(11, dbg.d_format("GeoUtil::Set() lon_min=%lf lat_min=%lf lon_max=%lf lat_max=%lf zoom=%lf w=%d h=%d", lon_min, lat_min, lon_max, lat_max, zoom, w, h));
     redraw = true;
+  }
+  public void setSize(int width, int height)
+  {
+    Set(lon_min, lon_max, lat_min, lat_max, width, height);
   }
   void Zoom(int x, int y, double zoom_new)
   {
@@ -124,6 +132,21 @@ public class GeoUtil
   void GetPosOffs(GeoPoint2D pt, Integer x, Integer y)
   {
     GetPosOffs(pt.lon, pt.lat, x, y);
+  }
+  public boolean isEqual(GeoUtil gu)
+  {
+    return (
+            (Math.abs(gu.lon_min - lon_min) < 1e-9) &&
+            (Math.abs(gu.lon_max - lon_max) < 1e-9) &&
+            (Math.abs(gu.lat_min - lat_min) < 1e-9) &&
+            (Math.abs(gu.lat_max - lat_max) < 1e-9) &&
+            (Math.abs(gu.zoom - zoom) < 1e-9) &&
+            true
+           );
+  }
+  public String toString()
+  {
+    return ""+lon_min + ","+lat_min+","+zoom;
   }
   double lon_min, lon_max, lat_min, lat_max, zoom;
   int w, h;
