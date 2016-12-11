@@ -30,6 +30,7 @@ public class igcImage extends threadImage
     g.setColor(Color.white);
     g.fillRect(40,30,200, 100);
     g.setColor(Color.green);
+    g.drawString("igcImage.drawString count=" + igcFiles.size(), 40, 10);
     g.drawString("igcImage.drawString ctr=" + ctr, 40, 40);ctr++;
     g.dispose();
   }

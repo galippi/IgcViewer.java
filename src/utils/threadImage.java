@@ -69,9 +69,9 @@ public class threadImage
     }
     return false;
   }
-  boolean isReady()
+  public boolean isReady()
   {
-    return ready;
+    return ((img != null) && ready);
   }
   public void Cancel()
   {
@@ -86,13 +86,15 @@ public class threadImage
       }
     }
   }
-  public void setImage(int width, int height)
+  public boolean setImage(int width, int height)
   {
     if ((img == null) || (img.getWidth() != width) || (img.getHeight() != height))
     {
       Cancel();
       img = new java.awt.image.BufferedImage(width, height, imageType);
+      return true;
     }
+    return false;
   }
   public void repaint()
   {

@@ -136,7 +136,7 @@ public class NumberAdditionUI extends javax.swing.JFrame {
     void repaintMap()
     {
       //jPanel1.Repaint();
-      mapPanel.repaint();
+      mapPanel.Repaint();
       dbg.println(9, "repaintMap() size=" + igcFiles.size());
       for (int i=0; i < igcFiles.size(); i++)
       {
