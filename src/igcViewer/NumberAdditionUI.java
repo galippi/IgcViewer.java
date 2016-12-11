@@ -118,34 +118,8 @@ public class NumberAdditionUI extends javax.swing.JFrame {
     public NumberAdditionUI() {
         igcFiles = new IgcFiles();
         initComponents();
-        timer = new Timer();
-        t = new Thread(new MessageLoop());
-        timer.schedule(new TimerTask(){
-            @Override
-            public void run() {
-                timerCallBack();
-            }
-        }  , 1000, 1000);
-        threadMessage("Starting MessageLoop thread");
-        long startTime = System.currentTimeMillis();
-        t.start();
-        timerCtr = 0;
     }
 
-    public void timerCallBack()
-    {
-      System.out.println("timerCallBack ctr=" + timerCtr);
-      jLabel1.setText("timerCallBack ctr=" + timerCtr);
-      if (t.isAlive())
-      {
-        System.out.println("t thread is running");
-      }else
-      {
-        System.out.println("t thread is stopped");
-        timer.cancel();
-      }
-      timerCtr++;
-    }
     void repaintMap()
     {
       //jPanel1.Repaint();
@@ -348,9 +322,6 @@ public class NumberAdditionUI extends javax.swing.JFrame {
     }
 
   // Variables
-  Timer timer;
-  Thread t;
-  int timerCtr;
   MapPanel mapPanel;
   // Variables declaration - do not modify//GEN-BEGIN:variables
   private javax.swing.JLabel jLabel1;
