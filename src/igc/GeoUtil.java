@@ -110,15 +110,23 @@ public class GeoUtil
       redraw_forced = false;
     }
   }
-  void GetPos(int x, int y, Double lon, Double lat)
+  public void GetPos(int x, int y, Double lon, Double lat)
   {
     lon = lon_min + (x / zoom);
     lat = lat_max - (y / zoom);
   };
-  void GetPos(double lon, double lat, Integer x, Integer y)
+  public void GetPos(double lon, double lat, Integer x, Integer y)
   {
     x = (int)((lon - lon_min) * zoom + 0.5);
     y = (int)((lat_max - lat) * zoom + 0.5);
+  };
+  public int getPosX(double lon)
+  {
+    return (int)((lon - lon_min) * zoom + 0.5);
+  };
+  public int getPosY(double lat)
+  {
+    return (int)((lat_max - lat) * zoom + 0.5);
   };
   void GetPosOffs(double lon, double lat, Integer x, Integer y)
   {

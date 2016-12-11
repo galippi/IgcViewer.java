@@ -6,8 +6,10 @@
 package igcViewer;
 
 import java.awt.Color;
+
 import utils.threadImage;
 import igc.GeoUtil;
+import igc.igc;
 
 /**
  *
@@ -27,10 +29,35 @@ public class igcImage extends threadImage
     protected void Drawing()
   {
     java.awt.Graphics2D g = img.createGraphics();
-    g.setColor(Color.red);
-    g.fillOval(img.getWidth() / 2, img.getHeight() / 2, img.getWidth() / 2 - 5, img.getHeight() / 2 - 5);
-    g.setColor(Color.white);
-    g.fillRect(0, 0, 200, 100);
+    if (igcFiles.size() > 0)
+    {
+      g.setBackground(Color.WHITE);
+      g.clearRect(0, 0, img.getWidth(), img.getHeight());
+      g.setColor(Color.red);
+      for (int i = 0; i < igcFiles.size(); i++)
+      {
+        igc igc = igcFiles.get(i);
+        if (igc.size() > 1)
+        {
+          int x0 = gu.getPosX(igc.get(0).lon.val());
+          int y0 = gu.getPosY(igc.get(0).lat.val());
+          for (int j = 1; j < igc.size(); j++)
+          {
+            int x1 = gu.getPosX(igc.get(j).lon.val());
+            int y1 = gu.getPosY(igc.get(j).lat.val());
+            g.drawLine(x0, y0, x1, y1);
+            x0 = x1;
+            y0 = y1;
+          }
+        }
+      }
+    }else
+    {
+      g.setColor(Color.red);
+      g.fillOval(img.getWidth() / 2, img.getHeight() / 2, img.getWidth() / 2 - 5, img.getHeight() / 2 - 5);
+      g.setColor(Color.white);
+      g.fillRect(0, 0, 200, 100);
+    }
     g.setColor(Color.green);
     g.drawString("igcImage.drawString count=" + igcFiles.size(), 0, 10);
     g.drawString("igcImage.drawString ctr=" + ctr, 0, 40);ctr++;

@@ -9,9 +9,11 @@ package igc;
  *
  * @author Gabor Liptak 2016
  */
-import utils.dbg;
 import java.io.*;
 import java.util.ArrayList;
+
+import igc.IGC_point;
+import utils.dbg;
 
 class IGC_FileException extends Exception
 {
@@ -85,15 +87,6 @@ class IGC_FileException extends Exception
     }
 }
 
-/*public*/ class IGC_point {
-  IGC_Coordinate lat, lon;
-  IGC_Altitude Altitude;
-  IGC_Time t;
-  public IGC_point()
-  {
-  }
-}
-
 /*public*/ class IGC_Points extends ArrayList
 {
   public IGC_Points()
@@ -144,6 +137,10 @@ public class igc {
   public int size()
   {
     return IGC_points.size();
+  }
+  public IGC_point get(int idx)
+  {
+    return IGC_points.get(idx);
   }
   public String getPilotsName()
   {
