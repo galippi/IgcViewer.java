@@ -52,6 +52,9 @@ public class MapPanel extends javax.swing.JPanel
     }
     public void mouseWheelMovedHandler(MouseWheelEvent e) {
           dbg.println(9, "mouseWheelMovedHandler="+e.getWheelRotation() + " x=" + e.getX() + " y=" + e.getY());
+          double zoom_new = (e.getWheelRotation() < 0) ? (gu.zoom * zoom_factor) : (gu.zoom / zoom_factor);
+          gu.Zoom(e.getX(), e.getY(), zoom_new);
+          repaint();
     }
     @Override
     public void paintComponent(java.awt.Graphics g) {
@@ -59,8 +62,6 @@ public class MapPanel extends javax.swing.JPanel
 
         g.setColor(Color.CYAN);
         g.fillRect(0, 0, getWidth(), getHeight());
-        g.setColor(Color.BLACK);
-        g.drawString("mapPanel ctr=" + ctr + " size=" + igcFiles.size(), 5, 10);
         ctr++;
         gu.setSize(getWidth(), getHeight());
         map.setGeoUtil(gu);
@@ -73,8 +74,10 @@ public class MapPanel extends javax.swing.JPanel
           igc.repaint();
         if (igc.isReady())
         {
-          g.drawImage(igc.getImage(), 0, 100, null);
+          //g.drawImage(igc.getImage(), 0, 0, null);
         }
+        g.setColor(Color.BLACK);
+        g.drawString("mapPanel ctr=" + ctr + " size=" + igcFiles.size() + " zoom=" + gu.zoom, 5, 10);
     }
     public void Repaint()
     {
@@ -88,4 +91,5 @@ public class MapPanel extends javax.swing.JPanel
     int ctr;
     igcImage igc;
     GeoUtil gu;
+    double zoom_factor = 1.3;
 }
