@@ -85,6 +85,7 @@ public class threadImage
             //threadMessage("I wasn't done!");
       }
     }
+    cancel = false;
   }
   public boolean setImage(int width, int height)
   {
@@ -101,7 +102,6 @@ public class threadImage
     if (img != null)
     {
       Cancel();
-      cancel = false;
       ready = false;
     }
   }
