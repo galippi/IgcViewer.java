@@ -19,7 +19,33 @@ public class BufferedRandomAccessFile
     int len = is.available();
     buf = new byte[len];
     pos = 0;
-    this.len = is.read(buf);
+    this.len = 0;
+    while (this.len < len)
+    {
+      int readLen;
+      if (this.len == 0)
+      {
+        readLen = is.read(buf);
+      }else
+      {
+        byte[] buf2 = new byte[len - this.len];
+        readLen = is.read(buf2);
+        if (readLen > 0)
+        {
+          System.arraycopy(buf2, 0, buf, this.len, readLen);
+        }else
+        {
+          dbg.dprintf(1, "Error: unable to load the full file (pos = %d)!", this.len);
+          throw new IOException();
+        }
+      }
+      this.len += readLen;
+    }
+    if (this.len != len)
+    {
+        dbg.dprintf(1, "Error: unable to load the full file (%d != %d)!", this.len, len);
+        throw new IOException();
+    }
   }
   public int read() throws IOException
   {
@@ -37,17 +63,23 @@ public class BufferedRandomAccessFile
     if (length <= 0)
     {
       dbg.println(11, "Info: BufferedRandomAccessFile.read after end of the file!");
+      //throw new IOException();
       return -1;
     }
     if (length > b.length)
     {
       length = b.length;
+    }else
+    if (b.length > length)
+    {
+      dbg.dprintf(11, "Info: BufferedRandomAccessFile.read after end of the file (%d > %d)!", b.length, length);
+      //throw new IOException();
     }
     System.arraycopy(buf, pos, b, 0, length);
     pos += length;
     return length;
   }
-  public int seek(int newPos)
+  public int seek(int newPos) throws IOException
   {
     int oldPos = pos;
     if (newPos < 0)
@@ -62,16 +94,18 @@ public class BufferedRandomAccessFile
       pos = newPos;
       if (pos > len)
       {
-        pos = len;
+        dbg.dprintf(11, "Error: BufferedRandomAccessFile.seek after end of the file (%d > %d)!", pos, len);
+        throw new IOException();
+        //pos = len;
       }
     }
     return oldPos;
   }
-  public void reset()
+  public void reset() throws IOException
   {
     seek(0);
   }
-  public long skip(long bytes)
+  public long skip(long bytes) throws IOException
   {
     int oldPos = pos;
     seek(pos + (int)bytes);
