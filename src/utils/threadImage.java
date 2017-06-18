@@ -118,7 +118,7 @@ public class threadImage
     stop = true;
   }
   protected java.awt.image.BufferedImage img;
-  int imageType = java.awt.image.BufferedImage.TYPE_INT_RGB;
+  int imageType = java.awt.image.BufferedImage.TYPE_INT_ARGB;
   protected Boolean ready;
   Boolean cancel;
   Boolean stop;
