@@ -23,6 +23,7 @@ public class MapPanel extends javax.swing.JPanel
 {
     IgcFiles igcFiles;
     int igcFileCnt = 0;
+    MapImage map;
     public MapPanel(IgcFiles igcFiles)
     {
       super();
@@ -30,6 +31,7 @@ public class MapPanel extends javax.swing.JPanel
       gu = new GeoUtil();
       ctr = 0;
       igc = new igcImage(this, this.igcFiles);
+      map = new MapImage(this, gu);
       if (false)
       {
         Timer timer = new Timer();
@@ -58,6 +60,9 @@ public class MapPanel extends javax.swing.JPanel
         g.drawString("mapPanel ctr=" + ctr + " size=" + igcFiles.size(), 5, 10);
         ctr++;
         gu.setSize(getWidth(), getHeight());
+        map.setGeoUtil(gu);
+        if (map.isReady())
+          g.drawImage(map.getImage(), 0, 30, null);
         igc.setGeoUtil(gu);
         if (igc.setImage(getWidth(), getHeight()))
           igc.repaint();
