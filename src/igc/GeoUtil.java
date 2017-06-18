@@ -114,12 +114,12 @@ public class GeoUtil
   {
     lon = lon_min + (x / zoom);
     lat = lat_max - (y / zoom);
-  };
+  }
   public void GetPos(double lon, double lat, Integer x, Integer y)
   {
     x = (int)((lon - lon_min) * zoom + 0.5);
     y = (int)((lat_max - lat) * zoom + 0.5);
-  };
+  }
   public int getPosX(double lon)
   {
     return (int)((lon - lon_min) * zoom + 0.5);
@@ -127,12 +127,20 @@ public class GeoUtil
   public int getPosY(double lat)
   {
     return (int)((lat_max - lat) * zoom + 0.5);
-  };
+  }
   void GetPosOffs(double lon, double lat, Integer x, Integer y)
   {
     GetPos(lon, lat, x, y);
     x += x_offs; y += y_offs;
-  };
+  }
+  public int getPosXOffs(double lon)
+  {
+    return getPosX(lon) + x_offs;
+  }
+  public int getPosYOffs(double lat)
+  {
+    return getPosY(lat) + y_offs;
+  }
   void GetPosOffs(GeoPoint pt, Integer x, Integer y)
   {
     GetPosOffs(pt.lon, pt.lat, x, y);
@@ -164,7 +172,7 @@ public class GeoUtil
   {
     return h;
   }
-  double lon_min, lon_max, lat_min, lat_max, zoom;
+  public double lon_min, lon_max, lat_min, lat_max, zoom;
   int w, h;
   int x_offs, y_offs;
   boolean redraw_forced;
