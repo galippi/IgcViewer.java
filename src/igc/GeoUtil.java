@@ -156,6 +156,14 @@ public class GeoUtil
   {
     return ""+lon_min + ","+lat_min+","+zoom;
   }
+  public int getW()
+  {
+    return w;
+  }
+  public int getH()
+  {
+    return h;
+  }
   double lon_min, lon_max, lat_min, lat_max, zoom;
   int w, h;
   int x_offs, y_offs;
