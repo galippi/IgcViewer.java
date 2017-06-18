@@ -31,7 +31,7 @@ public class igcImage extends threadImage
     java.awt.Graphics2D g = img.createGraphics();
     if (igcFiles.size() > 0)
     {
-      g.setBackground(Color.WHITE);
+      g.setBackground(new Color(Color.OPAQUE));
       g.clearRect(0, 0, img.getWidth(), img.getHeight());
       g.setColor(Color.red);
       for (int i = 0; i < igcFiles.size(); i++)
