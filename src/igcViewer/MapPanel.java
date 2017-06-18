@@ -51,23 +51,30 @@ public class MapPanel extends javax.swing.JPanel
       });
     }
     public void mouseWheelMovedHandler(MouseWheelEvent e) {
-          dbg.println(9, "mouseWheelMovedHandler="+e.getWheelRotation());
+          dbg.println(9, "mouseWheelMovedHandler="+e.getWheelRotation() + " x=" + e.getX() + " y=" + e.getY());
     }
     @Override
     public void paintComponent(java.awt.Graphics g) {
         super.paintComponent(g);
 
+        g.setColor(Color.CYAN);
+        g.fillRect(0, 0, getWidth(), getHeight());
+        g.setColor(Color.BLACK);
         g.drawString("mapPanel ctr=" + ctr + " size=" + igcFiles.size(), 5, 10);
         ctr++;
         gu.setSize(getWidth(), getHeight());
         map.setGeoUtil(gu);
         if (map.isReady())
-          g.drawImage(map.getImage(), 0, 30, null);
+        {
+          g.drawImage(map.getImage(), 0, 0, null);
+        }
         igc.setGeoUtil(gu);
         if (igc.setImage(getWidth(), getHeight()))
           igc.repaint();
         if (igc.isReady())
-          g.drawImage(igc.getImage(), 0, 30, null);
+        {
+          g.drawImage(igc.getImage(), 0, 100, null);
+        }
     }
     public void Repaint()
     {
