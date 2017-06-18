@@ -34,6 +34,11 @@ public class BufferedRandomAccessFile
   public int read(byte[] b) throws IOException
   {
     int length = (len - pos);
+    if (length <= 0)
+    {
+      dbg.println(11, "Info: BufferedRandomAccessFile.read after end of the file!");
+      return -1;
+    }
     if (length > b.length)
     {
       length = b.length;
@@ -72,7 +77,7 @@ public class BufferedRandomAccessFile
     seek(pos + (int)bytes);
     return oldPos - pos;
   }
-  public void close()
+  public void close() throws IOException
   {
     pos = 0;
     len = 0;
