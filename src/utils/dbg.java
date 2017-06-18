@@ -10,7 +10,7 @@ package utils;
  *
  * @author Gabor Liptak
  */
-import java.io.*;
+import utils.Sprintf;
 
 public class dbg {
     static int level;
@@ -20,11 +20,12 @@ public class dbg {
     }
     public dbg(int level)
     {
-       this.level = level;
+       set(level);
     }
     public static void set(int level_new)
     {
         level = level_new;
+        dprintf(level, "Info: dbg.set(%d)!\n", level);
     }
     public static void println(int dbg_level, String line)
     {
@@ -35,6 +36,16 @@ public class dbg {
     }
     public static String d_format(String fmt, Object ... arguments)
     {
-      return new String(fmt); 
+      // todo: not all c-formatter (e.g. %u) are supported
+      //return String.format(fmt, arguments);
+      return Sprintf.sprintf(fmt, arguments);
+    }
+
+    public static void dprintf(int dbg_level, String fmt, Object ... arguments)
+    {
+        if (dbg_level <= level)
+        {
+            System.out.print(Sprintf.sprintf(fmt, arguments));
+        }
     }
 }
