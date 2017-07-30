@@ -294,11 +294,22 @@ public class IgeViewerUI extends javax.swing.JFrame {
     { /* file is loaded -> add it to the list */
       igcFiles.add(igco);
       repaintMap();
-      for (int i = 9; i > 0; i--)
+      int i;
+      for (i = 0; i < 10; i++)
+      { /* check the existence of the file on the recent list */
+        if (fileName.equals(IgcViewerPrefs.getRecentFile(i, "")))
+        { // the file is already on the recent list -> move it to the first position
+          break;
+        }
+      }
+      for (; i > 0; i--)
       { /* move recent file lower */
         IgcViewerPrefs.putRecentFile(i, IgcViewerPrefs.getRecentFile(i - 1, ""));
       }
-      IgcViewerPrefs.putRecentFile(0, fileName);
+      if (i != 0)
+      {
+        IgcViewerPrefs.putRecentFile(0, fileName);
+      }
     }
   }
 
