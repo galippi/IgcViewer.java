@@ -9,6 +9,8 @@ import igc.igc;
 import java.awt.Color;
 import utils.threadImage;
 
+import igc.IgcFiles;
+
 /**
  *
  * @author liptak

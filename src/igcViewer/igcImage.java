@@ -10,6 +10,7 @@ import java.awt.Color;
 import utils.threadImage;
 import igc.GeoUtil;
 import igc.igc;
+import igc.IgcFiles;
 
 /**
  *

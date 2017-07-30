@@ -12,6 +12,8 @@ import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
 
 import igc.GeoUtil;
+import igc.IgcCursor;
+import igc.IgcFiles;
 import java.awt.Color;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -25,12 +27,13 @@ import utils.dbg;
 public class MapPanel extends javax.swing.JPanel
 {
     IgcFiles igcFiles;
+    IgcCursor igcCursor;
     int igcFileCnt = 0;
     MapImage map;
-    public MapPanel(IgcFiles igcFiles)
+    public MapPanel(IgcCursor igcCursor)
     {
       super();
-      this.igcFiles = igcFiles;
+      this.igcFiles = igcCursor.igcFiles;
       gu = new GeoUtil();
       ctr = 0;
       igc = new igcImage(this, this.igcFiles);
