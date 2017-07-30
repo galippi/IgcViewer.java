@@ -8,8 +8,8 @@ package igcViewer;
 //import igc.IGC_Altitude;
 //import igc.IGC_Coordinate;
 //import igc.IGC_Time;
-import java.util.Timer;
-import java.util.TimerTask;
+//import java.util.Timer;
+//import java.util.TimerTask;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 
