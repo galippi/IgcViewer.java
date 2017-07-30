@@ -5,11 +5,6 @@
  */
 package igcViewer;
 
-//import igc.IGC_Altitude;
-//import igc.IGC_Coordinate;
-//import igc.IGC_Time;
-//import java.util.Timer;
-//import java.util.TimerTask;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 
@@ -39,12 +34,24 @@ class IgcFiles
       lon_max = file.lon_max.val();
       lat_min = file.lat_min.val();
       lat_max = file.lat_max.val();
+      t_min = (int)file.t_min.t;
+      t_max = (int)file.t_max.t;
+      alt_min = file.alt_min.val();
+      alt_max = file.alt_max.val();
     }else
     {
       lon_min = Math.min(lon_min, file.lon_min.val());
       lon_max = Math.max(lon_max, file.lon_max.val());
       lat_min = Math.min(lat_min, file.lat_min.val());
       lat_max = Math.max(lat_max, file.lat_max.val());
+      if ((int)file.t_min.t < t_min)
+        t_min = (int)file.t_min.t;
+      if ((int)file.t_max.t < t_max)
+        t_max = (int)file.t_max.t;
+      if (file.alt_min.val() < alt_min)
+        alt_min = file.alt_min.val();
+      if (file.alt_max.val() < alt_max)
+        alt_max = file.alt_max.val();
     }
   }
   public int size()
@@ -67,10 +74,10 @@ class IgcFiles
   {
     return igcFiles.get(idx);
   }
-  public double t_min, t_max;
+  public int t_min, t_max;
   public double lon_min, lon_max;
   public double lat_min, lat_max;
-  public double alt_min, alt_max;
+  public int alt_min, alt_max;
   static final double SNA_doubleLimit = 1e98;
   static final public double SNA_double = (SNA_doubleLimit * 2);
   static public boolean isSna(double val)
@@ -127,7 +134,7 @@ public class NumberAdditionUI extends javax.swing.JFrame {
       dbg.println(9, "repaintMap() size=" + igcFiles.size());
       for (int i=0; i < igcFiles.size(); i++)
       {
-        jTable1.setValueAt("index " + i, i, 0);
+        jTable1.setValueAt(igcFiles.get(i).getCompetitionId(), i, 0);
         jTable1.setValueAt(igcFiles.get(i).getPilotsName(), i, 1);
         jTable1.setValueAt(igcFiles.get(i).getGliderId(), i, 2);
         jTable1.setValueAt(igcFiles.get(i).getGliderType(), i, 3);
@@ -146,7 +153,8 @@ public class NumberAdditionUI extends javax.swing.JFrame {
 
     jSplitPane1 = new javax.swing.JSplitPane();
     jPanel1 = mapPanel = new MapPanel(igcFiles);
-    jLabel1 = new javax.swing.JLabel();
+    jSplitPane2 = new javax.swing.JSplitPane();
+    jPanel2 = baroPanel = new BaroPanel(igcFiles);
     jScrollPane1 = new javax.swing.JScrollPane();
     jTable1 = new javax.swing.JTable();
     jMenuBar1 = new javax.swing.JMenuBar();
@@ -165,26 +173,34 @@ public class NumberAdditionUI extends javax.swing.JFrame {
 
     jPanel1.setMinimumSize(new java.awt.Dimension(95, 97));
 
-    jLabel1.setText("jLabel1");
-
     javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
     jPanel1.setLayout(jPanel1Layout);
     jPanel1Layout.setHorizontalGroup(
       jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-      .addGroup(jPanel1Layout.createSequentialGroup()
-        .addGap(26, 26, 26)
-        .addComponent(jLabel1)
-        .addContainerGap(538, Short.MAX_VALUE))
+      .addGap(0, 95, Short.MAX_VALUE)
     );
     jPanel1Layout.setVerticalGroup(
       jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-      .addGroup(jPanel1Layout.createSequentialGroup()
-        .addGap(53, 53, 53)
-        .addComponent(jLabel1)
-        .addContainerGap(82, Short.MAX_VALUE))
+      .addGap(0, 97, Short.MAX_VALUE)
     );
 
     jSplitPane1.setTopComponent(jPanel1);
+
+    jSplitPane2.setOrientation(javax.swing.JSplitPane.VERTICAL_SPLIT);
+
+    javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
+    jPanel2.setLayout(jPanel2Layout);
+    jPanel2Layout.setHorizontalGroup(
+      jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+      .addGap(0, 0, Short.MAX_VALUE)
+    );
+    jPanel2Layout.setVerticalGroup(
+      jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+      .addGap(0, 0, Short.MAX_VALUE)
+    );
+
+    jSplitPane2.setTopComponent(jPanel2);
+    jPanel2.getAccessibleContext().setAccessibleParent(jSplitPane2);
 
     jScrollPane1.setMaximumSize(new java.awt.Dimension(32767, 200));
     jScrollPane1.setMinimumSize(new java.awt.Dimension(50, 50));
@@ -208,10 +224,13 @@ public class NumberAdditionUI extends javax.swing.JFrame {
     jTable1.setPreferredSize(new java.awt.Dimension(200, 120));
     jScrollPane1.setViewportView(jTable1);
 
-    jSplitPane1.setBottomComponent(jScrollPane1);
+    jSplitPane2.setBottomComponent(jScrollPane1);
+
+    jSplitPane1.setBottomComponent(jSplitPane2);
 
     jMenu1.setText("File");
 
+    m_FileOpen.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_O, 0));
     m_FileOpen.setText("File open");
     m_FileOpen.addActionListener(new java.awt.event.ActionListener() {
       public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -221,6 +240,7 @@ public class NumberAdditionUI extends javax.swing.JFrame {
     jMenu1.add(m_FileOpen);
     jMenu1.add(jSeparator1);
 
+    m_FileExit.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_F4, java.awt.event.InputEvent.ALT_MASK));
     m_FileExit.setText("Exit");
     m_FileExit.addActionListener(new java.awt.event.ActionListener() {
       public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -244,7 +264,7 @@ public class NumberAdditionUI extends javax.swing.JFrame {
     );
     layout.setVerticalGroup(
       layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-      .addComponent(jSplitPane1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 450, Short.MAX_VALUE)
+      .addComponent(jSplitPane1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 467, Short.MAX_VALUE)
     );
 
     pack();
@@ -323,15 +343,18 @@ public class NumberAdditionUI extends javax.swing.JFrame {
 
   // Variables
   MapPanel mapPanel;
+  BaroPanel baroPanel;
+
   // Variables declaration - do not modify//GEN-BEGIN:variables
-  private javax.swing.JLabel jLabel1;
   private javax.swing.JMenu jMenu1;
   private javax.swing.JMenu jMenu2;
   private javax.swing.JMenuBar jMenuBar1;
   private javax.swing.JPanel jPanel1;
+  private javax.swing.JPanel jPanel2;
   private javax.swing.JScrollPane jScrollPane1;
   private javax.swing.JPopupMenu.Separator jSeparator1;
   private javax.swing.JSplitPane jSplitPane1;
+  private javax.swing.JSplitPane jSplitPane2;
   private javax.swing.JTable jTable1;
   private javax.swing.JMenuItem m_FileExit;
   private javax.swing.JMenuItem m_FileOpen;
