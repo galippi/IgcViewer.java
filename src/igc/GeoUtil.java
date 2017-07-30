@@ -68,6 +68,10 @@ public class GeoUtil
     dbg.println(11, dbg.d_format("GeoUtil::Set() lon_min=%lf lat_min=%lf lon_max=%lf lat_max=%lf zoom=%lf w=%d h=%d", lon_min, lat_min, lon_max, lat_max, zoom, w, h));
     redraw = true;
   }
+  public void Set(double _lon_min, double _lon_max, double _lat_min, double _lat_max)
+  {
+    Set(_lon_min, _lon_max, _lat_min, _lat_max, w, h);
+  }
   public void setSize(int width, int height)
   {
     Set(lon_min, lon_max, lat_min, lat_max, width, height);
@@ -108,6 +112,17 @@ public class GeoUtil
     }
     dbg.dprintf(9, "GeoUtil::Move dx=%d dy=%d forced=%s x_offs=%d y_offs=%d", dx, dy, forced ? "true" : "false", x_offs, y_offs);
   }
+  public void Move(double lon, double lat, double zoom)
+  {
+    lon_min = lon;
+    lat_max = lat;
+    lon_max = lon_min + w / zoom;
+    lat_min = lat_max - h / zoom;
+    dbg.dprintf(9, "Move - double - lon_min=%lf lat_min=%lf lon_max=%lf lat_max=%lf zoom=%lf w=%d h=%d", lon_min, lat_min, lon_max, lat_max, zoom, w, h);
+    x_offs = 0;
+    y_offs = 0;
+    redraw_forced = true;
+  }
   public double getPosLon(int x)
   {
     return lon_min + (x / zoom);
@@ -141,14 +156,6 @@ public class GeoUtil
   public int getPosYOffs(double lat)
   {
     return getPosY(lat) + y_offs;
-  }
-  void GetPosOffs(GeoPoint pt, Integer x, Integer y)
-  {
-    GetPosOffs(pt.lon, pt.lat, x, y);
-  }
-  void GetPosOffs(GeoPoint2D pt, Integer x, Integer y)
-  {
-    GetPosOffs(pt.lon, pt.lat, x, y);
   }
   public boolean isEqual(GeoUtil gu)
   {
