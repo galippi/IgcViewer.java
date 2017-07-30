@@ -86,7 +86,7 @@ class IgcFiles
   }
 }
 
-public class NumberAdditionUI extends javax.swing.JFrame {
+public class IgeViewerUI extends javax.swing.JFrame {
 
   IgcFiles igcFiles;
 
@@ -134,14 +134,14 @@ public class NumberAdditionUI extends javax.swing.JFrame {
     /**
      * Creates new form NumberAdditionUI
      */
-    public NumberAdditionUI() {
+    public IgeViewerUI() {
         igcFiles = new IgcFiles();
         initComponents();
         //jMenu3
         int nextRecentFile = 0;
         for (int i = 0; i < 10; i++)
         {
-          String val = java.util.prefs.Preferences.userRoot().node("RecentFiles").get("RecentFile"+i, "");
+          String val = IgcViewerPrefs.getRecentFile(i, "");
           if (!val.isEmpty())
           {
             javax.swing.JMenuItem jMenuItem = new javax.swing.JMenuItem();
@@ -155,6 +155,38 @@ public class NumberAdditionUI extends javax.swing.JFrame {
             jMenu3.add(jMenuItem);
           }
         }
+        setLocation(IgcViewerPrefs.get("MainWindowX", 0), IgcViewerPrefs.get("MainWindowY", 0));
+        setSize(IgcViewerPrefs.get("MainWindowW", 600), IgcViewerPrefs.get("MainWindowH", 400));
+        setExtendedState(IgcViewerPrefs.get("MainWindowState", NORMAL));
+        jSplitPane1.setDividerLocation(IgcViewerPrefs.get("MainWindowSplitPane1Pos", 100));
+        jSplitPane2.setDividerLocation(IgcViewerPrefs.get("MainWindowSplitPane2Pos", 100));
+        //pack();
+        //dbg.dprintf(9, "mapPanel=%d,%d\n", mapPanel.getWidth(), mapPanel.getHeight());
+        //mapPanel.getGeoUtil().setSize(mapPanel.getWidth(), mapPanel.getHeight());
+        mapPanel.getGeoUtil().Set(
+          IgcViewerPrefs.get("MainWindowGeoPosLonMin", 19.2),
+          IgcViewerPrefs.get("MainWindowGeoPosLonMax", 19.4),
+          IgcViewerPrefs.get("MainWindowGeoPosLatMin", 47.2),
+          IgcViewerPrefs.get("MainWindowGeoPosLatMax", 47.4));
+        mapPanel.Repaint();
+    }
+    public void windowClose(java.awt.event.WindowEvent e)
+    {
+      dbg.println(9, "windowClose");
+      IgcViewerPrefs.put("MainWindowX", getX());
+      IgcViewerPrefs.put("MainWindowY", getY());
+      IgcViewerPrefs.put("MainWindowH", getHeight());
+      IgcViewerPrefs.put("MainWindowW", getWidth());
+      IgcViewerPrefs.put("MainWindowState", getExtendedState());
+      IgcViewerPrefs.put("MainWindowSplitPane1Pos", jSplitPane1.getDividerLocation());
+      IgcViewerPrefs.put("MainWindowSplitPane2Pos", jSplitPane2.getDividerLocation());
+      IgcViewerPrefs.put("MainWindowGeoPosLonMin", mapPanel.getGeoUtil().lon_min);
+      IgcViewerPrefs.put("MainWindowGeoPosLatMin", mapPanel.getGeoUtil().lat_min);
+      IgcViewerPrefs.put("MainWindowGeoPosLonMax", mapPanel.getGeoUtil().lon_max);
+      IgcViewerPrefs.put("MainWindowGeoPosLatMax", mapPanel.getGeoUtil().lat_max);
+      //IgcViewerPrefs.put("MainWindowGeoPosZoom", mapPanel.getGeoUtil().zoom);
+      dbg.dprintf(9, "mapPanel=%d,%d\n", mapPanel.getWidth(), mapPanel.getHeight());
+      System.exit(0);
     }
 
     void repaintMap()
@@ -313,6 +345,7 @@ public class NumberAdditionUI extends javax.swing.JFrame {
 
   private void m_FileExitActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_m_FileExitActionPerformed
     dbg.println(1, "m_FileExitActionPerformed");
+    dispose();
     System.exit(0);
   }//GEN-LAST:event_m_FileExitActionPerformed
 
@@ -328,15 +361,14 @@ public class NumberAdditionUI extends javax.swing.JFrame {
       repaintMap();
       for (int i = 9; i > 0; i--)
       { /* move recent file lower */
-        java.util.prefs.Preferences.userRoot().node("RecentFiles").put("RecentFile" + i, 
-          java.util.prefs.Preferences.userRoot().node("RecentFiles").get("RecentFile" + (i - 1), ""));
+        IgcViewerPrefs.putRecentFile(i, IgcViewerPrefs.getRecentFile(i - 1, ""));
       }
-      java.util.prefs.Preferences.userRoot().node("RecentFiles").put("RecentFile" + 0, fileName);
+      IgcViewerPrefs.putRecentFile(0, fileName);
     }
   }
 
   private void m_FileOpenActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_m_FileOpenActionPerformed
-    System.out.println("m_FileOpenActionPerformed");
+    dbg.println(9, "m_FileOpenActionPerformed");
     //Create a file chooser
     final JFileChooser fc = new JFileChooser();
     javax.swing.filechooser.FileNameExtensionFilter filter =
@@ -353,7 +385,7 @@ public class NumberAdditionUI extends javax.swing.JFrame {
       openIgcFile(file.getPath());
     } else
     {
-      dbg.println(1, "Open command cancelled by user.");
+      dbg.println(9, "Open command cancelled by user.");
     }
   }//GEN-LAST:event_m_FileOpenActionPerformed
 
@@ -380,24 +412,35 @@ public class NumberAdditionUI extends javax.swing.JFrame {
                 }
             }
         } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(NumberAdditionUI.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(IgeViewerUI.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(NumberAdditionUI.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(IgeViewerUI.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(NumberAdditionUI.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(IgeViewerUI.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(NumberAdditionUI.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(IgeViewerUI.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
+        //</editor-fold>
         //</editor-fold>
 
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new NumberAdditionUI().setVisible(true);
+                frame = new IgeViewerUI();
+                frame.setVisible(true);
+            // ------------------------------------------------------------
+            // Window listener to close application when Window gets closed
+            // ------------------------------------------------------------
+            frame.addWindowListener(new java.awt.event.WindowAdapter() {
+                public void windowClosing(java.awt.event.WindowEvent e) {
+                    dbg.println(9, "windowClosing");
+                    frame.windowClose(e);
+                }
+            });
             }
         });
     }
-
+  static IgeViewerUI frame;
   // Variables
   MapPanel mapPanel;
   BaroPanel baroPanel;

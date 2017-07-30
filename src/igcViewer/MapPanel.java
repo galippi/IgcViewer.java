@@ -167,12 +167,17 @@ public class MapPanel extends javax.swing.JPanel
     }
     public void Repaint()
     {
+      gu.setSize(getWidth(), getHeight());
       if ((igcFileCnt != igcFiles.size()) && (igcFiles.size() != 0))
       {
         gu.Set(igcFiles.lon_min, igcFiles.lon_max, igcFiles.lat_min, igcFiles.lat_max, getWidth(), getHeight());
         igcFileCnt = igcFiles.size();
       }
       igc.repaint();
+    }
+    public GeoUtil getGeoUtil()
+    {
+      return gu;
     }
     int ctr;
     igcImage igc;
