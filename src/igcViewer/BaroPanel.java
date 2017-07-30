@@ -26,7 +26,7 @@ public class BaroPanel extends javax.swing.JPanel
   public BaroPanel(IgcCursor igcCursor)
   {
     super();
-    set(igcCursor.igcFiles);
+    set(igcCursor);
     baroImage = new BaroImage(this, igcCursor.igcFiles);
 
     //Register for mouse-wheel events on the map area.
@@ -65,7 +65,12 @@ public class BaroPanel extends javax.swing.JPanel
       }
     });
   }
-  void set(IgcFiles igcFiles)
+  void set(IgcCursor igcCursor)
+  {
+    this.igcCursor = igcCursor;
+    igcCursor.set(this);
+  }
+  void set_(IgcFiles igcFiles)
   {
     igcCursor.set(igcFiles);
     if (igcCursor.igcFiles.size() == 0)
@@ -75,14 +80,14 @@ public class BaroPanel extends javax.swing.JPanel
   }
   public void mouseWheelMovedHandler(MouseWheelEvent e) {
     dbg.println(9, "BaroPanel.mouseWheelMovedHandler="+e.getWheelRotation() + " x=" + e.getX() + " y=" + e.getY());
-    if (igcFiles.size() == 0)
+    if (igcCursor.size() == 0)
       return; // nothing to do, if no file is loaded
     repaint();
   }
   public void mouseHandler(MouseEvent e) {
     if ((e.getID() != e.MOUSE_MOVED) || (e.getButton() != 0))
       dbg.println(9, "BaroPanel.mouseHandler "+e.toString()+" x=" + e.getX() + " y=" + e.getY() + " button=" + e.getButton());
-    if (igcFiles.size() == 0)
+    if (igcCursor.size() == 0)
       return; // nothing to do, if no file is loaded
     if ((e.getID() == e.MOUSE_PRESSED) && (e.getButton() == e.BUTTON1))
     {
@@ -100,8 +105,8 @@ public class BaroPanel extends javax.swing.JPanel
   void updateCursor(int x)
   {
     timeCursorX = x;
-    timeCursor.t = igcFiles.t_min + (int)((((igcFiles.t_max - igcFiles.t_min) * (double)timeCursorX) / getWidth()) + 0.5);
-    dbg.dprintf(9, "BaroPanel - updateCursor: t=%d tmin=%d tmax=%d\n", (int)timeCursor.t, igcFiles.t_min, igcFiles.t_max);
+    igcCursor.timeCursor = igcCursor.igcFiles.t_min + (int)((((igcCursor.igcFiles.t_max - igcCursor.igcFiles.t_min) * (double)timeCursorX) / getWidth()) + 0.5);
+    dbg.dprintf(9, "BaroPanel - updateCursor: t=%d tmin=%d tmax=%d\n", (int)igcCursor.timeCursor, igcCursor.igcFiles.t_min, igcCursor.igcFiles.t_max);
     drawCursor();
     updateUIAll();
   }
@@ -118,10 +123,9 @@ public class BaroPanel extends javax.swing.JPanel
     super.paintComponent(g);
     dbg.println(9, "BaroPanel - paintComponent");
     boolean repaintNeeded = false;
-    if (igcFileCnt != igcFiles.size())
+    if (igcFileCnt != igcCursor.size())
     { /* baro shall be repainted */
-      set(igcFiles);
-      igcFileCnt = igcFiles.size();
+      igcFileCnt = igcCursor.size();
       repaintNeeded = true;
     }
     if (baroImage.setImage(getWidth(), getHeight()))

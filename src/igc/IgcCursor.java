@@ -19,7 +19,7 @@ public class IgcCursor {
   }
   public IgcCursor(IgcFiles igcFiles)
   {
-    call main constructor!!!
+    this();
     set(igcFiles);
   }
   public int size()
@@ -41,6 +41,10 @@ public class IgcCursor {
     {
       timeCursor = igcFiles.t_max;
     }
+  }
+  public void set(java.awt.Component parent)
+  {
+    uiParents.add(parent);
   }
   public IgcFiles igcFiles;
   public int timeCursor = -1;
