@@ -144,7 +144,7 @@ public class MapPanel extends javax.swing.JPanel
 
         dbg.println(9, "MapPanel - paintComponent");
         dbg.dprintf(21, "MapPanel - paintComponent(%d, %d)\n", gu.x_offs, gu.y_offs);
-        g.setColor(Color.CYAN);
+        g.setColor(Color.WHITE);
         g.fillRect(0, 0, getWidth(), getHeight());
         ctr++;
         gu.setSize(getWidth(), getHeight());
