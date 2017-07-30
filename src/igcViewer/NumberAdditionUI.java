@@ -119,12 +119,42 @@ public class NumberAdditionUI extends javax.swing.JFrame {
         }
     }
 
+    private void m_RecentFileActionPerformed(java.awt.event.ActionEvent evt) {
+      dbg.println(9, "m_RecentFileActionPerformed " + evt.toString());
+      String val = evt.getActionCommand();
+      dbg.dprintf(9, "  val=%s\n", val);
+      if (val.charAt(1) == ':')
+      {
+        int idx = val.charAt(0) - '0';
+        String file = val.substring(3);
+        dbg.dprintf(9, "  idx=%d file=%s\n", idx, file);
+        openIgcFile(file);
+      }
+    }
     /**
      * Creates new form NumberAdditionUI
      */
     public NumberAdditionUI() {
         igcFiles = new IgcFiles();
         initComponents();
+        //jMenu3
+        int nextRecentFile = 0;
+        for (int i = 0; i < 10; i++)
+        {
+          String val = java.util.prefs.Preferences.userRoot().node("RecentFiles").get("RecentFile"+i, "");
+          if (!val.isEmpty())
+          {
+            javax.swing.JMenuItem jMenuItem = new javax.swing.JMenuItem();
+            jMenuItem.setText(nextRecentFile + ": " + val);
+            nextRecentFile++;
+            jMenuItem.addActionListener(new java.awt.event.ActionListener() {
+              public void actionPerformed(java.awt.event.ActionEvent evt) {
+                m_RecentFileActionPerformed(evt);
+              }
+            });
+            jMenu3.add(jMenuItem);
+          }
+        }
     }
 
     void repaintMap()
@@ -161,6 +191,7 @@ public class NumberAdditionUI extends javax.swing.JFrame {
     jMenu1 = new javax.swing.JMenu();
     m_FileOpen = new javax.swing.JMenuItem();
     jSeparator1 = new javax.swing.JPopupMenu.Separator();
+    jMenu3 = new javax.swing.JMenu();
     m_FileExit = new javax.swing.JMenuItem();
     jMenu2 = new javax.swing.JMenu();
 
@@ -222,6 +253,11 @@ public class NumberAdditionUI extends javax.swing.JFrame {
     jTable1.setMaximumSize(new java.awt.Dimension(1000, 1000));
     jTable1.setMinimumSize(new java.awt.Dimension(100, 100));
     jTable1.setPreferredSize(new java.awt.Dimension(200, 120));
+    jTable1.addMouseListener(new java.awt.event.MouseAdapter() {
+      public void mouseClicked(java.awt.event.MouseEvent evt) {
+        jTable1MouseClicked(evt);
+      }
+    });
     jScrollPane1.setViewportView(jTable1);
 
     jSplitPane2.setBottomComponent(jScrollPane1);
@@ -239,6 +275,11 @@ public class NumberAdditionUI extends javax.swing.JFrame {
     });
     jMenu1.add(m_FileOpen);
     jMenu1.add(jSeparator1);
+
+    jMenu3.setText("Recent Files");
+    jMenu3.setToolTipText("");
+    jMenu3.setActionCommand("recentFiles");
+    jMenu1.add(jMenu3);
 
     m_FileExit.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_F4, java.awt.event.InputEvent.ALT_MASK));
     m_FileExit.setText("Exit");
@@ -271,9 +312,28 @@ public class NumberAdditionUI extends javax.swing.JFrame {
   }// </editor-fold>//GEN-END:initComponents
 
   private void m_FileExitActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_m_FileExitActionPerformed
-    System.out.println("m_FileExitActionPerformed");
+    dbg.println(1, "m_FileExitActionPerformed");
     System.exit(0);
   }//GEN-LAST:event_m_FileExitActionPerformed
+
+  private void openIgcFile(String fileName)
+  {
+    igc igco = new igc(fileName);
+    if (!igco.isValid())
+    { /* error message */
+      JOptionPane.showMessageDialog(this, "Unable to load file " + fileName);
+    }else
+    { /* file is loaded -> add it to the list */
+      igcFiles.add(igco);
+      repaintMap();
+      for (int i = 9; i > 0; i--)
+      { /* move recent file lower */
+        java.util.prefs.Preferences.userRoot().node("RecentFiles").put("RecentFile" + i, 
+          java.util.prefs.Preferences.userRoot().node("RecentFiles").get("RecentFile" + (i - 1), ""));
+      }
+      java.util.prefs.Preferences.userRoot().node("RecentFiles").put("RecentFile" + 0, fileName);
+    }
+  }
 
   private void m_FileOpenActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_m_FileOpenActionPerformed
     System.out.println("m_FileOpenActionPerformed");
@@ -289,21 +349,18 @@ public class NumberAdditionUI extends javax.swing.JFrame {
     {
       java.io.File file = fc.getSelectedFile();
       //This is where a real application would open the file.
-      System.out.println("Opening: " + file.getName() + ".");
-      igc igco = new igc(file.getPath());
-      if (!igco.isValid())
-      { /* error message */
-        JOptionPane.showMessageDialog(this, "Unable to load file " + file.getName());
-      }else
-      { /* file is loaded -> add it to the list */
-        igcFiles.add(igco);
-        repaintMap();
-      }
+      dbg.println(9, "Opening: " + file.getName() + ".");
+      openIgcFile(file.getPath());
     } else
     {
-      System.out.println("Open command cancelled by user.");
+      dbg.println(1, "Open command cancelled by user.");
     }
   }//GEN-LAST:event_m_FileOpenActionPerformed
+
+  private void jTable1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTable1MouseClicked
+    dbg.println(9, "jTable1MouseClicked " + evt.toString());
+    dbg.println(9, "  findComponentAt="+jTable1.findComponentAt(evt.getX(), evt.getY()).toString());
+  }//GEN-LAST:event_jTable1MouseClicked
 
     /**
      * @param args the command line arguments
@@ -348,6 +405,7 @@ public class NumberAdditionUI extends javax.swing.JFrame {
   // Variables declaration - do not modify//GEN-BEGIN:variables
   private javax.swing.JMenu jMenu1;
   private javax.swing.JMenu jMenu2;
+  private javax.swing.JMenu jMenu3;
   private javax.swing.JMenuBar jMenuBar1;
   private javax.swing.JPanel jPanel1;
   private javax.swing.JPanel jPanel2;
