@@ -35,62 +35,6 @@ class IGC_FileException extends Exception
   }
 }
 
-/*public*/ class IGC_Altitude {
-  public int h;
-  public IGC_Altitude(int val)
-  {
-    h = val;
-  }
-  public void min(IGC_Altitude val)
-  {
-    if (val.h < h)
-      h = val.h;
-  }
-  public void max(IGC_Altitude val)
-  {
-    if (val.h > h)
-      h = val.h;
-  }
-  public int val()
-  {
-    return h;
-  }
-}
-
-/*public*/ class IGC_Time {
-    public long t;
-    public IGC_Time(long val)
-    {
-      t = val;
-    }
-    public void min(IGC_Time val)
-    {
-      if (val.t < t)
-          t = val.t;
-    }
-    public void max(IGC_Time val)
-    {
-      if (val.t > t)
-          t = val.t;
-    }
-    public boolean isSmaller(IGC_Time val)
-    {
-      return t < val.t;
-    }
-    public boolean isSmallerOrEqual(IGC_Time val)
-    {
-      return t <= val.t;
-    }
-    public boolean isLarger(IGC_Time val)
-    {
-      return t > val.t;
-    }
-    public boolean isLargerOrEqual(IGC_Time val)
-    {
-      return t >= val.t;
-    }
-}
-
 /*public*/ class IGC_Points extends ArrayList
 {
   public IGC_Points()
@@ -118,20 +62,23 @@ class c_TaskPoint
 public class igc {
   boolean valid;
   String_ref PilotsName;
+  String_ref competitionId;
   String_ref GliderType;
   String_ref GliderId;
   String_ref DateStr;
   IGC_Points IGC_points;
-  IGC_Time t_min, t_max;
+  public IGC_Time t_min, t_max;
   public IGC_Coordinate lon_min, lon_max;
   public IGC_Coordinate lat_min, lat_max;
-  IGC_Altitude alt_min, alt_max;
+  public IGC_Altitude alt_min, alt_max;
   ArrayList<c_TaskPoint> TaskPoints;
+  public java.awt.Color color;
 
   public void Reinit()
   {
     valid = false;
     PilotsName = new String_ref("");
+    competitionId = new String_ref("");
     GliderType = new String_ref("");
     GliderId = new String_ref("");
     DateStr = new String_ref("");
@@ -149,6 +96,10 @@ public class igc {
   public String getPilotsName()
   {
     return PilotsName.var;
+  }
+  public String getCompetitionId()
+  {
+    return competitionId.var;
   }
   public String getGliderType()
   {
@@ -217,6 +168,8 @@ public class igc {
             else
             if (keyword(line, "HFDTE", DateStr)) ;
             else
+            if (keyword(line, "HFCIDCompetitionID", competitionId)) ;
+            else
             {
               dbg.println(9, "igc - Not processed H-record in line " + line + "!");
             }
@@ -262,10 +215,13 @@ public class igc {
           IGC_points.add(point_data);
           if (IGC_points.size() == 1)
           { /* first point -> init the limits of the file */
-            t_min = t_max = point_data.t;
+            t_min = new IGC_Time(point_data.t);
+            t_max = new IGC_Time(point_data.t);
             lon_min = lon_max = point_data.lon;
             lat_min = lat_max = point_data.lat;
-            alt_min = alt_max = point_data.Altitude;
+            alt_min = new IGC_Altitude(point_data.Altitude);
+            alt_max = new IGC_Altitude(point_data.Altitude);
+            
           }else
           { /* not the first point -> update the limits of the file */
             t_min.min(point_data.t);
@@ -347,6 +303,8 @@ public class igc {
   {
     IGC_points = new IGC_Points();
     TaskPoints = new ArrayList();
+    color = java.awt.Color.BLUE;
+
     Reinit();
   }
   public igc(String file)
