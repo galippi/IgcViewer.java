@@ -40,12 +40,12 @@ public class igcImage extends threadImage
       //g.setColor(new Color(Color.TRANSLUCENT));
       g.setColor(new Color(0, true));
       g.fillRect(0, 0, img.getWidth(), img.getHeight());
-      g.setColor(Color.red);
       for (int i = 0; i < igcFiles.size(); i++)
       {
         igc igc = igcFiles.get(i);
         if (igc.size() > 1)
         {
+          g.setColor(igc.color);
           int x0 = gu.getPosX(igc.get(0).lon.val());
           int y0 = gu.getPosY(igc.get(0).lat.val());
           for (int j = 1; j < igc.size(); j++)
