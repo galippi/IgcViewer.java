@@ -186,8 +186,8 @@ public class IgeViewerUI extends javax.swing.JFrame {
         "Title 1", "Title 2", "Title 3", "Title 4"
       }
     ));
-    jTable1.setEditingColumn(2);
-    jTable1.setEditingRow(2);
+    jTable1.setEditingColumn(0);
+    jTable1.setEditingRow(0);
     jTable1.setMaximumSize(new java.awt.Dimension(1000, 1000));
     jTable1.setMinimumSize(new java.awt.Dimension(100, 100));
     jTable1.setPreferredSize(new java.awt.Dimension(200, 120));

@@ -197,8 +197,8 @@
                         <Column editable="true" title="Title 4" type="java.lang.Object"/>
                       </Table>
                     </Property>
-                    <Property name="editingColumn" type="int" value="2"/>
-                    <Property name="editingRow" type="int" value="2"/>
+                    <Property name="editingColumn" type="int" value="0"/>
+                    <Property name="editingRow" type="int" value="0"/>
                     <Property name="maximumSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
                       <Dimension value="[1000, 1000]"/>
                     </Property>
