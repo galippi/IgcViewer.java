@@ -40,8 +40,6 @@ public class GeoUtil
 
   public void Set(double _lon_min, double _lon_max, double _lat_min, double _lat_max, int width, int height)
   {
-    //x_offs = 0;
-    //y_offs = 0;
     redraw_forced = true;
     double diff = Math.max(_lon_max - _lon_min, 0.01);
     double zoom_x = width / diff;
