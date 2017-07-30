@@ -29,10 +29,17 @@ public class igcImage extends threadImage
     protected void Drawing()
   {
     java.awt.Graphics2D g = img.createGraphics();
+    g.setBackground(new Color(0, true));
+    g.clearRect(0, 0, img.getWidth(), img.getHeight());
+    //g.setColor(new Color(0, true));
+    //g.fillRect(0, 0, img.getWidth(), img.getHeight());
     if (igcFiles.size() > 0)
     {
-      g.setBackground(new Color(Color.OPAQUE));
-      g.clearRect(0, 0, img.getWidth(), img.getHeight());
+      //g.setBackground(new Color(Color.TRANSLUCENT));
+      //g.clearRect(0, 0, img.getWidth(), img.getHeight());
+      //g.setColor(new Color(Color.TRANSLUCENT));
+      g.setColor(new Color(0, true));
+      g.fillRect(0, 0, img.getWidth(), img.getHeight());
       g.setColor(Color.red);
       for (int i = 0; i < igcFiles.size(); i++)
       {
@@ -53,10 +60,10 @@ public class igcImage extends threadImage
       }
     }else
     {
-      g.setColor(Color.red);
-      g.fillOval(img.getWidth() / 2, img.getHeight() / 2, img.getWidth() / 2 - 5, img.getHeight() / 2 - 5);
-      g.setColor(Color.white);
-      g.fillRect(0, 0, 200, 100);
+      //g.setColor(Color.red);
+      //g.fillOval(img.getWidth() / 2, img.getHeight() / 2, img.getWidth() / 2 - 5, img.getHeight() / 2 - 5);
+      //g.setColor(Color.white);
+      //g.fillRect(0, 0, 200, 100);
     }
     g.setColor(Color.green);
     g.drawString("igcImage.drawString count=" + igcFiles.size(), 0, 10);

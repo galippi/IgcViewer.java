@@ -43,12 +43,14 @@ public class MapImage extends threadImage
     java.awt.Graphics2D g = img.createGraphics();
     if (Xcm != null)
     { // the map is successfully loaded
-      g.setBackground(new Color(Color.OPAQUE));
+      //g.setBackground(new Color(Color.OPAQUE));
+      //g.clearRect(0, 0, img.getWidth(), img.getHeight());
+      //g.setColor(new Color(Color.OPAQUE));
+      //g.setColor(new Color(Color.OPAQUE));
+      //g.setColor(Color.GRAY);
+      //g.fillRect(0, 0, img.getWidth(), img.getHeight());
+      g.setBackground(new Color(0, true));
       g.clearRect(0, 0, img.getWidth(), img.getHeight());
-      g.setColor(new Color(Color.OPAQUE));
-      g.setColor(new Color(Color.OPAQUE));
-      g.setColor(Color.GRAY);
-      g.fillRect(0, 0, img.getWidth(), img.getHeight());
       g.setColor(Color.BLACK);
       g.drawString("Xcm drawing - MapImage - size="+Xcm.ShapeFiles.size()+"!", 40, 40);
       for (int i = 0; i < Xcm.ShapeFiles.size(); i++)
@@ -78,14 +80,14 @@ public class MapImage extends threadImage
     //dc.SetBrush(brush);
     if (isShapeVisible(shape))
     {
-      for (int j = 0; j < shape.PartsPos.length; j++)
+      if (shape.type == shape.SHP_POINT)
       {
-        if (shape.type == shape.SHP_POINT)
-        {
-          int x = gu.getPosXOffs(shape.Points[0].x);
-          int y = gu.getPosYOffs(shape.Points[0].y);
-          g.fillOval(x, y, 5, 5);
-        }else
+        int x = gu.getPosXOffs(shape.Points[0].x);
+        int y = gu.getPosYOffs(shape.Points[0].y);
+        g.fillOval(x, y, 5, 5);
+      }else
+      {
+        for (int j = 0; j < shape.nParts; j++)
         {
           int LastPoint;
           if (j == shape.PartsPos.length - 1)

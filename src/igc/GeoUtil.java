@@ -40,8 +40,8 @@ public class GeoUtil
 
   public void Set(double _lon_min, double _lon_max, double _lat_min, double _lat_max, int width, int height)
   {
-    x_offs = 0;
-    y_offs = 0;
+    //x_offs = 0;
+    //y_offs = 0;
     redraw_forced = true;
     double diff = Math.max(_lon_max - _lon_min, 0.01);
     double zoom_x = width / diff;
@@ -86,20 +86,19 @@ public class GeoUtil
     redraw_forced = true;
     dbg.println(11, dbg.d_format("GeoUtil::Zoom lon_min=%lf lat_min=%lf lon_max=%lf lat_max=%lf zoom=%lf w=%d h=%d", lon_min, lat_min, lon_max, lat_max, zoom, w, h));
   }
-  void Move(int dx, int dy)
+  public void Move(int dx, int dy)
   {
     Move(dx, dy, false);
   }
-  void Move(int dx, int dy, boolean forced)
+  public void Move(int dx, int dy, boolean forced)
   {
-    dbg.println(11, dbg.d_format("GeoUtil::Move dx=%d dy=%d forced=%s", dx, dy, forced ? "true" : "false"));
     if (forced)
     {
       lon_min = getPosLon(-x_offs);
       lat_max = getPosLat(-y_offs);
       lon_max = lon_min + w / zoom;
       lat_min = lat_max - h / zoom;
-      dbg.println(11, dbg.d_format("lon_min=%lf lat_min=%lf lon_max=%lf lat_max=%lf zoom=%lf w=%d h=%d", lon_min, lat_min, lon_max, lat_max, zoom, w, h));
+      dbg.dprintf(9, "lon_min=%lf lat_min=%lf lon_max=%lf lat_max=%lf zoom=%lf w=%d h=%d", lon_min, lat_min, lon_max, lat_max, zoom, w, h);
       x_offs = dx;
       y_offs = dy;
       redraw_forced = true;
@@ -109,6 +108,7 @@ public class GeoUtil
       y_offs += dy;
       redraw_forced = false;
     }
+    dbg.dprintf(9, "GeoUtil::Move dx=%d dy=%d forced=%s x_offs=%d y_offs=%d", dx, dy, forced ? "true" : "false", x_offs, y_offs);
   }
   public double getPosLon(int x)
   {
@@ -131,7 +131,7 @@ public class GeoUtil
   {
     return (int)((lat_max - lat) * zoom + 0.5);
   }
-  void GetPosOffs(double lon, double lat, Integer x, Integer y)
+  void __GetPosOffs(double lon, double lat, Integer x, Integer y)
   {
     GetPos(lon, lat, x, y);
     x += x_offs; y += y_offs;
@@ -160,6 +160,8 @@ public class GeoUtil
             (Math.abs(gu.lat_min - lat_min) < 1e-9) &&
             (Math.abs(gu.lat_max - lat_max) < 1e-9) &&
             (Math.abs(gu.zoom - zoom) < 1e-9) &&
+            // (gu.x_offs == x_offs) &&
+            // (gu.y_offs == y_offs) &&
             true
            );
   }
@@ -177,7 +179,7 @@ public class GeoUtil
   }
   public double lon_min, lon_max, lat_min, lat_max, zoom;
   int w, h;
-  int x_offs, y_offs;
+  public int x_offs = 0, y_offs = 0;
   boolean redraw_forced;
   boolean redraw;
 }

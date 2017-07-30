@@ -36,8 +36,8 @@ class IGC_FileException extends Exception
 }
 
 /*public*/ class IGC_Altitude {
-  public long h;
-  public IGC_Altitude(long val)
+  public int h;
+  public IGC_Altitude(int val)
   {
     h = val;
   }
@@ -50,6 +50,10 @@ class IGC_FileException extends Exception
   {
     if (val.h > h)
       h = val.h;
+  }
+  public int val()
+  {
+    return h;
   }
 }
 
@@ -178,7 +182,7 @@ public class igc {
   
   IGC_Altitude str_to_int32(String str)
   {
-    return new IGC_Altitude(Long.parseLong(str));
+    return new IGC_Altitude(Integer.parseInt(str));
   }
 
   IGC_Coordinate ToDouble(String str, int int_len)
@@ -254,7 +258,7 @@ public class igc {
             //return 2;
           }
           point_data.Altitude = str_to_int32(line.substring(25, 25+5));
-          dbg.println(21, line + dbg.d_format(": lat=%lf, lon=%lf alt=%d", point_data.lat, point_data.lon, point_data.Altitude));
+          dbg.println(21, line + dbg.d_format(": lat=%lf, lon=%lf alt=%d", point_data.lat.val(), point_data.lon.val(), point_data.Altitude.val()));
           IGC_points.add(point_data);
           if (IGC_points.size() == 1)
           { /* first point -> init the limits of the file */
