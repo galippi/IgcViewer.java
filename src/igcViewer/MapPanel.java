@@ -33,7 +33,9 @@ public class MapPanel extends javax.swing.JPanel
     public MapPanel(IgcCursor igcCursor)
     {
       super();
-      this.igcFiles = igcCursor.igcFiles;
+      this. igcCursor = igcCursor;
+      igcCursor.set(this);
+      igcFiles = igcCursor.igcFiles;
       gu = new GeoUtil();
       ctr = 0;
       igc = new igcImage(this, this.igcFiles);
@@ -164,9 +166,68 @@ public class MapPanel extends javax.swing.JPanel
         {
           g.drawImage(igc.getImage(), gu.x_offs, gu.y_offs, null);
         }
+        if (igcCursor.timeCursor >= 0)
+        {
+          for (int i = 0; i < igcCursor.size(); i++)
+          {
+            igc.igc igcFile = igcCursor.igcFiles.get(i);
+            g.setColor(igcFile.color);
+            int idx = igcFile.getIdx(igcCursor.timeCursor);
+            //int idx = igcCursor.timeCursor;
+            dbg.println(9, "DrawAircraft i=" + i + " idx=" + idx);
+            int x = gu.getPosX(igcFile.get(idx).lon.val());
+            int y = gu.getPosY(igcFile.get(idx).lat.val());
+            double dir = igcFile.getDir(idx);
+            drawAircraft(g, x, y, dir);
+          }
+        }
         g.setColor(Color.BLACK);
         g.drawString("mapPanel ctr=" + ctr + " size=" + igcFiles.size() + " zoom=" + gu.zoom, 5, 10);
         g.drawString("gu.x_offs=" + gu.x_offs + " gu.y_offs=" + gu.y_offs, 5, 20);
+    }
+    public void drawAircraft(java.awt.Graphics g, int x, int y, double dir)
+    {
+      double sin_dir = Math.sin(dir);
+      double cos_dir = Math.cos(dir);
+
+      final int plane_len_per_2 = 10;
+      //pen.SetColour(255, 0, 0);
+      //dc.SetPen(pen);
+      ItemDraw(g, x, y, sin_dir, cos_dir, 0, plane_len_per_2, false);
+
+      //pen.SetColour(0, 255, 0);
+      //dc.SetPen(pen);
+      final int wing_len_per_2 = (int)(plane_len_per_2 * 1.0);
+      final int wing_pos_per_2 = (int)(plane_len_per_2 * 0.4);
+      ItemDraw(g, x, y, sin_dir, cos_dir, wing_pos_per_2, wing_len_per_2, true);
+
+      //pen.SetColour(255, 255, 0);
+      //dc.SetPen(pen);
+      final int tail_len_per_2 = (int)(plane_len_per_2 * 0.4);
+      final int tail_pos_per_2 = (int)(plane_len_per_2 * -0.7);
+      ItemDraw(g, x, y, sin_dir, cos_dir, tail_pos_per_2, tail_len_per_2, true);
+    }
+    void ItemDraw(java.awt.Graphics g, int x, int y, double sin_dir, double cos_dir, int ItemPos_per_2, int ItemLen_per_2, boolean ItemDir_Orto)
+    {
+      int dx, dy;
+      dx = (int)(ItemPos_per_2 * sin_dir);
+      dy = (int)(ItemPos_per_2 * cos_dir);
+      int x_item, y_item;
+      x_item = x + dx;
+      y_item = y - dy;
+      if (ItemDir_Orto)
+      {
+        dx =   (int)(ItemLen_per_2 * cos_dir);
+        dy =   (int)(ItemLen_per_2 * sin_dir);
+      }else
+      {
+        dx = - (int)(ItemLen_per_2 * sin_dir);
+        dy =   (int)(ItemLen_per_2 * cos_dir);
+      }
+      int x0, y0, x1, y1;
+      x0 = x_item - dx; x1 = x_item + dx;
+      y0 = y_item - dy; y1 = y_item + dy;
+      g.drawLine(x0, y0, x1, y1);
     }
     public void Repaint()
     {
