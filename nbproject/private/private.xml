@@ -3,14 +3,10 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
-            <file>file:/D:/Gabor/Java/NumberAddition/src/xcm/xcm.java</file>
-            <file>file:/D:/Gabor/Java/NumberAddition/src/igc/IGC_point.java</file>
-            <file>file:/D:/Gabor/Java/NumberAddition/src/igc/GeoUtil.java</file>
-            <file>file:/D:/Gabor/Java/NumberAddition/src/xcm/Shp.java</file>
-            <file>file:/D:/Gabor/Java/NumberAddition/src/igcViewer/MapPanel.java</file>
-            <file>file:/D:/Gabor/Java/NumberAddition/src/igcViewer/MapImage.java</file>
-            <file>file:/D:/Gabor/Java/NumberAddition/src/igcViewer/igcImage.java</file>
-            <file>file:/D:/Gabor/Java/NumberAddition/src/igcViewer/NumberAdditionUI.java</file>
+            <file>file:/D:/Gabor/Java/IgcViewer/src/igcViewer/BaroPanel.java</file>
+            <file>file:/D:/Gabor/Java/IgcViewer/src/igc/IgcCursor.java</file>
+            <file>file:/D:/Gabor/Java/IgcViewer/src/igcViewer/IgeViewerUI.java</file>
+            <file>file:/D:/Gabor/Java/IgcViewer/src/igcViewer/IgcViewerPrefs.java</file>
         </group>
     </open-files>
 </project-private>
