@@ -93,6 +93,10 @@ public class igc {
   {
     return IGC_points.get(idx);
   }
+  public int getIdx(int t)
+  {
+    return t_2_idx(new IGC_Time(t));
+  }
   public String getPilotsName()
   {
     return PilotsName.var;
@@ -368,5 +372,9 @@ public class igc {
   public boolean isValid()
   {
     return valid;
+  }
+  public double getDir(int idx)
+  {
+    return 0.0;
   }
 }
