@@ -7,6 +7,7 @@ package igc;
 
 import igc.IgcFiles;
 import java.util.ArrayList;
+import utils.dbg;
 
 /**
  *
@@ -45,6 +46,14 @@ public class IgcCursor {
   public void set(java.awt.Component parent)
   {
     uiParents.add(parent);
+  }
+  public void repaint(int time)
+  {
+    timeCursor = time;
+    for (int i = 0; i < uiParents.size(); i++)
+    {
+      uiParents.get(i).repaint();
+    }
   }
   public IgcFiles igcFiles;
   public int timeCursor = -1;
