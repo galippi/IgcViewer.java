@@ -100,6 +100,11 @@ public class IgeViewerUI extends javax.swing.JFrame {
       //jPanel1.Repaint();
       mapPanel.Repaint();
       dbg.println(9, "repaintMap() size=" + igcFiles.size());
+      if (igcFiles.size() != jTable1.getRowCount())
+      {
+        javax.swing.table.DefaultTableModel model = (javax.swing.table.DefaultTableModel)jTable1.getModel();
+        model.setNumRows(igcFiles.size());
+      }
       for (int i=0; i < igcFiles.size(); i++)
       {
         jTable1.setValueAt(igcFiles.get(i).getCompetitionId(), i, 0);
@@ -177,14 +182,14 @@ public class IgeViewerUI extends javax.swing.JFrame {
 
     jTable1.setModel(new javax.swing.table.DefaultTableModel(
       new Object [][] {
-        {null, null, null, null, null, null, null}
+
       },
       new String [] {
-        "Competition ID", "Pilot", "Glider ID", "Glider type", "Altitude", "Ground speed", "Direction"
+        "Competition ID", "Pilot", "Glider ID", "Glider type", "Altitude", "Ground speed", "Direction", "Track color", "Task color"
       }
     ) {
       boolean[] canEdit = new boolean [] {
-        false, false, false, false, false, false, false
+        false, false, false, false, false, false, false, false, false
       };
 
       public boolean isCellEditable(int rowIndex, int columnIndex) {
