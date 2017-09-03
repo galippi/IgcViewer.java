@@ -55,6 +55,10 @@ public class IgcCursor {
       uiParents.get(i).repaint();
     }
   }
+  public igc get(int idx)
+  {
+    return igcFiles.get(idx);
+  }
   public IgcFiles igcFiles;
   public int timeCursor = -1;
   ArrayList<java.awt.Component> uiParents;
