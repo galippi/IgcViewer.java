@@ -377,4 +377,8 @@ public class igc {
   {
     return 0.0;
   }
+  public int getAltitude(int idx)
+  {
+    return IGC_points.get(idx).Altitude.h;
+  }
 }
