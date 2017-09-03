@@ -175,8 +175,8 @@ public class MapPanel extends javax.swing.JPanel
             int idx = igcFile.getIdx(igcCursor.timeCursor);
             //int idx = igcCursor.timeCursor;
             dbg.println(9, "DrawAircraft i=" + i + " idx=" + idx);
-            int x = gu.getPosX(igcFile.get(idx).lon.val());
-            int y = gu.getPosY(igcFile.get(idx).lat.val());
+            int x = gu.getPosXOffs(igcFile.get(idx).lon.val());
+            int y = gu.getPosYOffs(igcFile.get(idx).lat.val());
             double dir = igcFile.getDir(idx);
             drawAircraft(g, x, y, dir);
           }
