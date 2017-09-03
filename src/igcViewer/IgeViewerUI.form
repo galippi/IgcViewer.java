@@ -217,6 +217,9 @@
                   <Events>
                     <EventHandler event="mouseClicked" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="jTable1MouseClicked"/>
                   </Events>
+                  <AuxValues>
+                    <AuxValue name="JavaCodeGenerator_CreateCodeCustom" type="java.lang.String" value="igcFileTable = new IgcFileTable(igcCursor);"/>
+                  </AuxValues>
                 </Component>
               </SubComponents>
             </Container>

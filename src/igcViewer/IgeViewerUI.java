@@ -100,19 +100,7 @@ public class IgeViewerUI extends javax.swing.JFrame {
       //jPanel1.Repaint();
       mapPanel.Repaint();
       dbg.println(9, "repaintMap() size=" + igcFiles.size());
-      if (igcFiles.size() != jTable1.getRowCount())
-      {
-        javax.swing.table.DefaultTableModel model = (javax.swing.table.DefaultTableModel)jTable1.getModel();
-        model.setNumRows(igcFiles.size());
-      }
-      for (int i=0; i < igcFiles.size(); i++)
-      {
-        jTable1.setValueAt(igcFiles.get(i).getCompetitionId(), i, 0);
-        jTable1.setValueAt(igcFiles.get(i).getPilotsName(), i, 1);
-        jTable1.setValueAt(igcFiles.get(i).getGliderId(), i, 2);
-        jTable1.setValueAt(igcFiles.get(i).getGliderType(), i, 3);
-        dbg.println(9, "igcFiles.get("+i+").getPilotsName()=" + igcFiles.get(i).getPilotsName());
-      }
+      igcFileTable.updateStaticData();
     }
 
     /**
@@ -129,7 +117,7 @@ public class IgeViewerUI extends javax.swing.JFrame {
     jSplitPane2 = new javax.swing.JSplitPane();
     jPanel2 = baroPanel = new BaroPanel(igcCursor);
     jScrollPane1 = new javax.swing.JScrollPane();
-    jTable1 = new javax.swing.JTable();
+    jTable1 = igcFileTable = new IgcFileTable(igcCursor);
     jMenuBar1 = new javax.swing.JMenuBar();
     jMenu1 = new javax.swing.JMenu();
     m_FileOpen = new javax.swing.JMenuItem();
@@ -381,6 +369,7 @@ public class IgeViewerUI extends javax.swing.JFrame {
   // Variables
   MapPanel mapPanel;
   BaroPanel baroPanel;
+  IgcFileTable igcFileTable;
 
   // Variables declaration - do not modify//GEN-BEGIN:variables
   private javax.swing.JMenu jMenu1;
