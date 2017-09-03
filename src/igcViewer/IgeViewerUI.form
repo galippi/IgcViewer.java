@@ -190,11 +190,14 @@
                 <Component class="javax.swing.JTable" name="jTable1">
                   <Properties>
                     <Property name="model" type="javax.swing.table.TableModel" editor="org.netbeans.modules.form.editors2.TableModelEditor">
-                      <Table columnCount="4" rowCount="4">
-                        <Column editable="true" title="Title 1" type="java.lang.Object"/>
-                        <Column editable="true" title="Title 2" type="java.lang.Object"/>
-                        <Column editable="true" title="Title 3" type="java.lang.Object"/>
-                        <Column editable="true" title="Title 4" type="java.lang.Object"/>
+                      <Table columnCount="7" rowCount="1">
+                        <Column editable="false" title="Competition ID" type="java.lang.Object"/>
+                        <Column editable="false" title="Pilot" type="java.lang.Object"/>
+                        <Column editable="false" title="Glider ID" type="java.lang.Object"/>
+                        <Column editable="false" title="Glider type" type="java.lang.Object"/>
+                        <Column editable="false" title="Altitude" type="java.lang.Object"/>
+                        <Column editable="false" title="Ground speed" type="java.lang.Object"/>
+                        <Column editable="false" title="Direction" type="java.lang.Object"/>
                       </Table>
                     </Property>
                     <Property name="editingColumn" type="int" value="0"/>
