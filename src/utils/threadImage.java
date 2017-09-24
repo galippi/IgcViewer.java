@@ -7,7 +7,6 @@ package utils;
  */
 
 import java.awt.Color;
-import java.awt.Graphics;
 
 /**
  *
@@ -41,6 +40,7 @@ public class threadImage
             {
               System.out.println("DrawingLoop ctr=" + ctr);ctr++;
               Drawing();
+              setImg(img);
               ready = true;
               parent.repaint();
             }
@@ -71,7 +71,7 @@ public class threadImage
   }
   public boolean isReady()
   {
-    return ((img != null) && ready);
+    return ((imgReady != null) && ready);
   }
   public void Cancel()
   {
@@ -107,7 +107,11 @@ public class threadImage
   }
   public java.awt.image.BufferedImage getImage()
   {
-    return img;
+    return imgReady;
+  }
+  public void setImg(java.awt.image.BufferedImage newImg)
+  {
+    imgReady = newImg;
   }
   public void setType(int type)
   {
@@ -118,6 +122,7 @@ public class threadImage
     stop = true;
   }
   protected java.awt.image.BufferedImage img;
+  protected java.awt.image.BufferedImage imgReady;
   int imageType = java.awt.image.BufferedImage.TYPE_INT_ARGB;
   protected Boolean ready;
   Boolean cancel;
