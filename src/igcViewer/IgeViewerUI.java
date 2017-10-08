@@ -272,12 +272,12 @@ public class IgeViewerUI extends javax.swing.JFrame {
           break;
         }
       }
-      for (; i > 0; i--)
-      { /* move recent file lower */
-        IgcViewerPrefs.putRecentFile(i, IgcViewerPrefs.getRecentFile(i - 1, ""));
-      }
       if (i != 0)
       {
+        for (; i > 0; i--)
+        { /* move recent file lower */
+          IgcViewerPrefs.putRecentFile(i, IgcViewerPrefs.getRecentFile(i - 1, ""));
+        }
         IgcViewerPrefs.putRecentFile(0, fileName);
       }
     }
