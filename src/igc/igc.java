@@ -277,6 +277,9 @@ public class igc {
         if (line.charAt(0) == 'I')
         { /* I-record - not yet processed */
         }else
+        if (line.charAt(0) == 'E')
+        { /* E-record - not yet processed */
+        }else
         if (line.charAt(0) == 'F')
         { /* F-record - not yet processed */
         }else
