@@ -56,13 +56,38 @@ public class MapImage extends threadImage
       for (int i = 0; i < Xcm.ShapeFiles.size(); i++)
       {
         Shp shp = Xcm.get(i);
-        g.drawString("Shape " + i + ": " + shp.toStringBounds(), 50, 50 + i * 12);
-        if (isShpVisible(shp))
+        g.drawString("Shape " + i + ": " + shp.toStringBounds() + " zoom=" + shp.zoom, 50, 50 + i * 12);
+        if (shp.zoom > (10000 / gu.zoom))
         {
-          g.setColor(shp.color);
-          for (int j = 0; j < shp.size(); j++)
+          if (isShpVisible(shp))
           {
-            shapeDraw(g, shp.get(j));
+            g.setColor(shp.color);
+            for (int j = 0; j < shp.size(); j++)
+            {
+              shapeDraw(g, shp.get(j), gu);
+            }
+            g.setColor(Color.BLACK);
+            for (int j = 0; j < shp.size(); j++)
+            {
+                Shape shape = shp.get(j);
+              if (shape.name != null)
+              {
+                if (shape.type == shape.SHP_POINT)
+                {
+                  int x = gu.getPosXOffs(shape.Points[0].x);
+                  int y = gu.getPosYOffs(shape.Points[0].y);
+                  g.drawString(shape.name, x, y);
+                }else
+                {
+                  double lon = (shape.getLonMax() - shape.getLonMin()) / 2;
+                  double lat = (shape.getLatMax() - shape.getLatMin()) / 2;
+                  int x, y;
+                  x = gu.getPosXOffs(lon);
+                  y = gu.getPosYOffs(lat);
+                  g.drawString(shape.name, x, y);
+                }
+              }
+            }
           }
         }
       }
@@ -75,7 +100,7 @@ public class MapImage extends threadImage
     }
     g.dispose();
   }
-  void shapeDraw(java.awt.Graphics2D g, Shape shape)
+  void shapeDraw(java.awt.Graphics2D g, Shape shape, GeoUtil gu)
   {
     //dc.SetBrush(brush);
     if (isShapeVisible(shape))
