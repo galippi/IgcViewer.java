@@ -49,7 +49,7 @@ public class IgcFileTable extends javax.swing.JTable
         igc.igc igcFile = igcCursor.get(i);
         int idx = igcFile.getIdx(igcCursor.timeCursor);
         setValueAt(igcFile.getAltitude(idx), i, 4);
-        setValueAt(igcFile.getGroundSpeed(idx), i, 5);
+        setValueAt(igcFile.getGroundSpeed_km_per_h(idx), i, 5);
         setValueAt((int)(igcFile.getDir(idx) * 180 / Math.PI), i, 6);
         setValueAt(igcFile.getVario(idx), i, 7);
       }

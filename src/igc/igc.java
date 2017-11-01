@@ -420,9 +420,26 @@ public class igc {
     int dh = pt.Altitude.h - ptOther.Altitude.h;
     return (double)dh/(pt.t.t - ptOther.t.t);
   }
-  public int getGroundSpeed(int idx)
+  public double getGroundSpeed(int idx)
   {
-    return 0;
+    final int SpeedCalcOffset = 5;
+    int idx0 = GetPoint(idx, -SpeedCalcOffset);
+    int idx1 = GetPoint(idx, +SpeedCalcOffset);
+    if (idx0 != idx1)
+    {
+      IGC_point pt0 = IGC_points.get(idx0);
+      IGC_point pt1 = IGC_points.get(idx1);
+      long dt = pt1.t.t - pt0.t.t;
+      if (dt != 0) return new GeoPoint(pt0).getDistance(new GeoPoint(pt1)) / dt;
+      else         return 0;
+    }else
+    {
+      return 0;
+    }
+  }
+  public int getGroundSpeed_km_per_h(int idx)
+  {
+    return (int)(getGroundSpeed(idx) * 3.6);
   }
   public IGC_point getIgcPoint(int idx)
   {
