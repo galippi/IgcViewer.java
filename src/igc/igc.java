@@ -73,6 +73,7 @@ public class igc {
   public IGC_Altitude alt_min, alt_max;
   ArrayList<c_TaskPoint> TaskPoints;
   public java.awt.Color color;
+  public int timeOffsetSec;
 
   public void Reinit()
   {
@@ -84,6 +85,7 @@ public class igc {
     DateStr = new String_ref("");
     IGC_points.clear();
     TaskPoints.clear();
+    timeOffsetSec = 0;
   }
   public int size()
   {
@@ -378,10 +380,33 @@ public class igc {
   }
   public double getDir(int idx)
   {
-    return 0.0;
+    if ((idx < 0) && (idx >= size()))
+      return 0.0; /* direction is not calculable -> return an invalid value */
+    int idxOther = idx - 1;
+    if (idxOther < 0)
+    {
+      idxOther = idx + 1;
+      if (idxOther >= size())
+      {
+        return 0.0; /* direction is not calculable -> return an invalid value */
+      }
+    }
+    return IGC_points.get(idxOther).getDir(IGC_points.get(idx));
   }
   public int getAltitude(int idx)
   {
     return IGC_points.get(idx).Altitude.h;
+  }
+  public double getVario(int idx)
+  {
+    return 0.0;
+  }
+  public int getGroundSpeed(int idx)
+  {
+    return 0;
+  }
+  public IGC_point getIgcPoint(int idx)
+  {
+    return IGC_points.get(idx);
   }
 }
