@@ -378,18 +378,29 @@ public class igc {
   {
     return valid;
   }
-  public double getDir(int idx)
+  int getOtherPointIdx(int idx)
   {
     if ((idx < 0) && (idx >= size()))
-      return 0.0; /* direction is not calculable -> return an invalid value */
+      return -1; /* no other point exists */
     int idxOther = idx - 1;
     if (idxOther < 0)
     {
       idxOther = idx + 1;
       if (idxOther >= size())
       {
-        return 0.0; /* direction is not calculable -> return an invalid value */
+        return -1; /* no other point exists */
       }
+    }
+    return idxOther;
+  }
+  public double getDir(int idx)
+  {
+    if ((idx < 0) && (idx >= size()))
+      return 0.0; /* direction is not calculable -> return an invalid value */
+    int idxOther = getOtherPointIdx(idx);
+    if (idxOther < 0)
+    {
+      return 0.0; /* direction is not calculable -> return an invalid value */
     }
     return IGC_points.get(idxOther).getDir(IGC_points.get(idx));
   }
@@ -399,7 +410,15 @@ public class igc {
   }
   public double getVario(int idx)
   {
-    return 0.0;
+    int idxOther = getOtherPointIdx(idx);
+    if (idxOther < 0)
+    {
+      return 0.0; /* direction is not calculable -> return an invalid value */
+    }
+    IGC_point pt = IGC_points.get(idx);
+    IGC_point ptOther = IGC_points.get(idxOther);
+    int dh = pt.Altitude.h - ptOther.Altitude.h;
+    return (double)dh/(pt.t.t - ptOther.t.t);
   }
   public int getGroundSpeed(int idx)
   {
