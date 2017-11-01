@@ -12,6 +12,7 @@ import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
 
 import igc.GeoUtil;
+import igc.IGC_point;
 import igc.IgcCursor;
 import igc.IgcFiles;
 import java.awt.Color;
@@ -174,9 +175,11 @@ public class MapPanel extends javax.swing.JPanel
             g.setColor(igcFile.color);
             int idx = igcFile.getIdx(igcCursor.timeCursor);
             //int idx = igcCursor.timeCursor;
-            dbg.println(9, "DrawAircraft i=" + i + " idx=" + idx);
-            int x = gu.getPosXOffs(igcFile.get(idx).lon.val());
-            int y = gu.getPosYOffs(igcFile.get(idx).lat.val());
+            IGC_point pt = igcFile.get(idx);
+            dbg.println(9, "DrawAircraft i=" + i + " idx=" + idx + 
+                            " lon="+pt.lon.val()+" lat="+pt.lat.val());
+            int x = gu.getPosXOffs(pt.lon.val());
+            int y = gu.getPosYOffs(pt.lat.val());
             double dir = igcFile.getDir(idx);
             drawAircraft(g, x, y, dir);
           }
