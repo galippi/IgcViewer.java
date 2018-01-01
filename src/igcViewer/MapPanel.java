@@ -10,6 +10,7 @@ import java.awt.event.MouseWheelListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
+import javafx.scene.input.ZoomEvent;
 
 import igc.GeoUtil;
 import igc.IGC_point;
@@ -87,12 +88,20 @@ public class MapPanel extends javax.swing.JPanel
           mouseHandler(e);
         }
       });
+      addEventHandler(new EventHandler<ZoomEvent>() {
+        public void zoomIn(ZoomEvent e) {
+            zoomHandler(e);
+        }
+      });
     }
     public void mouseWheelMovedHandler(MouseWheelEvent e) {
           dbg.println(9, "mouseWheelMovedHandler="+e.getWheelRotation() + " x=" + e.getX() + " y=" + e.getY());
           double zoom_new = (e.getWheelRotation() < 0) ? (gu.zoom * zoom_factor) : (gu.zoom / zoom_factor);
           gu.Zoom(e.getX(), e.getY(), zoom_new);
           repaint();
+    }
+    public void zoomHandler(ZoomEvent e) {
+        
     }
     public void mouseHandler(MouseEvent e) {
       dbg.println(19, "mouseHandler "+e.toString()+" x=" + e.getX() + " y=" + e.getY() + " button=" + e.getButton());
