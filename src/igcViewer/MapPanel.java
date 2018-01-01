@@ -10,8 +10,9 @@ import java.awt.event.MouseWheelListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
-import javafx.scene.input.ZoomEvent;
-
+//import javafx.scene.input.ZoomEvent;
+//import oracle.adf.view.faces.bi.event.ZoomEvent;
+        
 import igc.GeoUtil;
 import igc.IGC_point;
 import igc.IgcCursor;
@@ -26,12 +27,26 @@ import utils.dbg;
  *
  * @author liptakok
  */
+class EventHandler<T>
+{
+  
+}
+
+class ZoomEvent
+{
+  
+}
+
 public class MapPanel extends javax.swing.JPanel
 {
     IgcFiles igcFiles;
     IgcCursor igcCursor;
     int igcFileCnt = 0;
     MapImage map;
+    void addEventHandler(EventHandler ev)
+    {
+      
+    }
     public MapPanel(IgcCursor igcCursor)
     {
       super();
