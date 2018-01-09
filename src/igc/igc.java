@@ -174,7 +174,7 @@ public class igc {
             else
             if (keyword(line, "HFDTE", DateStr)) ;
             else
-            if (keyword(line, "HFCIDCompetitionID", competitionId)) ;
+            if (keyword(line, "HFCIDCompetitionID:", competitionId)) ;
             else
             {
               dbg.println(9, "igc - Not processed H-record in line " + line + "!");
