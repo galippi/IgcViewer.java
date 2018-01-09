@@ -40,11 +40,11 @@ public class IgcFiles
       lat_max = Math.max(lat_max, file.lat_max.val());
       if ((int)file.t_min.t < t_min)
         t_min = (int)file.t_min.t;
-      if ((int)file.t_max.t < t_max)
+      if ((int)file.t_max.t > t_max)
         t_max = (int)file.t_max.t;
       if (file.alt_min.val() < alt_min)
         alt_min = file.alt_min.val();
-      if (file.alt_max.val() < alt_max)
+      if (file.alt_max.val() > alt_max)
         alt_max = file.alt_max.val();
     }
   }
