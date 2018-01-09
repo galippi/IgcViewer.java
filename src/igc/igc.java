@@ -308,11 +308,15 @@ public class igc {
       dbg.println(1, "ERROR: in file \"" + file + "\" in line \"" + e.getMessage() + "\"!");
     }
   }
+  final java.awt.Color defaultColors[] = {java.awt.Color.BLUE, java.awt.Color.RED, java.awt.Color.ORANGE};
+  static int defColIdx = 0;
   public igc()
   {
     IGC_points = new IGC_Points();
     TaskPoints = new ArrayList();
-    color = java.awt.Color.BLUE;
+    color = defaultColors[defColIdx++];
+    if (defColIdx >= defaultColors.length)
+      defColIdx = 0;
 
     Reinit();
   }
