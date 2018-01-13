@@ -43,7 +43,6 @@ public class IgeViewerUI extends javax.swing.JFrame {
         igcCursor = new IgcCursor(igcFiles);
 
         initComponents();
-        //jMenu3
         int nextRecentFile = 0;
         for (int i = 0; i < 10; i++)
         {
@@ -324,16 +323,6 @@ public class IgeViewerUI extends javax.swing.JFrame {
 
   private void jTable1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTable1MouseClicked
     dbg.println(9, "jTable1MouseClicked " + evt.toString());
-    dbg.println(9, "  findComponentAt="+jTable1.findComponentAt(evt.getX(), evt.getY()).toString());
-    if (evt.getID() == evt.MOUSE_CLICKED)
-    {
-      int rowAtPoint = jTable1.rowAtPoint(evt.getPoint());
-      int colAtPoint = jTable1.columnAtPoint(evt.getPoint());
-      dbg.dprintf(9, "  rowAtPoint=%d colAtPoint=%d\n", rowAtPoint, colAtPoint);
-      if (rowAtPoint > -1) {
-        jTable1.setRowSelectionInterval(rowAtPoint, rowAtPoint);
-      }
-    }
   }//GEN-LAST:event_jTable1MouseClicked
 
     /**
