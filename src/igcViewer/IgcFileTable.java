@@ -16,8 +16,7 @@ import utils.dbg;
  *
  * @author liptakok
  */
-class ColorCellRenderer
-  implements javax.swing.table.TableCellRenderer, java.io.Serializable
+class ColorCellRenderer extends javax.swing.table.DefaultTableCellRenderer
 {
   public ColorCellRenderer()
   {
@@ -26,8 +25,10 @@ class ColorCellRenderer
 
   @Override
   public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
-    color = java.awt.Color.BLUE;
-    return null;
+    color = (java.awt.Color)value;
+    Component component = super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
+    component.setBackground(color);
+    return component;
   }
   java.awt.Color color;
 }
@@ -38,6 +39,27 @@ public class IgcFileTable extends javax.swing.JTable
   public IgcFileTable(IgcCursor igcCursor)
   {
     super();
+    setModel(new javax.swing.table.DefaultTableModel(
+        new Object [][] {
+
+        },
+        new String [] {
+            "Competition ID", "Pilot", "Glider ID", "Glider type", "Altitude", "Ground speed", "Direction", "Vario", "Track color", "Task color"
+        }
+    ) {
+        boolean[] canEdit = new boolean [] {
+            false, false, false, false, false, false, false, false, false, false
+        };
+
+        public boolean isCellEditable(int rowIndex, int columnIndex) {
+            return canEdit [columnIndex];
+        }
+    });
+    setEditingColumn(0);
+    setEditingRow(0);
+    setMaximumSize(new java.awt.Dimension(1000, 1000));
+    setMinimumSize(new java.awt.Dimension(100, 100));
+    setPreferredSize(new java.awt.Dimension(200, 120));
     this.igcCursor = igcCursor;
     igcCursor.set(this);
     
@@ -74,7 +96,7 @@ public class IgcFileTable extends javax.swing.JTable
     item.addActionListener(changeColorMenuListener);
     add(popup);
 
-    //getColumnModel().getColumn(0).setCellRenderer(new ColorCellRenderer());
+    getColumnModel().getColumn(colTrackColor).setCellRenderer(new ColorCellRenderer());
   }
   
   void mouseHandler(MouseEvent evt)
@@ -86,25 +108,26 @@ public class IgcFileTable extends javax.swing.JTable
       int rowAtPoint = rowAtPoint(evt.getPoint());
       int colAtPoint = columnAtPoint(evt.getPoint());
       dbg.dprintf(9, "  rowAtPoint=%d colAtPoint=%d\n", rowAtPoint, colAtPoint);
-      if (rowAtPoint > -1) {
+      if (rowAtPoint >= 0) {
         setRowSelectionInterval(rowAtPoint, rowAtPoint);
-      }
-      if (evt.getButton() == evt.BUTTON3)
-      {
-        if ((colAtPoint == colTrackColor) || (colAtPoint == colTaskColor))
+        if (evt.getButton() == evt.BUTTON3)
         {
-          java.awt.Color newColor = 
-            javax.swing.JColorChooser.showDialog(
-              this,
-              (colAtPoint == colTrackColor) ?
-                "Choose Track Color" : "Choose Task Color",
-              java.awt.Color.BLUE);
-          if (newColor != null) {
-            //banner.setBackground(newColor);
+          if ((colAtPoint == colTrackColor) || (colAtPoint == colTaskColor))
+          {
+            java.awt.Color newColor = 
+              javax.swing.JColorChooser.showDialog(
+                this,
+                (colAtPoint == colTrackColor) ?
+                  "Choose Track Color" : "Choose Task Color",
+                igcCursor.get(rowAtPoint).color);
+            if (newColor != null) {
+              igcCursor.get(rowAtPoint).color = newColor;
+              //repaint();
+            }
+          }else
+          {
+            popup.show(this, evt.getX(), evt.getY());
           }
-        }else
-        {
-          popup.show(this, evt.getX(), evt.getY());
         }
       }
     }
@@ -126,10 +149,13 @@ public class IgcFileTable extends javax.swing.JTable
     }
     for (int i=0; i < igcCursor.size(); i++)
     {
-      setValueAt(igcCursor.get(i).getCompetitionId(), i, 0);
-      setValueAt(igcCursor.get(i).getPilotsName(), i, 1);
-      setValueAt(igcCursor.get(i).getGliderId(), i, 2);
-      setValueAt(igcCursor.get(i).getGliderType(), i, 3);
+      igc.igc igcFile = igcCursor.get(i);
+      setValueAt(igcFile.getCompetitionId(), i, 0);
+      setValueAt(igcFile.getPilotsName(), i, 1);
+      setValueAt(igcFile.getGliderId(), i, 2);
+      setValueAt(igcFile.getGliderType(), i, 3);
+      setValueAt(igcFile.color, i, colTrackColor);
+      setValueAt(igcFile.color.darker(), i, colTaskColor);
     }
   }
 
@@ -147,6 +173,8 @@ public class IgcFileTable extends javax.swing.JTable
         setValueAt(igcFile.getGroundSpeed_km_per_h(idx), i, 5);
         setValueAt((int)(igcFile.getDir(idx) * 180 / Math.PI), i, 6);
         setValueAt(igcFile.getVario(idx), i, 7);
+        setValueAt(igcFile.color, i, colTrackColor);
+        setValueAt(igcFile.color.darker(), i, colTaskColor);
       }
     }
     super.repaint();
