@@ -6,14 +6,32 @@
 package igcViewer;
 
 import igc.IgcCursor;
+import java.awt.Component;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import javax.swing.JTable;
 import utils.dbg;
 
 /**
  *
  * @author liptakok
  */
+class ColorCellRenderer
+  implements javax.swing.table.TableCellRenderer, java.io.Serializable
+{
+  public ColorCellRenderer()
+  {
+    super();
+  }
+
+  @Override
+  public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
+    color = java.awt.Color.BLUE;
+    return null;
+  }
+  java.awt.Color color;
+}
+
 public class IgcFileTable extends javax.swing.JTable
 {
   java.awt.PopupMenu popup;
@@ -55,24 +73,40 @@ public class IgcFileTable extends javax.swing.JTable
     popup.add(item = new java.awt.MenuItem("About"));
     item.addActionListener(changeColorMenuListener);
     add(popup);
-  }
 
+    //getColumnModel().getColumn(0).setCellRenderer(new ColorCellRenderer());
+  }
+  
   void mouseHandler(MouseEvent evt)
   {
     dbg.println(9, "IgcFileTable - MouseClicked " + evt.toString());
     dbg.println(9, "  findComponentAt="+findComponentAt(evt.getX(), evt.getY()).toString());
     if (evt.getID() == evt.MOUSE_CLICKED)
     {
-       int rowAtPoint = rowAtPoint(evt.getPoint());
-       int colAtPoint = columnAtPoint(evt.getPoint());
-       dbg.dprintf(9, "  rowAtPoint=%d colAtPoint=%d\n", rowAtPoint, colAtPoint);
-       if (rowAtPoint > -1) {
+      int rowAtPoint = rowAtPoint(evt.getPoint());
+      int colAtPoint = columnAtPoint(evt.getPoint());
+      dbg.dprintf(9, "  rowAtPoint=%d colAtPoint=%d\n", rowAtPoint, colAtPoint);
+      if (rowAtPoint > -1) {
         setRowSelectionInterval(rowAtPoint, rowAtPoint);
-       }
-       if (evt.getButton() == evt.BUTTON3)
-       {
-         popup.show(this, evt.getX(), evt.getY());
-       }
+      }
+      if (evt.getButton() == evt.BUTTON3)
+      {
+        if ((colAtPoint == colTrackColor) || (colAtPoint == colTaskColor))
+        {
+          java.awt.Color newColor = 
+            javax.swing.JColorChooser.showDialog(
+              this,
+              (colAtPoint == colTrackColor) ?
+                "Choose Track Color" : "Choose Task Color",
+              java.awt.Color.BLUE);
+          if (newColor != null) {
+            //banner.setBackground(newColor);
+          }
+        }else
+        {
+          popup.show(this, evt.getX(), evt.getY());
+        }
+      }
     }
   }
   
@@ -118,4 +152,8 @@ public class IgcFileTable extends javax.swing.JTable
     super.repaint();
   }
   IgcCursor igcCursor;
+  int colAltitude = 4;
+  int colSpeed = 5;
+  int colTrackColor = 8;
+  int colTaskColor = 9;
 }
