@@ -5,6 +5,8 @@
  */
 package igcViewer;
 
+import igc.GeoPoint;
+import igc.IGC_point;
 import igc.IgcCursor;
 import java.awt.Component;
 import java.awt.event.MouseEvent;
@@ -179,6 +181,14 @@ public class IgcFileTable extends javax.swing.JTable
     dbg.dprintf(9, "IgcFileTable.repaint\n");
     if (igcCursor != null)
     {
+      int selRow = getSelectedRow();
+      dbg.dprintf(9, "  selRow = %d\n", selRow);
+      IGC_point ptRef;
+      if (selRow >= 0)
+      {
+        igc.igc igcFileRef = igcCursor.get(selRow);
+        ptRef = igcFileRef.getIgcPoint(igcFileRef.getIdx(igcCursor.timeCursor));
+      }
       for (int i=0; i < igcCursor.size(); i++)
       {
         igc.igc igcFile = igcCursor.get(i);
@@ -193,6 +203,20 @@ public class IgcFileTable extends javax.swing.JTable
           setValueAt(String.format("%.1f", (-v / w)), i, colLD);
         else
           setValueAt("oo", i, colLD);
+        if ((selRow >= 0) && (i != selRow))
+        {
+          igc.igc igcFileRef = igcCursor.get(selRow);
+          ptRef = igcFileRef.getIgcPoint(igcFileRef.getIdx(igcCursor.timeCursor));
+          IGC_point pt = igcFile.get(idx);
+          double distance = ptRef.getDistance(pt);
+          String distanceStr;
+          if (distance > 5000)
+            distanceStr = String.format("%.2f", distance / 1000) + "km";
+          else
+            distanceStr = String.format("%.0f", distance) + "m";
+          setValueAt(distanceStr, i, colDistance);
+        }else
+          setValueAt("", i, colDistance);
       }
     }
     super.repaint();
