@@ -58,11 +58,11 @@ public class IgcFileTable extends javax.swing.JTable
 
         },
         new String [] {
-            "Competition ID", "Pilot", "Glider ID", "Glider type", "Altitude", "Ground speed", "Direction", "Vario", "Track color", "Task color"
+            "Competition ID", "Pilot", "Glider ID", "Glider type", "Altitude", "Ground speed", "Direction", "Vario", "Track color", "Task color", "Distance", "L/D"
         }
     ) {
         boolean[] canEdit = new boolean [] {
-            false, false, false, false, false, false, false, false, false, false
+            false, false, false, false, false, false, false, false, false, false, false, false
         };
 
         public boolean isCellEditable(int rowIndex, int columnIndex) {
@@ -164,10 +164,10 @@ public class IgcFileTable extends javax.swing.JTable
     for (int i=0; i < igcCursor.size(); i++)
     {
       igc.igc igcFile = igcCursor.get(i);
-      setValueAt(igcFile.getCompetitionId(), i, 0);
-      setValueAt(igcFile.getPilotsName(), i, 1);
-      setValueAt(igcFile.getGliderId(), i, 2);
-      setValueAt(igcFile.getGliderType(), i, 3);
+      setValueAt(igcFile.getCompetitionId(), i, colCompetitionId);
+      setValueAt(igcFile.getPilotsName(), i, colPilotName);
+      setValueAt(igcFile.getGliderId(), i, colGliderId);
+      setValueAt(igcFile.getGliderType(), i, colGliderType);
       setValueAt(igcFile.color, i, colTrackColor);
       setValueAt(igcFile.color.darker(), i, colTaskColor);
     }
@@ -183,10 +183,16 @@ public class IgcFileTable extends javax.swing.JTable
       {
         igc.igc igcFile = igcCursor.get(i);
         int idx = igcFile.getIdx(igcCursor.timeCursor);
-        setValueAt(igcFile.getAltitude(idx), i, 4);
-        setValueAt(igcFile.getGroundSpeed_km_per_h(idx), i, 5);
-        setValueAt((int)(igcFile.getDir(idx) * 180 / Math.PI), i, 6);
-        setValueAt(igcFile.getVario(idx), i, 7);
+        setValueAt(igcFile.getAltitude(idx), i, colAltitude);
+        double v = igcFile.getGroundSpeed(idx);
+        setValueAt((int)(v * 3.6), i, colSpeed);
+        setValueAt((int)(igcFile.getDir(idx) * 180 / Math.PI), i, colDirection);
+        double w = igcFile.getVario(idx);
+        setValueAt(w, i, colVerticalSpeed);
+        if (Math.abs(w) > 1e-3)
+          setValueAt(String.format("%.1f", (-v / w)), i, colLD);
+        else
+          setValueAt("oo", i, colLD);
       }
     }
     super.repaint();
@@ -200,8 +206,16 @@ public class IgcFileTable extends javax.swing.JTable
     repaint();
   }
   IgcCursor igcCursor;
+  int colCompetitionId = 0;
+  int colPilotName = 1;
+  int colGliderId = 2;
+  int colGliderType = 3;
   int colAltitude = 4;
   int colSpeed = 5;
+  int colDirection = 6;
+  int colVerticalSpeed = 7;
   int colTrackColor = 8;
   int colTaskColor = 9;
+  int colDistance = 10;
+  int colLD = 11;
 }

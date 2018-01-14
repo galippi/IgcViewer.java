@@ -177,11 +177,11 @@ public class IgeViewerUI extends javax.swing.JFrame {
 
       },
       new String [] {
-        "Competition ID", "Pilot", "Glider ID", "Glider type", "Altitude", "Ground speed", "Direction", "Vario", "Track color", "Task color"
+        "Competition ID", "Pilot", "Glider ID", "Glider type", "Altitude", "Ground speed", "Direction", "Vario", "Track color", "Task color", "Distance", "L/D"
       }
     ) {
       boolean[] canEdit = new boolean [] {
-        false, false, false, false, false, false, false, false, false, false
+        false, false, false, false, false, false, false, false, false, false, false, false
       };
 
       public boolean isCellEditable(int rowIndex, int columnIndex) {
