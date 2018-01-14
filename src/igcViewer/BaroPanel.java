@@ -21,11 +21,25 @@ import utils.dbg;
  *
  * @author liptak
  */
+class RepainterBaroPanel extends igc.Repainter {
+  BaroPanel parent;
+  RepainterBaroPanel(BaroPanel parent) {
+    this.parent = parent;
+  }
+  @Override
+    public void repaint(boolean forced)
+  {
+    parent.repaint(forced);
+  }
+}
+
 public class BaroPanel extends javax.swing.JPanel
 {
+  RepainterBaroPanel repainter;
   public BaroPanel(IgcCursor igcCursor)
   {
     super();
+    repainter = new RepainterBaroPanel(this);
     set(igcCursor);
     baroImage = new BaroImage(this, igcCursor.igcFiles);
 
@@ -68,7 +82,7 @@ public class BaroPanel extends javax.swing.JPanel
   void set(IgcCursor igcCursor)
   {
     this.igcCursor = igcCursor;
-    igcCursor.set(this);
+    igcCursor.set(repainter);
   }
   void set_(IgcFiles igcFiles)
   {
@@ -118,6 +132,14 @@ public class BaroPanel extends javax.swing.JPanel
   void updateUIAll()
   {
     
+  }
+  public void repaint(boolean forced)
+  {
+    if (forced)
+    {
+      baroImage.repaint();
+    }
+    repaint();
   }
   @Override
   public void paintComponent(java.awt.Graphics g) {

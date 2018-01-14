@@ -16,7 +16,7 @@ import utils.dbg;
 public class IgcCursor {
   public IgcCursor()
   {
-    uiParents = new ArrayList<java.awt.Component>();
+    uiParents = new ArrayList<Repainter>();
   }
   public IgcCursor(IgcFiles igcFiles)
   {
@@ -43,17 +43,21 @@ public class IgcCursor {
       timeCursor = igcFiles.t_max;
     }
   }
-  public void set(java.awt.Component parent)
+  public void set(Repainter parent)
   {
     uiParents.add(parent);
+  }
+  public void repaint(boolean forced)
+  {
+    for (int i = 0; i < uiParents.size(); i++)
+    {
+      uiParents.get(i).repaint(forced);
+    }
   }
   public void repaint(int time)
   {
     timeCursor = time;
-    for (int i = 0; i < uiParents.size(); i++)
-    {
-      uiParents.get(i).repaint();
-    }
+    repaint(false);
   }
   public igc get(int idx)
   {
@@ -61,5 +65,5 @@ public class IgcCursor {
   }
   public IgcFiles igcFiles;
   public int timeCursor = -1;
-  ArrayList<java.awt.Component> uiParents;
+  ArrayList<Repainter> uiParents;
 }

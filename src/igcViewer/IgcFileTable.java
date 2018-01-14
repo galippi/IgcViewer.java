@@ -33,12 +33,26 @@ class ColorCellRenderer extends javax.swing.table.DefaultTableCellRenderer
   java.awt.Color color;
 }
 
+class RepainterJTable extends igc.Repainter {
+  IgcFileTable parent;
+  RepainterJTable(IgcFileTable parent) {
+    this.parent = parent;
+  }
+  @Override
+    public void repaint(boolean forced)
+  {
+    parent.repaint(forced);
+  }
+}
+
 public class IgcFileTable extends javax.swing.JTable
 {
   java.awt.PopupMenu popup;
+  RepainterJTable repainter;
   public IgcFileTable(IgcCursor igcCursor)
   {
     super();
+    repainter = new RepainterJTable(this);
     setModel(new javax.swing.table.DefaultTableModel(
         new Object [][] {
 
@@ -61,7 +75,7 @@ public class IgcFileTable extends javax.swing.JTable
     setMinimumSize(new java.awt.Dimension(100, 100));
     setPreferredSize(new java.awt.Dimension(200, 120));
     this.igcCursor = igcCursor;
-    igcCursor.set(this);
+    igcCursor.set(repainter);
     
     addMouseListener(new MouseListener() {
         public void mouseMoved(MouseEvent e) {
@@ -122,7 +136,7 @@ public class IgcFileTable extends javax.swing.JTable
                 igcCursor.get(rowAtPoint).color);
             if (newColor != null) {
               igcCursor.get(rowAtPoint).color = newColor;
-              //repaint();
+              igcCursor.repaint(true);
             }
           }else
           {
@@ -173,11 +187,17 @@ public class IgcFileTable extends javax.swing.JTable
         setValueAt(igcFile.getGroundSpeed_km_per_h(idx), i, 5);
         setValueAt((int)(igcFile.getDir(idx) * 180 / Math.PI), i, 6);
         setValueAt(igcFile.getVario(idx), i, 7);
-        setValueAt(igcFile.color, i, colTrackColor);
-        setValueAt(igcFile.color.darker(), i, colTaskColor);
       }
     }
     super.repaint();
+  }
+  public void repaint(boolean forced)
+  {
+    if (forced)
+    {
+      updateStaticData();
+    }
+    repaint();
   }
   IgcCursor igcCursor;
   int colAltitude = 4;

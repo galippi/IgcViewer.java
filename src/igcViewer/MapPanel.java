@@ -37,8 +37,21 @@ class ZoomEvent
   
 }
 
+class RepainterMapPanel extends igc.Repainter {
+  MapPanel parent;
+  RepainterMapPanel(MapPanel parent) {
+    this.parent = parent;
+  }
+  @Override
+    public void repaint(boolean forced)
+  {
+    parent.repaint(forced);
+  }
+}
+
 public class MapPanel extends javax.swing.JPanel
 {
+    RepainterMapPanel repainter;
     IgcFiles igcFiles;
     IgcCursor igcCursor;
     int igcFileCnt = 0;
@@ -50,8 +63,9 @@ public class MapPanel extends javax.swing.JPanel
     public MapPanel(IgcCursor igcCursor)
     {
       super();
-      this. igcCursor = igcCursor;
-      igcCursor.set(this);
+      repainter = new RepainterMapPanel(this);
+      this.igcCursor = igcCursor;
+      igcCursor.set(repainter);
       igcFiles = igcCursor.igcFiles;
       gu = new GeoUtil();
       ctr = 0;
@@ -265,6 +279,12 @@ public class MapPanel extends javax.swing.JPanel
         igcFileCnt = igcFiles.size();
       }
       igc.repaint();
+    }
+    public void repaint(boolean forced)
+    {
+      if (forced)
+        Repaint();
+      repaint();
     }
     public GeoUtil getGeoUtil()
     {
