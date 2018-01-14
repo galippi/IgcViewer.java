@@ -63,4 +63,8 @@ public class IGC_point {
     }
     return result;
   }
+  public double getDistance(IGC_point pt)
+  {
+    return new GeoPoint(this).getDistance(new GeoPoint(pt));
+  }
 }
