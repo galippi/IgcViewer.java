@@ -193,16 +193,6 @@ public class IgeViewerUI extends javax.swing.JFrame {
     jTable1.setMaximumSize(new java.awt.Dimension(1000, 1000));
     jTable1.setMinimumSize(new java.awt.Dimension(100, 100));
     jTable1.setPreferredSize(new java.awt.Dimension(200, 120));
-    jTable1.addMouseListener(new java.awt.event.MouseAdapter() {
-      public void mouseClicked(java.awt.event.MouseEvent evt) {
-        jTable1MouseClicked(evt);
-      }
-    });
-    jTable1.addKeyListener(new java.awt.event.KeyAdapter() {
-      public void keyTyped(java.awt.event.KeyEvent evt) {
-        jTable1KeyTyped(evt);
-      }
-    });
     jScrollPane1.setViewportView(jTable1);
 
     jSplitPane2.setBottomComponent(jScrollPane1);
@@ -326,14 +316,6 @@ public class IgeViewerUI extends javax.swing.JFrame {
       dbg.println(9, "Open command cancelled by user.");
     }
   }//GEN-LAST:event_m_FileOpenActionPerformed
-
-  private void jTable1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTable1MouseClicked
-    dbg.println(9, "jTable1MouseClicked " + evt.toString());
-  }//GEN-LAST:event_jTable1MouseClicked
-
-  private void jTable1KeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jTable1KeyTyped
-    // TODO add your handling code here:
-  }//GEN-LAST:event_jTable1KeyTyped
 
     /**
      * @param args the command line arguments
