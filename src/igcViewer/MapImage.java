@@ -56,7 +56,10 @@ public class MapImage extends threadImage
       for (int i = 0; i < Xcm.ShapeFiles.size(); i++)
       {
         Shp shp = Xcm.get(i);
-        g.drawString("Shape " + i + ": " + shp.toStringBounds() + " zoom=" + shp.zoom, 50, 50 + i * 12);
+        if (dbg.get() >= 9)
+        {
+          g.drawString("Shape " + i + ": " + shp.toStringBounds() + " zoom=" + shp.zoom, 50, 50 + i * 12);
+        }
         if (shp.zoom > (10000 / gu.zoom))
         {
           if (isShpVisible(shp))
