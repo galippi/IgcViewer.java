@@ -49,4 +49,8 @@ public class dbg {
             System.out.print(Sprintf.sprintf(fmt, arguments));
         }
     }
+    public static int get()
+    {
+      return level;
+    }
 }
