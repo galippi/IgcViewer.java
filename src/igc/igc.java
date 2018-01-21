@@ -47,18 +47,6 @@ class IGC_FileException extends Exception
   }
 }
 
-class c_TaskPoint
-{
-  IGC_Coordinate lon, lat;
-  String Name;
-  public c_TaskPoint(String name, IGC_Coordinate lon, IGC_Coordinate lat)
-  {
-    Name = name;
-    this.lon = lon;
-    this.lat = lat;
-  }
-}
-
 public class igc {
   boolean valid;
   String_ref PilotsName;
@@ -71,8 +59,9 @@ public class igc {
   public IGC_Coordinate lon_min, lon_max;
   public IGC_Coordinate lat_min, lat_max;
   public IGC_Altitude alt_min, alt_max;
-  ArrayList<c_TaskPoint> TaskPoints;
+  public ArrayList<TaskPoint> TaskPoints;
   public java.awt.Color color;
+  public java.awt.Color colorTask;
   public int timeOffsetSec;
 
   public void Reinit()
@@ -268,8 +257,8 @@ public class igc {
             }
             if ((lon.abs() > 1e-9) || (lat.abs() > 1e-9))
             {
-              c_TaskPoint TaskPoint = new c_TaskPoint(line.substring(18), lon, lat);
-              TaskPoints.add(TaskPoint);
+              TaskPoint taskPoint = new TaskPoint(line.substring(18), lon, lat);
+              TaskPoints.add(taskPoint);
             }
           }
         }else
@@ -317,6 +306,7 @@ public class igc {
     color = defaultColors[defColIdx++];
     if (defColIdx >= defaultColors.length)
       defColIdx = 0;
+    colorTask = java.awt.Color.GREEN;
 
     Reinit();
   }
