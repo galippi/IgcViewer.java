@@ -113,6 +113,7 @@ public class IgcFileTable extends javax.swing.JTable
     add(popup);
 
     getColumnModel().getColumn(colTrackColor).setCellRenderer(new ColorCellRenderer());
+    getColumnModel().getColumn(colTaskColor).setCellRenderer(new ColorCellRenderer());
   }
   
   void mouseHandler(MouseEvent evt)
@@ -137,7 +138,10 @@ public class IgcFileTable extends javax.swing.JTable
                   "Choose Track Color" : "Choose Task Color",
                 igcCursor.get(rowAtPoint).color);
             if (newColor != null) {
-              igcCursor.get(rowAtPoint).color = newColor;
+              if (colAtPoint == colTrackColor)
+                igcCursor.get(rowAtPoint).color = newColor;
+              else
+                igcCursor.get(rowAtPoint).colorTask = newColor;
               igcCursor.repaint(true);
             }
           }else
@@ -171,7 +175,7 @@ public class IgcFileTable extends javax.swing.JTable
       setValueAt(igcFile.getGliderId(), i, colGliderId);
       setValueAt(igcFile.getGliderType(), i, colGliderType);
       setValueAt(igcFile.color, i, colTrackColor);
-      setValueAt(igcFile.color.darker(), i, colTaskColor);
+      setValueAt(igcFile.colorTask, i, colTaskColor);
     }
   }
 

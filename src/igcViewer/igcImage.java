@@ -11,6 +11,7 @@ import utils.threadImage;
 import igc.GeoUtil;
 import igc.igc;
 import igc.IgcFiles;
+import utils.dbg;
 
 /**
  *
@@ -57,6 +58,20 @@ public class igcImage extends threadImage
             x0 = x1;
             y0 = y1;
           }
+          if (igc.TaskPoints.size() > 0)
+          {
+            g.setColor(igc.colorTask);
+            x0 = gu.getPosX(igc.TaskPoints.get(0).lon.val());
+            y0 = gu.getPosY(igc.TaskPoints.get(0).lat.val());
+            for (int j = 1; j < igc.TaskPoints.size(); j++)
+            {
+              int x1 = gu.getPosX(igc.TaskPoints.get(j).lon.val());
+              int y1 = gu.getPosY(igc.TaskPoints.get(j).lat.val());
+              g.drawLine(x0, y0, x1, y1);
+              x0 = x1;
+              y0 = y1;
+            }
+          }
         }
       }
     }else
@@ -66,10 +81,13 @@ public class igcImage extends threadImage
       //g.setColor(Color.white);
       //g.fillRect(0, 0, 200, 100);
     }
-    g.setColor(Color.green);
-    g.drawString("igcImage.drawString count=" + igcFiles.size(), 0, 10);
-    g.drawString("igcImage.drawString ctr=" + ctr, 0, 40);ctr++;
-    g.drawString("igcImage.drawString gu=" + gu.toString(), 0, 70);
+    if (dbg.get() >= 9)
+    {
+      g.setColor(Color.green);
+      g.drawString("igcImage.drawString count=" + igcFiles.size(), 0, 10);
+      g.drawString("igcImage.drawString ctr=" + ctr, 0, 40);ctr++;
+      g.drawString("igcImage.drawString gu=" + gu.toString(), 0, 70);
+    }
     g.dispose();
   }
   int ctr;
