@@ -73,7 +73,10 @@ public class IgeViewerUI extends javax.swing.JFrame {
           IgcViewerPrefs.get("MainWindowGeoPosLonMin", 19.2),
           IgcViewerPrefs.get("MainWindowGeoPosLonMax", 19.4),
           IgcViewerPrefs.get("MainWindowGeoPosLatMin", 47.2),
-          IgcViewerPrefs.get("MainWindowGeoPosLatMax", 47.4));
+          IgcViewerPrefs.get("MainWindowGeoPosLatMax", 47.4),
+          IgcViewerPrefs.get("MapWindowW", 1024),
+          IgcViewerPrefs.get("MapWindowH",  768)
+        );
         mapPanel.Repaint();
     }
     public void windowClose(java.awt.event.WindowEvent e)
@@ -90,6 +93,8 @@ public class IgeViewerUI extends javax.swing.JFrame {
       IgcViewerPrefs.put("MainWindowGeoPosLatMin", mapPanel.getGeoUtil().lat_min);
       IgcViewerPrefs.put("MainWindowGeoPosLonMax", mapPanel.getGeoUtil().lon_max);
       IgcViewerPrefs.put("MainWindowGeoPosLatMax", mapPanel.getGeoUtil().lat_max);
+      IgcViewerPrefs.put("MapWindowH", mapPanel.getHeight());
+      IgcViewerPrefs.put("MapWindowW", mapPanel.getWidth());
       //IgcViewerPrefs.put("MainWindowGeoPosZoom", mapPanel.getGeoUtil().zoom);
       dbg.dprintf(9, "mapPanel=%d,%d\n", mapPanel.getWidth(), mapPanel.getHeight());
       System.exit(0);
