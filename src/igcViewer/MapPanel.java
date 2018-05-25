@@ -71,17 +71,6 @@ public class MapPanel extends javax.swing.JPanel
       ctr = 0;
       igc = new igcImage(this, this.igcFiles);
       map = new MapImage(this, gu);
-      if (false)
-      {
-        Timer timer = new Timer();
-        timer.schedule(new TimerTask() {
-          @Override
-            public void run() {
-              //repaint();
-              igc.repaint();
-            }
-        }, 5000);
-      }
       //Register for mouse-wheel events on the map area.
       addMouseWheelListener(new MouseWheelListener() {
         public void mouseWheelMoved(MouseWheelEvent e) {
@@ -126,8 +115,12 @@ public class MapPanel extends javax.swing.JPanel
     public void mouseWheelMovedHandler(MouseWheelEvent e) {
           dbg.println(9, "mouseWheelMovedHandler="+e.getWheelRotation() + " x=" + e.getX() + " y=" + e.getY());
           double zoom_new = (e.getWheelRotation() < 0) ? (gu.zoom * zoom_factor) : (gu.zoom / zoom_factor);
-          gu.Zoom(e.getX(), e.getY(), zoom_new);
-          repaint();
+          if (((zoom_new > 40) || (e.getWheelRotation() < 0)) &&
+              ((zoom_new < 13000) || (e.getWheelRotation() > 0)))
+          { // limit the zooming
+            gu.Zoom(e.getX(), e.getY(), zoom_new);
+            repaint();
+          }
     }
     public void zoomHandler(ZoomEvent e) {
         
