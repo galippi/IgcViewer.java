@@ -63,6 +63,10 @@ public class IgcCursor {
   {
     return igcFiles.get(idx);
   }
+  public void setTimeOffset(int idx, int offset)
+  {
+    igcFiles.setTimeOffset(idx, offset);
+  }
   public IgcFiles igcFiles;
   public int timeCursor = -1;
   ArrayList<Repainter> uiParents;
