@@ -22,8 +22,13 @@ public class IgcFiles
   public void add(igc file)
   {
     igcFiles.add(file);
-    if (igcFiles.size() == 1)
+    updateLimits();
+  }
+  void updateLimits()
+  {
+    if (igcFiles.size() >= 1)
     {
+      igc file = igcFiles.get(0);
       lon_min = file.lon_min.val();
       lon_max = file.lon_max.val();
       lat_min = file.lat_min.val();
@@ -32,21 +37,31 @@ public class IgcFiles
       t_max = (int)file.t_max.t;
       alt_min = file.alt_min.val();
       alt_max = file.alt_max.val();
+      for (int idx = 1; idx < igcFiles.size(); idx++)
+      {
+        file = igcFiles.get(idx);
+        lon_min = Math.min(lon_min, file.lon_min.val());
+        lon_max = Math.max(lon_max, file.lon_max.val());
+        lat_min = Math.min(lat_min, file.lat_min.val());
+        lat_max = Math.max(lat_max, file.lat_max.val());
+        if ((int)file.t_min.t < t_min)
+          t_min = (int)file.t_min.t;
+        if ((int)file.t_max.t > t_max)
+          t_max = (int)file.t_max.t;
+        if (file.alt_min.val() < alt_min)
+          alt_min = file.alt_min.val();
+        if (file.alt_max.val() > alt_max)
+          alt_max = file.alt_max.val();
+      }
     }else
-    {
-      lon_min = Math.min(lon_min, file.lon_min.val());
-      lon_max = Math.max(lon_max, file.lon_max.val());
-      lat_min = Math.min(lat_min, file.lat_min.val());
-      lat_max = Math.max(lat_max, file.lat_max.val());
-      if ((int)file.t_min.t < t_min)
-        t_min = (int)file.t_min.t;
-      if ((int)file.t_max.t > t_max)
-        t_max = (int)file.t_max.t;
-      if (file.alt_min.val() < alt_min)
-        alt_min = file.alt_min.val();
-      if (file.alt_max.val() > alt_max)
-        alt_max = file.alt_max.val();
+    { // no file
     }
+  }
+  public void setTimeOffset(int idx, int offset)
+  {
+    igc file = igcFiles.get(idx);
+    file.setTimeOffset(offset);
+    updateLimits();
   }
   public int size()
   {
