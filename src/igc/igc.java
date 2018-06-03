@@ -62,7 +62,7 @@ public class igc {
   public ArrayList<TaskPoint> TaskPoints;
   public java.awt.Color color;
   public java.awt.Color colorTask;
-  public int timeOffsetSec;
+  int timeOffsetSec;
 
   public void Reinit()
   {
@@ -315,8 +315,26 @@ public class igc {
     this();
     read(file);
   }
+  public void setTimeOffset(int offset)
+  {
+    t_min.t = t_min.t - timeOffsetSec;
+    t_max.t = t_max.t - timeOffsetSec;
+    timeOffsetSec = offset;
+    t_min.t = t_min.t + timeOffsetSec;
+    t_max.t = t_max.t + timeOffsetSec;
+  }
+  public int getTimeOffset()
+  {
+    return timeOffsetSec;
+  }
+  public int getT(int idx)
+  {
+    int t = (int)IGC_points.get(idx).t.t + timeOffsetSec;
+    return t;
+  }
   int t_2_idx(IGC_Time t)
   {
+    t.t = t.t - timeOffsetSec;
     int num = IGC_points.size();
     if (num <= 0)
     {
