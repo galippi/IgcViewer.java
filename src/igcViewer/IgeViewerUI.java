@@ -43,6 +43,7 @@ public class IgeViewerUI extends javax.swing.JFrame {
         igcCursor = new IgcCursor(igcFiles);
 
         initComponents();
+        igcFileTable.setupTable();
         int nextRecentFile = 0;
         for (int i = 0; i < 10; i++)
         {
@@ -124,6 +125,7 @@ public class IgeViewerUI extends javax.swing.JFrame {
     jMenu3 = new javax.swing.JMenu();
     m_FileExit = new javax.swing.JMenuItem();
     jMenu2 = new javax.swing.JMenu();
+    jMenuOption = new javax.swing.JMenuItem();
     jMenu4 = new javax.swing.JMenu();
     jMenuItem1 = new javax.swing.JMenuItem();
     jMenuItem2 = new javax.swing.JMenuItem();
@@ -177,11 +179,11 @@ public class IgeViewerUI extends javax.swing.JFrame {
 
       },
       new String [] {
-        "Competition ID", "Pilot", "Glider ID", "Glider type", "Altitude", "Ground speed", "Direction", "Vario", "Track color", "Task color", "Distance", "L/D"
+        "Competition ID", "Pilot", "Glider ID", "Glider type", "Altitude", "Ground speed", "Direction", "Vario", "Track color", "Task color", "Distance", "L/D", "Time offset"
       }
     ) {
       boolean[] canEdit = new boolean [] {
-        false, false, false, false, false, false, false, false, false, false, false, false
+        false, false, false, false, false, false, false, false, false, false, false, false, true
       };
 
       public boolean isCellEditable(int rowIndex, int columnIndex) {
@@ -228,6 +230,10 @@ public class IgeViewerUI extends javax.swing.JFrame {
     jMenuBar1.add(jMenu1);
 
     jMenu2.setText("Edit");
+
+    jMenuOption.setText("jMenuItem3");
+    jMenu2.add(jMenuOption);
+
     jMenuBar1.add(jMenu2);
 
     jMenu4.setText("View");
@@ -378,6 +384,7 @@ public class IgeViewerUI extends javax.swing.JFrame {
   private javax.swing.JMenuBar jMenuBar1;
   private javax.swing.JMenuItem jMenuItem1;
   private javax.swing.JMenuItem jMenuItem2;
+  private javax.swing.JMenuItem jMenuOption;
   private javax.swing.JPanel jPanel1;
   private javax.swing.JPanel jPanel2;
   private javax.swing.JScrollPane jScrollPane1;

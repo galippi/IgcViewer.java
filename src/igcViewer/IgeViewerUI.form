@@ -46,6 +46,13 @@
           <Properties>
             <Property name="text" type="java.lang.String" value="Edit"/>
           </Properties>
+          <SubComponents>
+            <MenuItem class="javax.swing.JMenuItem" name="jMenuOption">
+              <Properties>
+                <Property name="text" type="java.lang.String" value="jMenuItem3"/>
+              </Properties>
+            </MenuItem>
+          </SubComponents>
         </Menu>
         <Menu class="javax.swing.JMenu" name="jMenu4">
           <Properties>
@@ -213,7 +220,7 @@
                   <Properties>
                     <Property name="autoCreateColumnsFromModel" type="boolean" value="false"/>
                     <Property name="model" type="javax.swing.table.TableModel" editor="org.netbeans.modules.form.editors2.TableModelEditor">
-                      <Table columnCount="12" rowCount="0">
+                      <Table columnCount="13" rowCount="0">
                         <Column editable="false" title="Competition ID" type="java.lang.Object"/>
                         <Column editable="false" title="Pilot" type="java.lang.Object"/>
                         <Column editable="false" title="Glider ID" type="java.lang.Object"/>
@@ -226,6 +233,7 @@
                         <Column editable="false" title="Task color" type="java.lang.Object"/>
                         <Column editable="false" title="Distance" type="java.lang.Object"/>
                         <Column editable="false" title="L/D" type="java.lang.Object"/>
+                        <Column editable="true" title="Time offset" type="java.lang.Object"/>
                       </Table>
                     </Property>
                     <Property name="editingColumn" type="int" value="0"/>

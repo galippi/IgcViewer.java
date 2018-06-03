@@ -60,11 +60,11 @@ public class IgcFileTable extends javax.swing.JTable
 
         },
         new String [] {
-            "Competition ID", "Pilot", "Glider ID", "Glider type", "Altitude", "Ground speed", "Direction", "Vario", "Track color", "Task color", "Distance", "L/D"
+            "Competition ID", "Pilot", "Glider ID", "Glider type", "Altitude", "Ground speed", "Direction", "Vario", "Track color", "Task color", "Distance", "L/D", "Time offset"
         }
     ) {
         boolean[] canEdit = new boolean [] {
-            false, false, false, false, false, false, false, false, false, false, false, false
+            false, false, false, false, false, false, false, false, false, false, false, false, true
         };
 
         public boolean isCellEditable(int rowIndex, int columnIndex) {
@@ -116,6 +116,43 @@ public class IgcFileTable extends javax.swing.JTable
     getColumnModel().getColumn(colTaskColor).setCellRenderer(new ColorCellRenderer());
   }
   
+  void setupTable()
+  {
+    getModel().addTableModelListener(
+      new javax.swing.event.TableModelListener()
+      {
+          public void tableChanged(javax.swing.event.TableModelEvent evt) 
+          {
+            tableChangedHandler(evt);
+          }
+    });
+  }
+
+  void tableChangedHandler(javax.swing.event.TableModelEvent evt)
+  {
+    dbg.println(9, "tableChangedHandler evt=" + evt);
+    dbg.println(9, "  UPDATE=" + evt.UPDATE);
+    if ((evt.getType() == evt.UPDATE) && (evt.getColumn() == colIgcTimeOffset))
+    {
+      if ((evt.getFirstRow() >= 0) && (evt.getFirstRow() == evt.getLastRow()))
+      {
+        String str = getValueAt(evt.getFirstRow(), evt.getColumn()).toString();
+        try
+        {
+          int offset = Integer.parseInt(str);
+          if (offset != igcCursor.get(evt.getFirstRow()).getTimeOffset())
+          {
+            igcCursor.setTimeOffset(evt.getFirstRow(), offset);
+            igcCursor.repaint(true);
+          }
+        }catch (NumberFormatException e)
+        {
+          //error handling
+        }
+      }
+    }
+  }
+
   void mouseHandler(MouseEvent evt)
   {
     dbg.println(9, "IgcFileTable - MouseClicked " + evt.toString());
@@ -176,6 +213,7 @@ public class IgcFileTable extends javax.swing.JTable
       setValueAt(igcFile.getGliderType(), i, colGliderType);
       setValueAt(igcFile.color, i, colTrackColor);
       setValueAt(igcFile.colorTask, i, colTaskColor);
+      setValueAt(igcFile.getTimeOffset(), i, colIgcTimeOffset);
     }
   }
 
@@ -246,4 +284,5 @@ public class IgcFileTable extends javax.swing.JTable
   int colTaskColor = 9;
   int colDistance = 10;
   int colLD = 11;
+  int colIgcTimeOffset = 12;
 }
