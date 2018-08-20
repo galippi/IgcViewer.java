@@ -19,15 +19,18 @@ public class AirspaceImage extends threadImage
   {
     super(parent);
     this.gu = new GeoUtil(gu);
+    airSpaces = new xcm.AirSpaces();
   }
   @Override
     protected void Drawing()
   { /* drawing function */
-    java.awt.Graphics2D g = img.createGraphics();    
-    g.setColor(Color.gray);
+    java.awt.Graphics2D g = img.createGraphics();
+    Color baseColor = Color.gray;
+    g.setColor(new Color(baseColor.getRed(), baseColor.getGreen(), baseColor.getBlue(), 127));
     g.fillOval(img.getWidth() / 2, img.getHeight() / 2, img.getWidth() / 2 - 5, img.getHeight() / 2 - 5);
     g.setColor(Color.cyan);
-    g.drawString("AirspaceImage!", 40, 40);
+    g.drawString("AirspaceImage!", 40, 100);
+    airSpaces.draw(g);
     g.dispose();
 }
   public void setGeoUtil(GeoUtil gu)
@@ -40,4 +43,5 @@ public class AirspaceImage extends threadImage
     }
   }
   GeoUtil gu;
+  xcm.AirSpaces airSpaces;
 }
