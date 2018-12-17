@@ -5,7 +5,6 @@
  */
 package igcViewer;
 
-import igc.GeoPoint;
 import igc.IGC_point;
 import igc.IgcCursor;
 import java.awt.Component;

@@ -5,9 +5,7 @@
  */
 package igc;
 
-import igc.IgcFiles;
 import java.util.ArrayList;
-import utils.dbg;
 
 /**
  *
@@ -16,7 +14,7 @@ import utils.dbg;
 public class IgcCursor {
   public IgcCursor()
   {
-    uiParents = new ArrayList<Repainter>();
+    uiParents = new ArrayList<>();
   }
   public IgcCursor(IgcFiles igcFiles)
   {
