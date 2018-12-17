@@ -100,6 +100,8 @@ class InstrumentServer implements Runnable
         Socket client = socket.accept();
         InstrumentClientConnector conn = new InstrumentClientConnector(this, client);
         clientSockets.add(conn);
+        if (dataLast != null)
+          send(dataLast);
       }catch (Exception e)
       {
         dbg.println(2, "Warning: InstrumentServer.accept exception e=" + e.toString());
@@ -120,10 +122,12 @@ class InstrumentServer implements Runnable
         i++;
       }
     }
+    dataLast = data;
   }
   InstrumentExternal parent;
   ServerSocket socket;
   ArrayList<InstrumentClientConnector> clientSockets;
+  byte[] dataLast;
 }
 
 public class InstrumentExternal {
@@ -149,17 +153,18 @@ public class InstrumentExternal {
   {
     if (igcCursor.igcFiles.size() >= 1)
     { // inform the instrument panels about the new data
-      byte[] data = new byte[24];
-      data[0] = 1;
-      data[1] = 24;
       igc.igc file = igcCursor.igcFiles.get(0);
       int idx = file.getIdx(igcCursor.timeCursor);
       igc.IGC_point pt = file.get(idx);
-      int alt = pt.Altitude.h;
-      data[2] = (byte)(alt & 0xFF);
-      data[3] = (byte)((alt >>  8) & 0xFF);
-      data[4] = (byte)((alt >> 16) & 0xFF);
-      data[5] = (byte)((alt >> 24) & 0xFF);
+      IgcDataStream.IgcDataStream strm = new IgcDataStream.IgcDataStream();
+      strm.setTime(igcCursor.timeCursor);
+      strm.setAltitude(pt.Altitude.h);
+      strm.setLatitude(pt.lat.val());
+      strm.setLongitude(pt.lon.val());
+      strm.setDirection(file.getDir(idx));
+      strm.setSpeed(file.getGroundSpeed(idx));
+      strm.setVerticalSpeed(file.getVario(idx));
+      byte[] data = strm.transmit();
       clients.send(data);
     }
   }
