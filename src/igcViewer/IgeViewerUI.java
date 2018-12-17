@@ -78,7 +78,9 @@ public class IgeViewerUI extends javax.swing.JFrame {
           IgcViewerPrefs.get("MapWindowH",  768)
         );
         mapPanel.Repaint();
+        instrumentPanels = new InstrumentExternal(igcCursor);
     }
+    InstrumentExternal instrumentPanels;
     public void windowClose(java.awt.event.WindowEvent e)
     {
       dbg.println(9, "windowClose");
