@@ -10,3 +10,6 @@
 [submodule "xcm"]
 	path = src/xcm
 	url = S:\\git\\xcm
+[submodule "IgcDataStream"]
+	path = src/IgcDataStream
+	url = S:\\git\\IgcDataStream
