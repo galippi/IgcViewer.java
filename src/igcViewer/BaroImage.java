@@ -41,11 +41,11 @@ public class BaroImage extends threadImage
         if (igc.size() > 1)
         {
           g.setColor(igc.color);
-          int x0 = (int)(((int)igc.get(0).t.t - igcFiles.t_min) * TimeScale + 0.5);
+          int x0 = (int)(((int)igc.getT(0) - igcFiles.t_min) * TimeScale + 0.5);
           int y0 = img.getHeight() - (int)((igc.get(0).Altitude.h - igcFiles.alt_min) * AltitudeScale);
           for (int t = 1; t < igc.size(); t++)
           {
-            int x1 = (int)(((int)igc.get(t).t.t - igcFiles.t_min) * TimeScale + 0.5);
+            int x1 = (int)((igc.getT(t) - igcFiles.t_min) * TimeScale + 0.5);
             int y1 = img.getHeight() - (int)((igc.get(t).Altitude.h - igcFiles.alt_min) * AltitudeScale);
             g.drawLine(x0, y0, x1, y1);
             x0 = x1;
