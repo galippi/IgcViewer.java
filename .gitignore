@@ -3,3 +3,4 @@ build/*
 *.bak
 *.xcm
 nbproject/private/*
+obf/*
