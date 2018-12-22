@@ -1,1 +1,1 @@
-java -jar dist/igcviewer.jar
+start java -jar dist/igcviewer.jar
