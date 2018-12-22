@@ -9,6 +9,7 @@ import utils.threadImage;
 import igc.GeoUtil;
 import java.awt.Color;
 import java.io.IOException;
+import utils.Sprintf;
 import utils.dbg;
 import xcm.xcm;
 import xcm.Shp;
@@ -43,16 +44,10 @@ public class MapImage extends threadImage
     java.awt.Graphics2D g = img.createGraphics();
     if (Xcm != null)
     { // the map is successfully loaded
-      //g.setBackground(new Color(Color.OPAQUE));
-      //g.clearRect(0, 0, img.getWidth(), img.getHeight());
-      //g.setColor(new Color(Color.OPAQUE));
-      //g.setColor(new Color(Color.OPAQUE));
-      //g.setColor(Color.GRAY);
-      //g.fillRect(0, 0, img.getWidth(), img.getHeight());
       g.setBackground(new Color(0, true));
       g.clearRect(0, 0, img.getWidth(), img.getHeight());
       g.setColor(Color.BLACK);
-      g.drawString("Xcm drawing - MapImage - size="+Xcm.ShapeFiles.size()+"!", 40, 40);
+      if (dbg.get(9)) g.drawString("Xcm drawing - MapImage - size="+Xcm.ShapeFiles.size()+"!", 40, 40);
       for (int i = 0; i < Xcm.ShapeFiles.size(); i++)
       {
         Shp shp = Xcm.get(i);
@@ -75,23 +70,51 @@ public class MapImage extends threadImage
                 Shape shape = shp.get(j);
               if (shape.name != null)
               {
-                if (shape.type == shape.SHP_POINT)
+                if (shape.type == Shape.SHP_POINT)
                 {
-                  int x = gu.getPosXOffs(shape.Points[0].x);
-                  int y = gu.getPosYOffs(shape.Points[0].y);
-                  g.drawString(shape.name, x, y);
+                    int x = gu.getPosXOffs(shape.Points[0].x);
+                    int y = gu.getPosYOffs(shape.Points[0].y);
+                    g.drawString(shape.name, x, y);
                 }else
                 {
-                  double lon = (shape.getLonMax() - shape.getLonMin()) / 2;
-                  double lat = (shape.getLatMax() - shape.getLatMin()) / 2;
-                  int x, y;
-                  x = gu.getPosXOffs(lon);
-                  y = gu.getPosYOffs(lat);
-                  g.drawString(shape.name, x, y);
+                    double lon = (shape.getLonMax() - shape.getLonMin()) / 2;
+                    double lat = (shape.getLatMax() - shape.getLatMin()) / 2;
+                    int x, y;
+                    x = gu.getPosXOffs(lon);
+                    y = gu.getPosYOffs(lat);
+                    g.drawString(shape.name, x, y);
                 }
               }
             }
           }
+        }
+      }
+      // drawing raster net, if it's possible
+      g.setColor(Color.BLACK);
+      double dLon = gu.lon_max - gu.lon_min;
+      double lonStep = getRaster(dLon);
+      if (lonStep > 1e-6)
+      {
+          double lon = (int)(gu.lon_min / lonStep) * lonStep + (0.2/60);
+          while(lon < gu.lon_max)
+          {
+            int x = gu.getPosXOffs(lon);
+            g.drawLine(x, 0, x, gu.getH());
+            g.drawString(Sprintf.sprintf("%4d:%02d", (int)lon, (int)(lon*60) % 60), x-20, 15);
+            lon += lonStep;
+          }
+      }
+      double dLat = gu.lat_max - gu.lat_min;
+      double latStep = getRaster(dLat);
+      if (latStep > 1e-6)
+      {
+          double lat = (int)(gu.lat_min / latStep) * latStep + (0.2/60);
+          while(lat < gu.lat_max)
+          {
+            int y = gu.getPosYOffs(lat);
+            g.drawLine(0, y, gu.getW(), y);
+            g.drawString(Sprintf.sprintf("%4d:%02d", (int)lat, (int)(lat*60) % 60), 0, y);
+            lat += latStep;
         }
       }
     }else
@@ -102,6 +125,19 @@ public class MapImage extends threadImage
       g.drawString("MapImage - error loading map!", 40, 40);
     }
     g.dispose();
+  }
+  double getRaster(double delta)
+  {
+      final double raster[] = {0.0, 1.0/60, 2.5/60, 5.0/60, 10.0/60, 15.0/60, 20.0/60, 1.0, 2.0, 2.5, 5.0};
+      double deltaHalf = Math.abs(delta / 2);
+      if (deltaHalf < raster[0])
+          return 0.0; // to small area - do not draw raster lines
+      for(int i = 1; i < raster.length; i++)
+      {
+          if (deltaHalf < raster[i])
+              return raster[i - 1];
+      }
+      return 0.0; // too large area
   }
   void shapeDraw(java.awt.Graphics2D g, Shape shape, GeoUtil gu)
   {
