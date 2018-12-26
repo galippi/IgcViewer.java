@@ -78,6 +78,39 @@ public class StringUtil
     StringUtil s = new StringUtil(str);
     return s.getFieldU32(FieldNum, delimit);
   }
+  public String GetBeforeFirst(char ch)
+  {
+    int idx = str.indexOf(ch);
+    if (idx >= 0)
+    {
+        if (idx > 0)
+        {
+          return str.substring(0, idx - 1);
+        }else
+        {
+            return "";
+        }
+    }else
+    {
+        return str;
+    }
+  }
+  public void SetBeforeFirst(char ch)
+  {
+      str = GetBeforeFirst(ch);
+  }
+  public void trim()
+  {
+      str = str.trim();
+  }
+  public boolean isEmpty()
+  {
+      return str.isEmpty();
+  }
+  public String get()
+  {
+      return str;
+  }
   String str;
   static public final long val_err = Integer.MAX_VALUE;
 }
