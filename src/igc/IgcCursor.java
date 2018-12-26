@@ -77,6 +77,18 @@ public class IgcCursor {
   {
     igcFiles.setTimeOffset(idx, offset);
   }
+  public void close(int idx)
+  {
+      if (size() == 1)
+      {
+          reinit();
+      }else
+      {
+          igcFiles.close(idx);
+          timeCursor = 0;
+          repaint(true);
+      }
+  }
   public IgcFiles igcFiles;
   public int timeCursor = -1;
   ArrayList<Repainter> uiParents;
