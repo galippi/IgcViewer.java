@@ -21,6 +21,12 @@ public class IgcCursor {
     this();
     set(igcFiles);
   }
+  public void reinit()
+  {
+    this.igcFiles.reinit();
+    timeCursor = -1;
+    repaint(true);
+  }
   public int size()
   {
     return igcFiles.size();
@@ -44,6 +50,12 @@ public class IgcCursor {
   public void set(Repainter parent)
   {
     uiParents.add(parent);
+  }
+  public void add(igc file)
+  {
+    igcFiles.add(file);
+    timeCursor = 0;
+    repaint(true);
   }
   public void repaint(boolean forced)
   {
