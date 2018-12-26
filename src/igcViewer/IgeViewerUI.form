@@ -29,7 +29,7 @@
                 <Property name="actionCommand" type="java.lang.String" value="recentFiles"/>
               </Properties>
             </Menu>
-            <MenuItem class="javax.swing.JMenuItem" name="jMenuItem4">
+            <MenuItem class="javax.swing.JMenuItem" name="MenuCloseFile">
               <Properties>
                 <Property name="text" type="java.lang.String" value="Close file"/>
               </Properties>
