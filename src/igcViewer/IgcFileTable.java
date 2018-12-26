@@ -97,18 +97,22 @@ public class IgcFileTable extends javax.swing.JTable
 
     popup = new java.awt.PopupMenu("demo");
     java.awt.MenuItem item;
-    java.awt.event.ActionListener changeColorMenuListener;
-    changeColorMenuListener = new java.awt.event.ActionListener() {
+    java.awt.event.ActionListener popupMenuListener;
+    popupMenuListener = new java.awt.event.ActionListener() {
       public void actionPerformed(java.awt.event.ActionEvent event) {
-        dbg.dprintf(9, "Popup menu item ["
+        dbg.println(9, "Popup menu item ["
             + event.getActionCommand() + "] was pressed.");
         popupMenuHandler(event);
       }
     };
     popup.add(item = new java.awt.MenuItem("Change color"));
-    item.addActionListener(changeColorMenuListener);
+    item.addActionListener(popupMenuListener);
+    popup.add(item = new java.awt.MenuItem("Close file"));
+    item.addActionListener(popupMenuListener);
+    popup.add(item = new java.awt.MenuItem("Close all file"));
+    item.addActionListener(popupMenuListener);
     popup.add(item = new java.awt.MenuItem("About"));
-    item.addActionListener(changeColorMenuListener);
+    item.addActionListener(popupMenuListener);
     add(popup);
 
     getColumnModel().getColumn(colTrackColor).setCellRenderer(new ColorCellRenderer());
