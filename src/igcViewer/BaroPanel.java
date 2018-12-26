@@ -149,6 +149,8 @@ public class BaroPanel extends javax.swing.JPanel
     if (igcFileCnt != igcCursor.size())
     { /* baro shall be repainted */
       igcFileCnt = igcCursor.size();
+      if (igcFileCnt == 0)
+          timeCursorX = -1; // disable cursor painting
       repaintNeeded = true;
     }
     if (baroImage.setImage(getWidth(), getHeight()))
