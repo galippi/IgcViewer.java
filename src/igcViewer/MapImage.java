@@ -90,9 +90,10 @@ public class MapImage extends threadImage
         }
       }
       // drawing raster net, if it's possible
+      final double gradRaster[] = {0.0, 1.0/60, 2.5/60, 5.0/60, 10.0/60, 15.0/60, 20.0/60, 1.0, 2.0, 2.5, 5.0};
       g.setColor(Color.BLACK);
       double dLon = gu.lon_max - gu.lon_min;
-      double lonStep = getRaster(dLon);
+      double lonStep = getRaster(dLon, gradRaster);
       if (lonStep > 1e-6)
       {
           double lon = (int)(gu.lon_min / lonStep) * lonStep + (0.2/60);
@@ -105,7 +106,7 @@ public class MapImage extends threadImage
           }
       }
       double dLat = gu.lat_max - gu.lat_min;
-      double latStep = getRaster(dLat);
+      double latStep = getRaster(dLat, gradRaster);
       if (latStep > 1e-6)
       {
           double lat = (int)(gu.lat_min / latStep) * latStep + (0.2/60);
@@ -117,6 +118,7 @@ public class MapImage extends threadImage
             lat += latStep;
         }
       }
+      scaleDraw(g, gu);
     }else
     { // the map could not be loaded
       g.setColor(Color.red);
@@ -126,9 +128,26 @@ public class MapImage extends threadImage
     }
     g.dispose();
   }
-  double getRaster(double delta)
+  void scaleDraw(java.awt.Graphics2D g, GeoUtil gu)
   {
-      final double raster[] = {0.0, 1.0/60, 2.5/60, 5.0/60, 10.0/60, 15.0/60, 20.0/60, 1.0, 2.0, 2.5, 5.0};
+      g.setColor(Color.black);
+      int xPos = img.getWidth() * 4 / 5;
+      int yPos = img.getHeight() - 20;
+      int ySize = 20;
+      double dLat = gu.lat_max - gu.lat_min;
+      final double Nm2m = 1.852;
+      double distanceUnit = dLat * Nm2m / 6;
+      final double unitRaster[] = {0.0, 0.01, 0.02, 0.05, 0.1, 0.2, 0.5, 1, 2, 2, 5, 10, 20, 50, 100};
+      double distanceStep = getRaster(distanceUnit, unitRaster);
+      int dx = gu.getPosYOffs(distanceStep / Nm2m) - gu.getPosYOffs(0);
+      int xSize = Math.abs(dx);
+      g.drawString("MapImage - scale draw "+distanceStep+"km!", xPos, yPos);
+      g.drawLine(xPos,         yPos + ySize / 2, xPos + xSize, yPos + ySize / 2);
+      g.drawLine(xPos,         yPos            , xPos        , yPos + ySize);
+      g.drawLine(xPos + xSize, yPos            , xPos + xSize, yPos + ySize);
+  }
+  double getRaster(double delta, final double raster[])
+  {
       double deltaHalf = Math.abs(delta / 2);
       if (deltaHalf < raster[0])
           return 0.0; // to small area - do not draw raster lines
