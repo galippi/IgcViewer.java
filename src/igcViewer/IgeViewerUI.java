@@ -301,7 +301,6 @@ public class IgeViewerUI extends javax.swing.JFrame {
     }else
     { /* file is loaded -> add it to the list */
       igcCursor.add(igco);
-      igcCursor.setTime(0);
       repaintMap();
       int i;
       for (i = 0; i < 10; i++)
