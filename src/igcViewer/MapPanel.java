@@ -211,21 +211,27 @@ public class MapPanel extends javax.swing.JPanel
           for (int i = 0; i < igcCursor.size(); i++)
           {
             igc.igc igcFile = igcCursor.igcFiles.get(i);
-            g.setColor(igcFile.color);
-            int idx = igcFile.getIdx(igcCursor.getTime());
-            //int idx = igcCursor.timeCursor;
-            IGC_point pt = igcFile.get(idx);
-            dbg.println(9, "DrawAircraft i=" + i + " idx=" + idx + 
-                            " lon="+pt.lon.val()+" lat="+pt.lat.val());
-            int x = gu.getPosXOffs(pt.lon.val());
-            int y = gu.getPosYOffs(pt.lat.val());
-            double dir = igcFile.getDir(idx);
-            drawAircraft(g, x, y, dir);
+            drawAircraft(g, igcFile, igcCursor.getTime(), igcFile.color);
+            drawAircraft(g, igcFile, igcCursor.getTimeAux(), Color.GRAY);
           }
         }
         g.setColor(Color.BLACK);
         g.drawString("mapPanel ctr=" + ctr + " size=" + igcFiles.size() + " zoom=" + gu.zoom, 5, 10);
         g.drawString("gu.x_offs=" + gu.x_offs + " gu.y_offs=" + gu.y_offs, 5, 20);
+    }
+    public void drawAircraft(java.awt.Graphics g, igc.igc igcFile, int t, Color c)
+    {
+      if (t < 0)
+        return;
+      g.setColor(c);
+      int idx = igcFile.getIdx(t);
+      IGC_point pt = igcFile.get(idx);
+      dbg.println(9, "DrawAircraft idx=" + idx + 
+                      " lon="+pt.lon.val()+" lat="+pt.lat.val());
+      int x = gu.getPosXOffs(pt.lon.val());
+      int y = gu.getPosYOffs(pt.lat.val());
+      double dir = igcFile.getDir(idx);
+      drawAircraft(g, x, y, dir);
     }
     public void drawAircraft(java.awt.Graphics g, int x, int y, double dir)
     {

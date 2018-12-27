@@ -104,6 +104,10 @@ public class IgcCursor {
     if (cursorMain != null)
       cursorMain.timeCursor = t;
   }
+  public int getTimeAux()
+  {
+    return cursorAux != null ? cursorAux.timeCursor : -1;
+  }
   public IgcFiles igcFiles;
   ArrayList<Repainter> uiParents;
   BaroCursor cursorMain;

@@ -150,7 +150,7 @@ public class BaroPanel extends javax.swing.JPanel
     cursor.timeCursor = igcCursor.igcFiles.t_min + (int)((((igcCursor.igcFiles.t_max - igcCursor.igcFiles.t_min) * (double)cursor.timeCursorX) / getWidth()) + 0.5);
     dbg.dprintf(9, "BaroPanel - updateCursor: t=%d tmin=%d tmax=%d\n", cursor.timeCursor, igcCursor.igcFiles.t_min, igcCursor.igcFiles.t_max);
     drawCursor();
-    igcCursor.repaint(cursor.timeCursor);
+    igcCursor.repaint(false);
     updateUIAll();
   }
   void drawCursor()
