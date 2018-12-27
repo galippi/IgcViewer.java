@@ -89,6 +89,10 @@ public class IgcFiles
         alt_max = file.alt_max.val();
     }
   }
+  public void setTimeOffset(int idx, int offset)
+  {
+    get(idx).setTimeOffset(offset);
+  }
   public int t_min, t_max;
   public double lon_min, lon_max;
   public double lat_min, lat_max;
