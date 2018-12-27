@@ -206,13 +206,13 @@ public class MapPanel extends javax.swing.JPanel
         {
           g.drawImage(igc.getImage(), gu.x_offs, gu.y_offs, null);
         }
-        if (igcCursor.timeCursor >= 0)
+        if (igcCursor.getTime() >= 0)
         {
           for (int i = 0; i < igcCursor.size(); i++)
           {
             igc.igc igcFile = igcCursor.igcFiles.get(i);
             g.setColor(igcFile.color);
-            int idx = igcFile.getIdx(igcCursor.timeCursor);
+            int idx = igcFile.getIdx(igcCursor.getTime());
             //int idx = igcCursor.timeCursor;
             IGC_point pt = igcFile.get(idx);
             dbg.println(9, "DrawAircraft i=" + i + " idx=" + idx + 

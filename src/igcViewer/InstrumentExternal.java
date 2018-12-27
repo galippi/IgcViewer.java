@@ -66,15 +66,6 @@ class InstrumentClientConnector implements Runnable
       return true;
     }
   }
-  void dummy()
-  {
-      String line = in.readLine();
-      System.out.println("Server:" + line + "!");
-      out.println("Client request");
-      out.flush();
-      line = in.readLine();
-      System.out.println("Server:" + line + "!");
-  }
   InstrumentServer parent;
   Socket socket;
   OutputStream ostrm;
@@ -154,10 +145,10 @@ public class InstrumentExternal {
     if (igcCursor.igcFiles.size() >= 1)
     { // inform the instrument panels about the new data
       igc.igc file = igcCursor.igcFiles.get(0);
-      int idx = file.getIdx(igcCursor.timeCursor);
+      int idx = file.getIdx(igcCursor.getTime());
       igc.IGC_point pt = file.get(idx);
       IgcDataStream.IgcDataStream strm = new IgcDataStream.IgcDataStream();
-      strm.setTime(igcCursor.timeCursor);
+      strm.setTime(igcCursor.getTime());
       strm.setAltitude(pt.Altitude.h);
       strm.setLatitude(pt.lat.val());
       strm.setLongitude(pt.lon.val());

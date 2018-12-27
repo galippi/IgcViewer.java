@@ -5,6 +5,7 @@
  */
 package igc;
 
+import igcViewer.BaroCursor;
 import java.util.ArrayList;
 
 /**
@@ -24,7 +25,7 @@ public class IgcCursor {
   public void reinit()
   {
     this.igcFiles.reinit();
-    timeCursor = -1;
+    setTime(-1);
     repaint(true);
   }
   public int size()
@@ -36,25 +37,30 @@ public class IgcCursor {
     this.igcFiles = igcFiles;
     if (igcFiles.size() < 1)
     { // no file is loaded
-      timeCursor = -1;
+      setTime(-1);
     }else
-    if (timeCursor < igcFiles.t_min)
+    if (getTime() < igcFiles.t_min)
     { // file is loaded -> set the cursor to the beginning of the file
-      timeCursor = igcFiles.t_min;
+      setTime(igcFiles.t_min);
     }else
-    if (timeCursor > igcFiles.t_max)
+    if (getTime() > igcFiles.t_max)
     {
-      timeCursor = igcFiles.t_max;
+      setTime(igcFiles.t_max);
     }
   }
   public void set(Repainter parent)
   {
     uiParents.add(parent);
   }
+  public void set(BaroCursor cursorMain, BaroCursor cursorAux)
+  {
+    this.cursorMain = cursorMain;
+    this.cursorAux = cursorAux;
+  }
   public void add(igc file)
   {
     igcFiles.add(file);
-    timeCursor = 0;
+    setTime(0);
     repaint(true);
   }
   public void repaint(boolean forced)
@@ -66,7 +72,7 @@ public class IgcCursor {
   }
   public void repaint(int time)
   {
-    timeCursor = time;
+    setTime(time);
     repaint(false);
   }
   public igc get(int idx)
@@ -85,11 +91,21 @@ public class IgcCursor {
       }else
       {
           igcFiles.close(idx);
-          timeCursor = 0;
+          setTime(0);
           repaint(true);
       }
   }
+  public int getTime()
+  {
+    return cursorMain != null ? cursorMain.timeCursor : -1;
+  }
+  public void setTime(int t)
+  {
+    if (cursorMain != null)
+      cursorMain.timeCursor = t;
+  }
   public IgcFiles igcFiles;
-  public int timeCursor = -1;
   ArrayList<Repainter> uiParents;
+  BaroCursor cursorMain;
+  BaroCursor cursorAux;
 }

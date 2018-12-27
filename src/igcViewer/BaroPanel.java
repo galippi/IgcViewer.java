@@ -39,8 +39,11 @@ public class BaroPanel extends javax.swing.JPanel
   public BaroPanel(IgcCursor igcCursor)
   {
     super();
+    cursorMain = new BaroCursor();
+    cursorAux = new BaroCursor();
     repainter = new RepainterBaroPanel(this);
     set(igcCursor);
+    igcCursor.set(cursorMain, cursorAux);
     baroImage = new BaroImage(this, igcCursor.igcFiles);
 
     //Register for mouse-wheel events on the map area.
@@ -88,8 +91,9 @@ public class BaroPanel extends javax.swing.JPanel
   {
     igcCursor.set(igcFiles);
     if (igcCursor.igcFiles.size() == 0)
-    {
-      timeCursorX = -1;
+    { // disable cursor painting
+      cursorMain.timeCursorX = -1;
+      cursorAux.timeCursorX = -1;
     }
   }
   public void mouseWheelMovedHandler(MouseWheelEvent e) {
@@ -98,31 +102,55 @@ public class BaroPanel extends javax.swing.JPanel
       return; // nothing to do, if no file is loaded
     repaint();
   }
+  BaroCursor cursorLast;
   public void mouseHandler(MouseEvent e) {
     if ((e.getID() != e.MOUSE_MOVED) || (e.getButton() != 0))
       dbg.println(9, "BaroPanel.mouseHandler "+e.toString()+" x=" + e.getX() + " y=" + e.getY() + " button=" + e.getButton());
     if (igcCursor.size() == 0)
+    {
+      cursorLast = null;
       return; // nothing to do, if no file is loaded
-    if ((e.getID() == e.MOUSE_PRESSED) && (e.getButton() == e.BUTTON1))
+    }
+
+    if (e.getID() == e.MOUSE_PRESSED)
     {
-      m_capture = true;
-      updateCursor(e.getX());
+      if (cursorLast != null)
+      {
+        cursorLast.m_capture = false;
+        cursorLast = null;
+      }
+      if (e.getButton() == e.BUTTON1)
+      {
+        cursorLast = cursorMain;
+      }else if (e.getButton() == e.BUTTON3)
+      {
+        cursorLast = cursorAux;
+      }else
+      {
+        cursorLast.m_capture = false;
+        cursorLast = null;
+        return;
+      }
+      cursorLast.m_capture = true;
+      updateCursor(cursorLast, e.getX());
     }else
-    if (((e.getID() == e.MOUSE_MOVED) || (e.getID() == e.MOUSE_DRAGGED)) && m_capture)
+    if (((e.getID() == e.MOUSE_MOVED) || (e.getID() == e.MOUSE_DRAGGED)) && (cursorLast != null) && (cursorLast.m_capture))
     {
-      updateCursor(e.getX());
+      updateCursor(cursorLast, e.getX());
     }else
     {
-      m_capture = false;
+      if (cursorLast != null)
+        cursorLast.m_capture = false;
+      cursorLast = null;
     }
   }
-  void updateCursor(int x)
+  void updateCursor(BaroCursor cursor, int x)
   {
-    timeCursorX = x;
-    igcCursor.timeCursor = igcCursor.igcFiles.t_min + (int)((((igcCursor.igcFiles.t_max - igcCursor.igcFiles.t_min) * (double)timeCursorX) / getWidth()) + 0.5);
-    dbg.dprintf(9, "BaroPanel - updateCursor: t=%d tmin=%d tmax=%d\n", (int)igcCursor.timeCursor, igcCursor.igcFiles.t_min, igcCursor.igcFiles.t_max);
+    cursor.timeCursorX = x;
+    cursor.timeCursor = igcCursor.igcFiles.t_min + (int)((((igcCursor.igcFiles.t_max - igcCursor.igcFiles.t_min) * (double)cursor.timeCursorX) / getWidth()) + 0.5);
+    dbg.dprintf(9, "BaroPanel - updateCursor: t=%d tmin=%d tmax=%d\n", cursor.timeCursor, igcCursor.igcFiles.t_min, igcCursor.igcFiles.t_max);
     drawCursor();
-    igcCursor.repaint(igcCursor.timeCursor);
+    igcCursor.repaint(cursor.timeCursor);
     updateUIAll();
   }
   void drawCursor()
@@ -150,7 +178,10 @@ public class BaroPanel extends javax.swing.JPanel
     { /* baro shall be repainted */
       igcFileCnt = igcCursor.size();
       if (igcFileCnt == 0)
-          timeCursorX = -1; // disable cursor painting
+      { // disable cursor painting
+        cursorMain.timeCursorX = -1;
+        cursorAux.timeCursorX = -1;
+      }
       repaintNeeded = true;
     }
     if (baroImage.setImage(getWidth(), getHeight()))
@@ -162,16 +193,25 @@ public class BaroPanel extends javax.swing.JPanel
     if (baroImage.isReady())
     {
       g.drawImage(baroImage.getImage(), 0, 0, null);
-      if ((timeCursorX >= 0) && (timeCursorX < getWidth()))
+      if ((cursorMain.timeCursorX >= 0) && (cursorMain.timeCursorX < getWidth()))
       {
         g.setColor(Color.red);
-        g.drawLine(timeCursorX, 0, timeCursorX, getHeight() - 1);
+        g.drawLine(cursorMain.timeCursorX, 0, cursorMain.timeCursorX, getHeight() - 1);
+      }
+      if ((cursorAux.timeCursorX >= 0) && (cursorAux.timeCursorX < getWidth()))
+      {
+        g.setColor(Color.blue);
+        g.drawLine(cursorAux.timeCursorX, 0, cursorAux.timeCursorX, getHeight() - 1);
       }
     }
+  }
+  public static BaroCursor getMainCursor()
+  {
+    return cursorMain;
   }
   IgcCursor igcCursor;
   int igcFileCnt = 0;
   BaroImage baroImage;
-  int timeCursorX = -1;
-  boolean m_capture = false;
+  static BaroCursor cursorMain;
+  static BaroCursor cursorAux;
 }

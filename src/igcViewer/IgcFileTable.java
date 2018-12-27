@@ -232,12 +232,12 @@ public class IgcFileTable extends javax.swing.JTable
       if (selRow >= 0)
       {
         igc.igc igcFileRef = igcCursor.get(selRow);
-        ptRef = igcFileRef.getIgcPoint(igcFileRef.getIdx(igcCursor.timeCursor));
+        ptRef = igcFileRef.getIgcPoint(igcFileRef.getIdx(igcCursor.getTime()));
       }
       for (int i=0; i < igcCursor.size(); i++)
       {
         igc.igc igcFile = igcCursor.get(i);
-        int idx = igcFile.getIdx(igcCursor.timeCursor);
+        int idx = igcFile.getIdx(igcCursor.getTime());
         setValueAt(igcFile.getAltitude(idx), i, colAltitude);
         double v = igcFile.getGroundSpeed(idx);
         setValueAt((int)(v * 3.6), i, colSpeed);
@@ -251,7 +251,7 @@ public class IgcFileTable extends javax.swing.JTable
         if ((selRow >= 0) && (i != selRow))
         {
           igc.igc igcFileRef = igcCursor.get(selRow);
-          ptRef = igcFileRef.getIgcPoint(igcFileRef.getIdx(igcCursor.timeCursor));
+          ptRef = igcFileRef.getIgcPoint(igcFileRef.getIdx(igcCursor.getTime()));
           IGC_point pt = igcFile.get(idx);
           double distance = ptRef.getDistance(pt);
           String distanceStr;
