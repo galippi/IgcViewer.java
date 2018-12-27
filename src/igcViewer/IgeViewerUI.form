@@ -62,7 +62,8 @@
           <SubComponents>
             <MenuItem class="javax.swing.JMenuItem" name="jMenuOption">
               <Properties>
-                <Property name="text" type="java.lang.String" value="jMenuItem3"/>
+                <Property name="text" type="java.lang.String" value="Options"/>
+                <Property name="actionCommand" type="java.lang.String" value="OptionsMenu"/>
               </Properties>
             </MenuItem>
           </SubComponents>
