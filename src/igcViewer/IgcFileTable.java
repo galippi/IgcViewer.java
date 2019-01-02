@@ -50,24 +50,30 @@ public class IgcFileTable extends javax.swing.JTable
 {
   java.awt.PopupMenu popup;
   RepainterJTable repainter;
+  IgcFileTableColumnArray columns;
+  boolean[] canEdit;
   public IgcFileTable(IgcCursor igcCursor)
   {
     super();
     repainter = new RepainterJTable(this);
+    columns = new IgcFileTableColumnArray();
+    int numCols = columns.size();
+    String[] names = new String[numCols];
+    canEdit = new boolean[numCols];
+    for (int i = 0; i < numCols; i++)
+    {
+      names[i] = columns.get(i).getColName();
+      canEdit[i] = columns.get(i).isEditable();
+    }
     setModel(new javax.swing.table.DefaultTableModel(
         new Object [][] {
 
         },
-        new String [] {
-            "Competition ID", "Pilot", "Glider ID", "Glider type", "Altitude", "Ground speed", "Direction", "Vario", "Track color", "Task color", "Distance", "L/D", "Time offset"
-        }
+        names
     ) {
-        boolean[] canEdit = new boolean [] {
-            false, false, false, false, false, false, false, false, false, false, false, false, true
-        };
-
         public boolean isCellEditable(int rowIndex, int columnIndex) {
-            return canEdit [columnIndex];
+            dbg.println(9, "isCellEditable rowIndex=" + rowIndex + " columnIndex=" + columnIndex);
+            return canEdit[columnIndex];
         }
     });
     setEditingColumn(0);
