@@ -58,12 +58,17 @@ public class IgcFileTable extends javax.swing.JTable
     repainter = new RepainterJTable(this);
     columns = new IgcFileTableColumnArray();
     int numCols = columns.size();
-    String[] names = new String[numCols];
-    canEdit = new boolean[numCols];
+    colList = new int[numCols];
     for (int i = 0; i < numCols; i++)
     {
-      names[i] = columns.get(i).getColName();
-      canEdit[i] = columns.get(i).isEditable();
+      colList[i] = i;
+    }
+    String[] names = new String[colList.length];
+    canEdit = new boolean[colList.length];
+    for (int i = 0; i < colList.length; i++)
+    {
+      names[i] = columns.get(colList[i]).getColName();
+      canEdit[i] = columns.get(colList[i]).isEditable();
     }
     setModel(new javax.swing.table.DefaultTableModel(
         new Object [][] {
@@ -121,10 +126,16 @@ public class IgcFileTable extends javax.swing.JTable
     item.addActionListener(popupMenuListener);
     add(popup);
 
-    getColumnModel().getColumn(colTrackColor).setCellRenderer(new ColorCellRenderer());
-    getColumnModel().getColumn(colTaskColor).setCellRenderer(new ColorCellRenderer());
+    setColorCellRenderer("Track color");
+    setColorCellRenderer("Task color");
   }
-  
+  void setColorCellRenderer(String colName)
+  {
+    int colIdx;
+    colIdx = columns.getColIdx(colName);
+    if (colIdx >= 0)
+      getColumnModel().getColumn(colIdx).setCellRenderer(new ColorCellRenderer());
+  }
   void setupTable()
   {
     getModel().addTableModelListener(
@@ -216,13 +227,22 @@ public class IgcFileTable extends javax.swing.JTable
     for (int i=0; i < igcCursor.size(); i++)
     {
       igc.igc igcFile = igcCursor.get(i);
-      setValueAt(igcFile.getCompetitionId(), i, colCompetitionId);
-      setValueAt(igcFile.getPilotsName(), i, colPilotName);
-      setValueAt(igcFile.getGliderId(), i, colGliderId);
-      setValueAt(igcFile.getGliderType(), i, colGliderType);
-      setValueAt(igcFile.color, i, colTrackColor);
-      setValueAt(igcFile.colorTask, i, colTaskColor);
-      setValueAt(igcFile.getTimeOffset(), i, colIgcTimeOffset);
+      if (false)
+      {
+        setValueAt(igcFile.getCompetitionId(), i, colCompetitionId);
+        setValueAt(igcFile.getPilotsName(), i, colPilotName);
+        setValueAt(igcFile.getGliderId(), i, colGliderId);
+        setValueAt(igcFile.getGliderType(), i, colGliderType);
+        setValueAt(igcFile.color, i, colTrackColor);
+        setValueAt(igcFile.colorTask, i, colTaskColor);
+        setValueAt(igcFile.getTimeOffset(), i, colIgcTimeOffset);
+      }else
+      {
+        for(int j = 0; j < colList.length; j++)
+        {
+          setValueAt(columns.get(colList[j]).getValue(igcCursor, i, igcFile, 0), i, colList[j]);
+        }
+      }
     }
   }
 
@@ -244,30 +264,39 @@ public class IgcFileTable extends javax.swing.JTable
       {
         igc.igc igcFile = igcCursor.get(i);
         int idx = igcFile.getIdx(igcCursor.getTime());
-        setValueAt(igcFile.getAltitude(idx), i, colAltitude);
-        double v = igcFile.getGroundSpeed(idx);
-        setValueAt((int)(v * 3.6), i, colSpeed);
-        setValueAt((int)(igcFile.getDir(idx) * 180 / Math.PI), i, colDirection);
-        double w = igcFile.getVario(idx);
-        setValueAt(w, i, colVerticalSpeed);
-        if (Math.abs(w) > 1e-3)
-          setValueAt(String.format("%.1f", (-v / w)), i, colLD);
-        else
-          setValueAt("oo", i, colLD);
-        if ((selRow >= 0) && (i != selRow))
+        if (false)
         {
-          igc.igc igcFileRef = igcCursor.get(selRow);
-          ptRef = igcFileRef.getIgcPoint(igcFileRef.getIdx(igcCursor.getTime()));
-          IGC_point pt = igcFile.get(idx);
-          double distance = ptRef.getDistance(pt);
-          String distanceStr;
-          if (distance > 5000)
-            distanceStr = String.format("%.2f", distance / 1000) + "km";
+          setValueAt(igcFile.getAltitude(idx), i, colAltitude);
+          double v = igcFile.getGroundSpeed(idx);
+          setValueAt((int)(v * 3.6), i, colSpeed);
+          setValueAt((int)(igcFile.getDir(idx) * 180 / Math.PI), i, colDirection);
+          double w = igcFile.getVario(idx);
+          setValueAt(w, i, colVerticalSpeed);
+          if (Math.abs(w) > 1e-3)
+            setValueAt(String.format("%.1f", (-v / w)), i, colLD);
           else
-            distanceStr = String.format("%.0f", distance) + "m";
-          setValueAt(distanceStr, i, colDistance);
+            setValueAt("oo", i, colLD);
+          if ((selRow >= 0) && (i != selRow))
+          {
+            igc.igc igcFileRef = igcCursor.get(selRow);
+            ptRef = igcFileRef.getIgcPoint(igcFileRef.getIdx(igcCursor.getTime()));
+            IGC_point pt = igcFile.get(idx);
+            double distance = ptRef.getDistance(pt);
+            String distanceStr;
+            if (distance > 5000)
+              distanceStr = String.format("%.2f", distance / 1000) + "km";
+            else
+              distanceStr = String.format("%.0f", distance) + "m";
+            setValueAt(distanceStr, i, colDistance);
+          }else
+            setValueAt("", i, colDistance);
         }else
-          setValueAt("", i, colDistance);
+        {
+          for(int j = 0; j < colList.length; j++)
+          {
+            setValueAt(columns.get(colList[j]).getValue(igcCursor, i, igcFile, idx), i, colList[j]);
+          }
+        }
       }
     }
     super.repaint();
@@ -281,6 +310,7 @@ public class IgcFileTable extends javax.swing.JTable
     repaint();
   }
   IgcCursor igcCursor;
+  int[] colList;
   int colCompetitionId = 0;
   int colPilotName = 1;
   int colGliderId = 2;

@@ -1,6 +1,8 @@
 package igcViewer;
 
+import igc.IgcCursor;
 import java.util.ArrayList;
+import java.util.TreeMap;
 
 /*
  * To change this license header, choose License Headers in Project Properties.
@@ -12,23 +14,68 @@ import java.util.ArrayList;
  *
  * @author liptakok
  */
+class TaskColor extends IgcFileTableColumnBase
+{
+  TaskColor(String colName)
+  {
+    super(colName);
+  }
+  @Override
+  public Object getValue(IgcCursor igcCursor, int fileIdx, igc.igc igcFile, int ptIdx)
+  {
+    return igcFile.colorTask;
+  }
+}
+
+class TrackColor extends IgcFileTableColumnBase
+{
+  TrackColor(String colName)
+  {
+    super(colName);
+  }
+  @Override
+  public Object getValue(IgcCursor igcCursor, int fileIdx, igc.igc igcFile, int ptIdx)
+  {
+    return igcFile.color;
+  }
+}
+
+class Altitude extends IgcFileTableColumnBase
+{
+  Altitude(String colName)
+  {
+    super(colName);
+  }
+  @Override
+  public Object getValue(IgcCursor igcCursor, int fileIdx, igc.igc igcFile, int ptIdx)
+  {
+    return igcFile.getAltitude(ptIdx);
+  }
+}
+
 public class IgcFileTableColumnArray {
   public IgcFileTableColumnArray()
   {
     columns = new ArrayList<>();
-    columns.add(new IgcFileTableColumnBase("Competition ID"));
-    columns.add(new IgcFileTableColumnBase("Pilot"));
-    columns.add(new IgcFileTableColumnBase("Glider ID"));
-    columns.add(new IgcFileTableColumnBase("Glider type"));
-    columns.add(new IgcFileTableColumnBase("Altitude"));
-    columns.add(new IgcFileTableColumnBase("Ground speed"));
-    columns.add(new IgcFileTableColumnBase("Direction"));
-    columns.add(new IgcFileTableColumnBase("Vario"));
-    columns.add(new IgcFileTableColumnBase("Track color"));
-    columns.add(new IgcFileTableColumnBase("Task color"));
-    columns.add(new IgcFileTableColumnBase("Distance"));
-    columns.add(new IgcFileTableColumnBase("L/D"));
-    columns.add(new IgcFileTableColumnBase("Time offset"));
+    colIdx = new TreeMap();
+    add(new IgcFileTableColumnBase("Competition ID"));
+    add(new IgcFileTableColumnBase("Pilot"));
+    add(new IgcFileTableColumnBase("Glider ID"));
+    add(new IgcFileTableColumnBase("Glider type"));
+    add(new Altitude("Altitude"));
+    add(new IgcFileTableColumnBase("Ground speed"));
+    add(new IgcFileTableColumnBase("Direction"));
+    add(new IgcFileTableColumnBase("Vario"));
+    add(new TrackColor("Track color"));
+    add(new TaskColor("Task color"));
+    add(new IgcFileTableColumnBase("Distance"));
+    add(new IgcFileTableColumnBase("L/D"));
+    add(new IgcFileTableColumnBase("Time offset"));
+  }
+  void add(IgcFileTableColumnBase newCol)
+  {
+    colIdx.put(newCol.getColName(), new Integer(columns.size()));
+    columns.add(newCol);
   }
   public IgcFileTableColumnBase get(int idx)
   {
@@ -38,5 +85,14 @@ public class IgcFileTableColumnArray {
   {
     return columns.size();
   }
+  public int getColIdx(String colName)
+  {
+    Integer obj = (Integer)colIdx.get(colName);
+    if (obj == null)
+      return -1;
+    else
+      return obj.intValue();
+  }
   ArrayList<IgcFileTableColumnBase> columns;
+  TreeMap colIdx;
 }
