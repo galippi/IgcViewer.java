@@ -22,11 +22,15 @@ public class IgcFileTableColumnBase {
   }
   public Object getValue(IgcCursor igcCursor, int fileIdx, igc.igc igcFile, int ptIdx)
   {
-    return new String("not implemented");
+    return "not implemented";
   }
   public boolean isEditable()
   {
     return false;
+  }
+  public boolean isStaticField()
+  {
+    return true;
   }
   final String colName;
 }

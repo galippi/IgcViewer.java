@@ -51,6 +51,11 @@ class Altitude extends IgcFileTableColumnBase
   {
     return igcFile.getAltitude(ptIdx);
   }
+  @Override
+  public boolean isStaticField()
+  {
+    return false;
+  }
 }
 
 public class IgcFileTableColumnArray {
@@ -72,7 +77,7 @@ public class IgcFileTableColumnArray {
     add(new IgcFileTableColumnBase("L/D"));
     add(new IgcFileTableColumnBase("Time offset"));
   }
-  void add(IgcFileTableColumnBase newCol)
+  final void add(IgcFileTableColumnBase newCol)
   {
     colIdx.put(newCol.getColName(), new Integer(columns.size()));
     columns.add(newCol);

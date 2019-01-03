@@ -240,7 +240,8 @@ public class IgcFileTable extends javax.swing.JTable
       {
         for(int j = 0; j < colList.length; j++)
         {
-          setValueAt(columns.get(colList[j]).getValue(igcCursor, i, igcFile, 0), i, colList[j]);
+          if (columns.get(colList[j]).isStaticField())
+            setValueAt(columns.get(colList[j]).getValue(igcCursor, i, igcFile, 0), i, colList[j]);
         }
       }
     }
@@ -294,7 +295,8 @@ public class IgcFileTable extends javax.swing.JTable
         {
           for(int j = 0; j < colList.length; j++)
           {
-            setValueAt(columns.get(colList[j]).getValue(igcCursor, i, igcFile, idx), i, colList[j]);
+            if (!columns.get(colList[j]).isStaticField())
+              setValueAt(columns.get(colList[j]).getValue(igcCursor, i, igcFile, idx), i, colList[j]);
           }
         }
       }
