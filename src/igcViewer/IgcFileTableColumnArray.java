@@ -40,6 +40,32 @@ class Pilot extends IgcFileTableColumnBase
   }
 }
 
+class GliderId extends IgcFileTableColumnBase
+{
+  GliderId(String colName)
+  {
+    super(colName);
+  }
+  @Override
+  public Object getValue(IgcCursor igcCursor, int fileIdx, igc.igc igcFile, int ptIdx)
+  {
+    return igcFile.getGliderId();
+  }
+}
+
+class GliderType extends IgcFileTableColumnBase
+{
+  GliderType(String colName)
+  {
+    super(colName);
+  }
+  @Override
+  public Object getValue(IgcCursor igcCursor, int fileIdx, igc.igc igcFile, int ptIdx)
+  {
+    return igcFile.getGliderType();
+  }
+}
+
 class TaskColor extends IgcFileTableColumnBase
 {
   TaskColor(String colName)
@@ -109,8 +135,8 @@ public class IgcFileTableColumnArray {
     colIdx = new TreeMap();
     add(new CompetitionId("Competition ID"));
     add(new Pilot("Pilot"));
-    add(new IgcFileTableColumnBase("Glider ID"));
-    add(new IgcFileTableColumnBase("Glider type"));
+    add(new GliderId("Glider ID"));
+    add(new GliderType("Glider type"));
     add(new Altitude("Altitude"));
     add(new IgcFileTableColumnBase("Ground speed"));
     add(new IgcFileTableColumnBase("Direction"));
