@@ -14,6 +14,32 @@ import java.util.TreeMap;
  *
  * @author liptakok
  */
+class CompetitionId extends IgcFileTableColumnBase
+{
+  CompetitionId(String colName)
+  {
+    super(colName);
+  }
+  @Override
+  public Object getValue(IgcCursor igcCursor, int fileIdx, igc.igc igcFile, int ptIdx)
+  {
+    return igcFile.getCompetitionId();
+  }
+}
+
+class Pilot extends IgcFileTableColumnBase
+{
+  Pilot(String colName)
+  {
+    super(colName);
+  }
+  @Override
+  public Object getValue(IgcCursor igcCursor, int fileIdx, igc.igc igcFile, int ptIdx)
+  {
+    return igcFile.getPilotsName();
+  }
+}
+
 class TaskColor extends IgcFileTableColumnBase
 {
   TaskColor(String colName)
@@ -81,8 +107,8 @@ public class IgcFileTableColumnArray {
   {
     columns = new ArrayList<>();
     colIdx = new TreeMap();
-    add(new IgcFileTableColumnBase("Competition ID"));
-    add(new IgcFileTableColumnBase("Pilot"));
+    add(new CompetitionId("Competition ID"));
+    add(new Pilot("Pilot"));
     add(new IgcFileTableColumnBase("Glider ID"));
     add(new IgcFileTableColumnBase("Glider type"));
     add(new Altitude("Altitude"));
