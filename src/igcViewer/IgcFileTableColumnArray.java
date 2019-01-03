@@ -93,7 +93,7 @@ class TrackColor extends IgcFileTableColumnBase
   }
 }
 
-class Altitude extends IgcFileTableColumnBase
+class Altitude extends IgcFileTableColumnDynamicBase
 {
   Altitude(String colName)
   {
@@ -104,14 +104,9 @@ class Altitude extends IgcFileTableColumnBase
   {
     return "" + igcFile.getAltitude(ptIdx) + " m";
   }
-  @Override
-  public boolean isStaticField()
-  {
-    return false;
-  }
 }
 
-class GroundSpeed extends IgcFileTableColumnBase
+class GroundSpeed extends IgcFileTableColumnDynamicBase
 {
   GroundSpeed(String colName)
   {
@@ -122,14 +117,9 @@ class GroundSpeed extends IgcFileTableColumnBase
   {
     return "" + igcFile.getGroundSpeed_km_per_h(ptIdx) + " km/h";
   }
-  @Override
-  public boolean isStaticField()
-  {
-    return false;
-  }
 }
 
-class Direction extends IgcFileTableColumnBase
+class Direction extends IgcFileTableColumnDynamicBase
 {
   Direction(String colName)
   {
@@ -140,14 +130,9 @@ class Direction extends IgcFileTableColumnBase
   {
     return (int)(igcFile.getDir(ptIdx) * 180 / Math.PI);
   }
-  @Override
-  public boolean isStaticField()
-  {
-    return false;
-  }
 }
 
-class Vario extends IgcFileTableColumnBase
+class Vario extends IgcFileTableColumnDynamicBase
 {
   Vario(String colName)
   {
@@ -158,14 +143,9 @@ class Vario extends IgcFileTableColumnBase
   {
     return utils.Sprintf.sprintf("%3.1f m/s", igcFile.getVario(ptIdx));
   }
-  @Override
-  public boolean isStaticField()
-  {
-    return false;
-  }
 }
 
-class Distance extends IgcFileTableColumnBase
+class Distance extends IgcFileTableColumnDynamicBase
 {
   Distance(String colName)
   {
@@ -189,14 +169,9 @@ class Distance extends IgcFileTableColumnBase
     }else
       return "";
   }
-  @Override
-  public boolean isStaticField()
-  {
-    return false;
-  }
 }
 
-class LiftToDrag extends IgcFileTableColumnBase
+class LiftToDrag extends IgcFileTableColumnDynamicBase
 {
   LiftToDrag(String colName)
   {
@@ -211,11 +186,6 @@ class LiftToDrag extends IgcFileTableColumnBase
       return String.format("%.1f", (-v / w));
     else
       return "oo";
-  }
-  @Override
-  public boolean isStaticField()
-  {
-    return false;
   }
 }
 
