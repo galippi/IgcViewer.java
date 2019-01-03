@@ -22,7 +22,7 @@ class CompetitionId extends IgcFileTableColumnBase
     super(colName);
   }
   @Override
-  public Object getValue(IgcCursor igcCursor, int fileIdx, igc.igc igcFile, int ptIdx)
+  public Object getValue(igc.igc igcFile)
   {
     return igcFile.getCompetitionId();
   }
@@ -35,7 +35,7 @@ class Pilot extends IgcFileTableColumnBase
     super(colName);
   }
   @Override
-  public Object getValue(IgcCursor igcCursor, int fileIdx, igc.igc igcFile, int ptIdx)
+  public Object getValue(igc.igc igcFile)
   {
     return igcFile.getPilotsName();
   }
@@ -48,7 +48,7 @@ class GliderId extends IgcFileTableColumnBase
     super(colName);
   }
   @Override
-  public Object getValue(IgcCursor igcCursor, int fileIdx, igc.igc igcFile, int ptIdx)
+  public Object getValue(igc.igc igcFile)
   {
     return igcFile.getGliderId();
   }
@@ -61,7 +61,7 @@ class GliderType extends IgcFileTableColumnBase
     super(colName);
   }
   @Override
-  public Object getValue(IgcCursor igcCursor, int fileIdx, igc.igc igcFile, int ptIdx)
+  public Object getValue(igc.igc igcFile)
   {
     return igcFile.getGliderType();
   }
@@ -74,7 +74,7 @@ class TaskColor extends IgcFileTableColumnBase
     super(colName);
   }
   @Override
-  public Object getValue(IgcCursor igcCursor, int fileIdx, igc.igc igcFile, int ptIdx)
+  public Object getValue(igc.igc igcFile)
   {
     return igcFile.colorTask;
   }
@@ -87,7 +87,7 @@ class TrackColor extends IgcFileTableColumnBase
     super(colName);
   }
   @Override
-  public Object getValue(IgcCursor igcCursor, int fileIdx, igc.igc igcFile, int ptIdx)
+  public Object getValue(igc.igc igcFile)
   {
     return igcFile.color;
   }
@@ -100,7 +100,7 @@ class Altitude extends IgcFileTableColumnDynamicBase
     super(colName);
   }
   @Override
-  public Object getValue(IgcCursor igcCursor, int fileIdx, igc.igc igcFile, int ptIdx)
+  public Object getValue(igc.igc igcFile, int ptIdx)
   {
     return "" + igcFile.getAltitude(ptIdx) + " m";
   }
@@ -113,7 +113,7 @@ class GroundSpeed extends IgcFileTableColumnDynamicBase
     super(colName);
   }
   @Override
-  public Object getValue(IgcCursor igcCursor, int fileIdx, igc.igc igcFile, int ptIdx)
+  public Object getValue(igc.igc igcFile, int ptIdx)
   {
     return "" + igcFile.getGroundSpeed_km_per_h(ptIdx) + " km/h";
   }
@@ -126,7 +126,7 @@ class Direction extends IgcFileTableColumnDynamicBase
     super(colName);
   }
   @Override
-  public Object getValue(IgcCursor igcCursor, int fileIdx, igc.igc igcFile, int ptIdx)
+  public Object getValue(igc.igc igcFile, int ptIdx)
   {
     return (int)(igcFile.getDir(ptIdx) * 180 / Math.PI);
   }
@@ -139,7 +139,7 @@ class Vario extends IgcFileTableColumnDynamicBase
     super(colName);
   }
   @Override
-  public Object getValue(IgcCursor igcCursor, int fileIdx, igc.igc igcFile, int ptIdx)
+  public Object getValue(igc.igc igcFile, int ptIdx)
   {
     return utils.Sprintf.sprintf("%3.1f m/s", igcFile.getVario(ptIdx));
   }
