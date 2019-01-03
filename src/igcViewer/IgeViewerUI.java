@@ -98,6 +98,7 @@ public class IgeViewerUI extends javax.swing.JFrame {
       IgcViewerPrefs.put("MapWindowH", mapPanel.getHeight());
       IgcViewerPrefs.put("MapWindowW", mapPanel.getWidth());
       //IgcViewerPrefs.put("MainWindowGeoPosZoom", mapPanel.getGeoUtil().zoom);
+      igcFileTable.saveColumnSet();
       dbg.dprintf(9, "mapPanel=%d,%d\n", mapPanel.getWidth(), mapPanel.getHeight());
       System.exit(0);
     }

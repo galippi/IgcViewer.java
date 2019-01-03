@@ -57,11 +57,30 @@ public class IgcFileTable extends javax.swing.JTable
     super();
     repainter = new RepainterJTable(this);
     columns = new IgcFileTableColumnArray();
-    int numCols = columns.size();
-    colList = new int[numCols];
-    for (int i = 0; i < numCols; i++)
+    int numCols =  IgcViewerPrefs.get("FileTable", "ColNum", -1);
+    if (numCols > 0)
+      colList = new int[numCols];
+    for(int i = 0; i < numCols; i++)
     {
-      colList[i] = i;
+      String colName = IgcViewerPrefs.get("FileTable", "ColName" + i, null);
+      if (colName != null)
+      {
+        int colIdx = columns.getColIdx(colName);
+        if (colIdx >= 0)
+          colList[i] = colIdx;
+        else
+          numCols = -1; // table setting is invalid -> set default set
+      }else
+        numCols = -1; // table setting is invalid -> set default set
+    }
+    if (numCols < 0)
+    { // table is not yet set -> set default column set
+      numCols = columns.size();
+      colList = new int[numCols];
+      for (int i = 0; i < numCols; i++)
+      {
+        colList[i] = i;
+      }
     }
     String[] names = new String[colList.length];
     canEdit = new boolean[colList.length];
@@ -135,6 +154,15 @@ public class IgcFileTable extends javax.swing.JTable
     colIdx = columns.getColIdx(colName);
     if (colIdx >= 0)
       getColumnModel().getColumn(colIdx).setCellRenderer(new ColorCellRenderer());
+  }
+  void saveColumnSet()
+  {
+    int colNum = getColumnCount();
+    IgcViewerPrefs.put("FileTable", "ColNum", colNum);
+    for(int i = 0; i < colNum; i++)
+    {
+      IgcViewerPrefs.put("FileTable", "ColName" + i, getColumnName(i));
+    }
   }
   void setupTable()
   {
