@@ -200,6 +200,10 @@ class TimeOffset extends IgcFileTableColumnBase
   {
     return igcFile.getTimeOffset() + " s";
   }
+  public boolean isEditable()
+  {
+    return true;
+  }
 }
 
 public class IgcFileTableColumnArray {
