@@ -49,7 +49,25 @@ class Altitude extends IgcFileTableColumnBase
   @Override
   public Object getValue(IgcCursor igcCursor, int fileIdx, igc.igc igcFile, int ptIdx)
   {
-    return igcFile.getAltitude(ptIdx);
+    return "" + igcFile.getAltitude(ptIdx) + " m";
+  }
+  @Override
+  public boolean isStaticField()
+  {
+    return false;
+  }
+}
+
+class Vario extends IgcFileTableColumnBase
+{
+  Vario(String colName)
+  {
+    super(colName);
+  }
+  @Override
+  public Object getValue(IgcCursor igcCursor, int fileIdx, igc.igc igcFile, int ptIdx)
+  {
+    return utils.Sprintf.sprintf("%3.1f m/s", igcFile.getVario(ptIdx));
   }
   @Override
   public boolean isStaticField()
@@ -70,7 +88,7 @@ public class IgcFileTableColumnArray {
     add(new Altitude("Altitude"));
     add(new IgcFileTableColumnBase("Ground speed"));
     add(new IgcFileTableColumnBase("Direction"));
-    add(new IgcFileTableColumnBase("Vario"));
+    add(new Vario("Vario"));
     add(new TrackColor("Track color"));
     add(new TaskColor("Task color"));
     add(new IgcFileTableColumnBase("Distance"));
