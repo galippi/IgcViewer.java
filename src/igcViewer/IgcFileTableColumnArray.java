@@ -110,6 +110,42 @@ class Altitude extends IgcFileTableColumnBase
   }
 }
 
+class GroundSpeed extends IgcFileTableColumnBase
+{
+  GroundSpeed(String colName)
+  {
+    super(colName);
+  }
+  @Override
+  public Object getValue(IgcCursor igcCursor, int fileIdx, igc.igc igcFile, int ptIdx)
+  {
+    return "" + igcFile.getGroundSpeed_km_per_h(ptIdx) + " km/h";
+  }
+  @Override
+  public boolean isStaticField()
+  {
+    return false;
+  }
+}
+
+class Direction extends IgcFileTableColumnBase
+{
+  Direction(String colName)
+  {
+    super(colName);
+  }
+  @Override
+  public Object getValue(IgcCursor igcCursor, int fileIdx, igc.igc igcFile, int ptIdx)
+  {
+    return (int)(igcFile.getDir(ptIdx) * 180 / Math.PI);
+  }
+  @Override
+  public boolean isStaticField()
+  {
+    return false;
+  }
+}
+
 class Vario extends IgcFileTableColumnBase
 {
   Vario(String colName)
@@ -138,8 +174,8 @@ public class IgcFileTableColumnArray {
     add(new GliderId("Glider ID"));
     add(new GliderType("Glider type"));
     add(new Altitude("Altitude"));
-    add(new IgcFileTableColumnBase("Ground speed"));
-    add(new IgcFileTableColumnBase("Direction"));
+    add(new GroundSpeed("Ground speed"));
+    add(new Direction("Direction"));
     add(new Vario("Vario"));
     add(new TrackColor("Track color"));
     add(new TaskColor("Task color"));
