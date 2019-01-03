@@ -296,7 +296,7 @@ public class IgcFileTable extends javax.swing.JTable
           for(int j = 0; j < colList.length; j++)
           {
             if (!columns.get(colList[j]).isStaticField())
-              setValueAt(columns.get(colList[j]).getValue(igcCursor, i, igcFile, idx), i, colList[j]);
+              setValueAt(columns.get(colList[j]).getValue(igcCursor, i, igcFile, idx, selRow), i, colList[j]);
           }
         }
       }

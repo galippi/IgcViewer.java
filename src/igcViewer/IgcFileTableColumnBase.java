@@ -20,9 +20,21 @@ public class IgcFileTableColumnBase {
   {
     return colName;
   }
-  public Object getValue(IgcCursor igcCursor, int fileIdx, igc.igc igcFile, int ptIdx)
+  public Object getValue(igc.igc igcFile)
   {
     return "not implemented";
+  }
+  public Object getValue(igc.igc igcFile, int ptIdx)
+  {
+    return getValue(igcFile);
+  }
+  public Object getValue(IgcCursor igcCursor, int fileIdx, igc.igc igcFile, int ptIdx)
+  {
+    return getValue(igcFile, ptIdx);
+  }
+  public Object getValue(IgcCursor igcCursor, int fileIdx, igc.igc igcFile, int ptIdx, int selRow)
+  {
+    return getValue(igcCursor, fileIdx, igcFile, ptIdx);
   }
   public boolean isEditable()
   {

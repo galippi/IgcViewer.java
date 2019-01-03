@@ -1,5 +1,6 @@
 package igcViewer;
 
+import igc.IGC_point;
 import igc.IgcCursor;
 import java.util.ArrayList;
 import java.util.TreeMap;
@@ -164,6 +165,73 @@ class Vario extends IgcFileTableColumnBase
   }
 }
 
+class Distance extends IgcFileTableColumnBase
+{
+  Distance(String colName)
+  {
+    super(colName);
+  }
+  @Override
+  public Object getValue(IgcCursor igcCursor, int fileIdx, igc.igc igcFile, int ptIdx, int selRow)
+  {
+    String distanceStr;
+    if ((selRow >= 0) && (fileIdx != selRow))
+    {
+      igc.igc igcFileRef = igcCursor.get(selRow);
+      IGC_point ptRef = igcFileRef.getIgcPoint(igcFileRef.getIdx(igcCursor.getTime()));
+      IGC_point pt = igcFile.get(ptIdx);
+      double distance = ptRef.getDistance(pt);
+      if (distance > 5000)
+        distanceStr = String.format("%.2f", distance / 1000) + "km";
+      else
+        distanceStr = String.format("%.0f", distance) + "m";
+      return distanceStr;
+    }else
+      return "";
+  }
+  @Override
+  public boolean isStaticField()
+  {
+    return false;
+  }
+}
+
+class LiftToDrag extends IgcFileTableColumnBase
+{
+  LiftToDrag(String colName)
+  {
+    super(colName);
+  }
+  @Override
+  public Object getValue(igc.igc igcFile, int ptIdx)
+  {
+    double v = igcFile.getGroundSpeed(ptIdx);
+    double w = igcFile.getVario(ptIdx);
+    if (Math.abs(w) > 1e-3)
+      return String.format("%.1f", (-v / w));
+    else
+      return "oo";
+  }
+  @Override
+  public boolean isStaticField()
+  {
+    return false;
+  }
+}
+
+class TimeOffset extends IgcFileTableColumnBase
+{
+  TimeOffset(String colName)
+  {
+    super(colName);
+  }
+  @Override
+  public Object getValue(igc.igc igcFile)
+  {
+    return igcFile.getTimeOffset() + " s";
+  }
+}
+
 public class IgcFileTableColumnArray {
   public IgcFileTableColumnArray()
   {
@@ -179,9 +247,9 @@ public class IgcFileTableColumnArray {
     add(new Vario("Vario"));
     add(new TrackColor("Track color"));
     add(new TaskColor("Task color"));
-    add(new IgcFileTableColumnBase("Distance"));
-    add(new IgcFileTableColumnBase("L/D"));
-    add(new IgcFileTableColumnBase("Time offset"));
+    add(new Distance("Distance"));
+    add(new LiftToDrag("L/D"));
+    add(new TimeOffset("Time offset"));
   }
   final void add(IgcFileTableColumnBase newCol)
   {
