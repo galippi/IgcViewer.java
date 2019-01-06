@@ -46,15 +46,32 @@ class RepainterJTable extends igc.Repainter {
   }
 }
 
+class MyPopupMenu extends java.awt.PopupMenu
+{
+  MyPopupMenu(String label)
+  {
+    super(label);
+  }
+  @Override
+  public void show(Component origin, int x, int y)
+  {
+    this.x = x; this.y = y;
+    super.show(origin, x, y);
+  }
+  int x;
+  int y;
+}
+
 public class IgcFileTable extends javax.swing.JTable
 {
-  java.awt.PopupMenu popup;
+  MyPopupMenu popup;
   RepainterJTable repainter;
   IgcFileTableColumnArray columns;
   boolean[] canEdit;
   public IgcFileTable(IgcCursor igcCursor)
   {
     super();
+    this.igcCursor = igcCursor;
     repainter = new RepainterJTable(this);
     columns = new IgcFileTableColumnArray();
     int numCols =  IgcViewerPrefs.get("FileTable", "ColNum", -1);
@@ -105,7 +122,6 @@ public class IgcFileTable extends javax.swing.JTable
     setMaximumSize(new java.awt.Dimension(1000, 1000));
     setMinimumSize(new java.awt.Dimension(100, 100));
     setPreferredSize(new java.awt.Dimension(200, 120));
-    this.igcCursor = igcCursor;
     igcCursor.set(repainter);
     
     addMouseListener(new MouseListener() {
@@ -125,7 +141,7 @@ public class IgcFileTable extends javax.swing.JTable
         }
     });
 
-    popup = new java.awt.PopupMenu("demo");
+    popup = new MyPopupMenu("demo");
     java.awt.MenuItem item;
     java.awt.event.ActionListener popupMenuListener;
     popupMenuListener = new java.awt.event.ActionListener() {
@@ -140,6 +156,10 @@ public class IgcFileTable extends javax.swing.JTable
     popup.add(item = new java.awt.MenuItem("Close file"));
     item.addActionListener(popupMenuListener);
     popup.add(item = new java.awt.MenuItem("Close all file"));
+    item.addActionListener(popupMenuListener);
+    popup.add(item = new java.awt.MenuItem("Add column"));
+    item.addActionListener(popupMenuListener);
+    popup.add(item = new java.awt.MenuItem("Remove column"));
     item.addActionListener(popupMenuListener);
     popup.add(item = new java.awt.MenuItem("About"));
     item.addActionListener(popupMenuListener);
@@ -240,8 +260,20 @@ public class IgcFileTable extends javax.swing.JTable
   
   void popupMenuHandler(java.awt.event.ActionEvent event)
   {
-    dbg.println(9, "popupMenuHandler event="+event.toString());
-    dbg.println(9, "popupMenuHandler event.getActionCommand="+event.getActionCommand());
+    dbg.println(17, "popupMenuHandler event="+event.toString());
+    java.awt.Point pt = new java.awt.Point(popup.x, popup.y);
+    int colAtPoint = columnAtPoint(pt);
+    dbg.println(9, "popupMenuHandler event.getActionCommand="+event.getActionCommand() + " colAtPoint=" + colAtPoint);
+    switch(event.getActionCommand())
+    {
+      case "Add column":
+        break;
+      case "Remove column":
+        break;
+      default:
+         dbg.println(1, "popupMenuHandler invalid event="+event.toString());
+        break;
+    }
   }
 
   void updateStaticData()
