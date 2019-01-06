@@ -12,6 +12,7 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.util.TreeMap;
 import javax.swing.JTable;
+import javax.swing.table.TableModel;
 import utils.dbg;
 
 /**
@@ -205,21 +206,31 @@ public class IgcFileTable extends javax.swing.JTable
     }
     if (this.getModel() == null)
     {
-      setModel(new javax.swing.table.DefaultTableModel(
-          new Object [][] {
+      if (false)
+      {
+        javax.swing.table.DefaultTableModel model = new javax.swing.table.DefaultTableModel(
+            new Object [][] {
 
-          },
-          names
-      ) {
-          public boolean isCellEditable(int rowIndex, int columnIndex) {
-              dbg.println(9, "isCellEditable rowIndex=" + rowIndex + " columnIndex=" + columnIndex);
-              return canEdit[columnIndex];
-          }
-      });
+            },
+            names
+        ) {
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                dbg.println(9, "isCellEditable rowIndex=" + rowIndex + " columnIndex=" + columnIndex);
+                return canEdit[columnIndex];
+            }
+        };
+      }
+      javax.swing.table.DefaultTableModel model = new javax.swing.table.DefaultTableModel(names, 0);
+      setModel(model);
     }else
     {
       javax.swing.table.DefaultTableModel model = (javax.swing.table.DefaultTableModel)this.getModel();
-      model.setColumnIdentifiers(names);
+      //model.setColumnIdentifiers(names);
+      //javax.swing.table.DefaultTableModel model = new javax.swing.table.DefaultTableModel(names, 0);
+      //setModel(model);
+      model.setColumnCount(colList.length);
+      for (int i = 0; i < colList.length; i++)
+        this.getTableHeader().getColumnModel().getColumn(i).setHeaderValue(columns.get(colList[i]).getColName());
     }
     colTrackColor = columnSet.get("Track color");
     colTaskColor = columnSet.get("Task color");
@@ -259,6 +270,7 @@ public class IgcFileTable extends javax.swing.JTable
   {
     dbg.println(9, "tableChangedHandler evt=" + evt);
     dbg.println(9, "  UPDATE=" + evt.UPDATE);
+    return;
     if ((evt.getType() == evt.UPDATE) && (evt.getColumn() == columnSet.get("Time offset")))
     {
       if ((evt.getFirstRow() >= 0) && (evt.getFirstRow() == evt.getLastRow()))
@@ -328,6 +340,24 @@ public class IgcFileTable extends javax.swing.JTable
       case "Add column":
         break;
       case "Remove column":
+        if ((colAtPoint >= 0) && (colList.length > 1) && (colAtPoint < colList.length))
+        { // remove column only if minimum 1 column remains
+          int[] colListNew = new int[colList.length - 1];
+          for(int i = 0; i < colList.length; i++)
+          { // copy remained columns to the new list
+            if (i < colAtPoint)
+              colListNew[i] = colList[i];
+            else if (i > colAtPoint)
+              colListNew[i - 1] = colList[i];
+          }
+          colList = colListNew;
+          //javax.swing.table.DefaultTableModel model = (javax.swing.table.DefaultTableModel)this.getModel();
+          //model.setColumnCount(colList.length);
+          //this.removeColumn(this.getColumnModel().getColumn(colAtPoint));
+          this.removeColumn(this.getColumnModel().getColumn(colList.length));
+          setColumnHeader();
+          invalidate();
+        }
         break;
       default:
          dbg.println(1, "popupMenuHandler invalid event="+event.toString());
@@ -335,6 +365,33 @@ public class IgcFileTable extends javax.swing.JTable
     }
   }
 
+  @Override
+  public Object getValueAt(int row, int column)
+  {
+    if (column >= 8)
+      System.out.println("getValueAt column="+column);
+    if (column < colList.length)
+    {
+      return getModel().getValueAt(row, column);
+      //return super.getValueAt(row, column);
+    }
+    else
+      return "";
+  }
+  @Override
+  public void setValueAt(Object data, int row, int column)
+  {
+    if (column >= 8)
+      System.out.println("setValueAt column="+column);
+    if (column < colList.length)
+    {
+      getModel().setValueAt(data, row, column);
+      return;
+    }
+    else
+      return;
+  }
+    
   void updateStaticData()
   {
     dbg.dprintf(9, "IgcFileTable.updateStaticData\n");
@@ -349,7 +406,7 @@ public class IgcFileTable extends javax.swing.JTable
       for(int j = 0; j < colList.length; j++)
       {
         if (columns.get(colList[j]).isStaticField())
-          setValueAt(columns.get(colList[j]).getValue(igcCursor, i, igcFile, 0), i, colList[j]);
+          setValueAt(columns.get(colList[j]).getValue(igcCursor, i, igcFile, 0), i, j);
       }
     }
   }
@@ -377,7 +434,7 @@ public class IgcFileTable extends javax.swing.JTable
         for(int j = 0; j < colList.length; j++)
         {
           if (!columns.get(colList[j]).isStaticField())
-            setValueAt(columns.get(colList[j]).getValue(igcCursor, i, igcFile, idx, selRow), i, colList[j]);
+            setValueAt(columns.get(colList[j]).getValue(igcCursor, i, igcFile, idx, selRow), i, j);
         }
       }
     }
