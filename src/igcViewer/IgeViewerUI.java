@@ -35,10 +35,12 @@ public class IgeViewerUI extends javax.swing.JFrame {
         openIgcFile(file);
       }
     }
+    static public IgeViewerUI mainWindow;
     /**
      * Creates new form NumberAdditionUI
      */
     public IgeViewerUI() {
+        mainWindow = this;
         igcFiles = new IgcFiles();
         igcCursor = new IgcCursor(igcFiles);
 
