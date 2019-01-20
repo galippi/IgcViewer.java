@@ -338,7 +338,7 @@ public class IgcFileTable extends javax.swing.JTable
     switch(event.getActionCommand())
     {
       case "Add column":
-        FilePropertiesDialog fpd = new FilePropertiesDialog(IgeViewerUI.mainWindow, columns, colList);
+        ColumnSelectorDialog fpd = new ColumnSelectorDialog(IgeViewerUI.mainWindow, columns, colList);
         fpd.setVisible(true);
         break;
       case "Remove column":
