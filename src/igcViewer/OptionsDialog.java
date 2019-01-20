@@ -16,6 +16,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import javax.swing.BoxLayout;
 import javax.swing.DefaultListModel;
+import javax.swing.GroupLayout;
 import javax.swing.JButton;
 import javax.swing.JDialog;
 import javax.swing.JFrame;
@@ -26,37 +27,67 @@ import javax.swing.JScrollPane;
 import javax.swing.JTextField;
 import javax.swing.ListModel;
 import javax.swing.SwingConstants;
+import utils.dbg;
 
 /**
  *
  * @author liptakok
  */
 public class OptionsDialog extends JDialog {
+  JTextField debugLevel;
   OptionsDialog(JFrame parent)
   {
     super(parent, Dialog.ModalityType.APPLICATION_MODAL);
-    this.setTitle("File details");
+    this.setTitle("Options");
 
-    JLabel l2 = new JLabel("File name:");
-    l2.setHorizontalAlignment(SwingConstants.LEFT);
+    JLabel l2 = new JLabel("Debug level:");
+    l2.setHorizontalAlignment(JTextField.LEFT);
+    debugLevel = new JTextField("" + dbg.get(), 5);
+    //debugLevel.setSize(100,20);
+    debugLevel.setHorizontalAlignment(JTextField.TRAILING);
 
-    JButton b2 = new JButton("Close");
+    JPanel jpDebugLevel = new JPanel();
+    //jpDebugLevel.setLayout(new GroupLayout(jpDebugLevel));
+    jpDebugLevel.add(l2);
+    jpDebugLevel.add(debugLevel);
+    
+    JButton bOk = new JButton("Ok");
     //b2.setHorizontalAlignment(SwingConstants.CENTER);
-    b2.addActionListener(new ActionListener() {
+    bOk.addActionListener(new ActionListener() {
         public void actionPerformed(ActionEvent e) {
-            setVisible(false);
+            okHandler();
         }
     });
+    JButton bCancel = new JButton("Cancel");
+    //b2.setHorizontalAlignment(SwingConstants.CENTER);
+    bCancel.addActionListener(new ActionListener() {
+        public void actionPerformed(ActionEvent e) {
+            cancelHandler();
+        }
+    });
+    JPanel bOkCancel = new JPanel();
+    bOkCancel.add(bOk);
+    bOkCancel.add(bCancel);
 
     Container cp = getContentPane();
     // add label, text field and button one after another into a single column
     cp.setLayout(new BoxLayout(cp, BoxLayout.Y_AXIS));
-    cp.add(l2);
-    b2.setAlignmentX(cp.CENTER_ALIGNMENT);
-    cp.add(b2);
+    cp.add(jpDebugLevel);
+    cp.add(bOkCancel, BorderLayout.SOUTH);
     Point pt = parent.getLocationOnScreen();
     int pw = parent.getWidth();
     setBounds(pt.x + pw / 2 - 150, pt.y + 200, 400, 400);
     this.setMinimumSize(new Dimension(350, 300));
+  }
+  void okHandler()
+  {
+    int level = Integer.parseInt(debugLevel.getText());
+    IgcViewerPrefs.put("Debug level", level);
+    dbg.set(level);
+    setVisible(false);
+  }
+  void cancelHandler()
+  {
+    setVisible(false);
   }
 }
