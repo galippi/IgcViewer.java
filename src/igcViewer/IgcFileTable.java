@@ -181,6 +181,8 @@ public class IgcFileTable extends javax.swing.JTable
         popupMenuHandler(event);
       }
     };
+    popup.add(item = new java.awt.MenuItem("File properties"));
+    item.addActionListener(popupMenuListener);
     popup.add(item = new java.awt.MenuItem("Change color"));
     item.addActionListener(popupMenuListener);
     popup.add(item = new java.awt.MenuItem("Close file"));
@@ -334,12 +336,13 @@ public class IgcFileTable extends javax.swing.JTable
     dbg.println(17, "popupMenuHandler event="+event.toString());
     java.awt.Point pt = new java.awt.Point(popup.x, popup.y);
     int colAtPoint = columnAtPoint(pt);
+    int rowAtPoint = rowAtPoint(pt);
     dbg.println(9, "popupMenuHandler event.getActionCommand="+event.getActionCommand() + " colAtPoint=" + colAtPoint);
     switch(event.getActionCommand())
     {
       case "Add column":
-        ColumnSelectorDialog fpd = new ColumnSelectorDialog(IgeViewerUI.mainWindow, columns, colList);
-        fpd.setVisible(true);
+        ColumnSelectorDialog csd = new ColumnSelectorDialog(IgeViewerUI.mainWindow, columns, colList);
+        csd.setVisible(true);
         break;
       case "Remove column":
         if ((colAtPoint >= 0) && (colList.length > 1) && (colAtPoint < colList.length))
@@ -360,6 +363,10 @@ public class IgcFileTable extends javax.swing.JTable
           setColumnHeader();
           invalidate();
         }
+        break;
+      case "File properties":
+        FilePropertiesDialog fpd = new FilePropertiesDialog(IgeViewerUI.mainWindow, igcCursor.get(rowAtPoint));
+        fpd.setVisible(true);
         break;
       default:
          dbg.println(1, "popupMenuHandler invalid event="+event.toString());
