@@ -23,6 +23,9 @@ import javax.swing.JList;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.SwingConstants;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
+import utils.dbg;
 
 /**
  *
@@ -35,9 +38,13 @@ public class ColumnSelectorDialog extends JDialog {
   JButton bAdd;
   JButton bRemove;
   JButton bRemoveAll;
-  ColumnSelectorDialog(JFrame parent, IgcFileTableColumnArray colArray, int[] selected)
+  IgcFileTable callBackParent;
+  IgcFileTableColumnArray colArray;
+  ColumnSelectorDialog(JFrame parent, IgcFileTable fileTable, IgcFileTableColumnArray colArray, int[] selected)
   {
     super(parent, Dialog.ModalityType.APPLICATION_MODAL);
+    callBackParent = fileTable;
+    this.colArray = colArray;
     this.setTitle("Select signals to be displayed");
 
     JLabel l2 = new JLabel("Select signals to be displayed");
@@ -46,8 +53,9 @@ public class ColumnSelectorDialog extends JDialog {
     JButton b2 = new JButton("OK");
     b2.setHorizontalAlignment(SwingConstants.LEFT);
     b2.addActionListener(new ActionListener() {
+        @Override
         public void actionPerformed(ActionEvent e) {
-            setVisible(false);
+            okHandler();
         }
     });
 
@@ -65,6 +73,14 @@ public class ColumnSelectorDialog extends JDialog {
       lmSelected.addElement(colArray.get(selected[i]).colName);
     }
     lbSelected = new JList(lmSelected);
+    lbSelected.addListSelectionListener(new ListSelectionListener()
+    {
+      @Override
+      public void valueChanged(ListSelectionEvent e)
+      {
+        updateButtons();
+      }
+    });
 
     DefaultListModel lmDeselected = new DefaultListModel();
     for(int i = 0; i < colArray.size(); i++)
@@ -79,6 +95,14 @@ public class ColumnSelectorDialog extends JDialog {
         lmDeselected.addElement(colArray.get(i).colName);
     }
     lbDeselected = new JList(lmDeselected);
+    lbDeselected.addListSelectionListener(new ListSelectionListener()
+    {
+      @Override
+      public void valueChanged(ListSelectionEvent e)
+      {
+        updateButtons();
+      }
+    });
 
     Container cp2 = getContentPane();
     // add label, text field and button one after another into a single column
@@ -128,6 +152,7 @@ public class ColumnSelectorDialog extends JDialog {
     bRemove = new JButton(">");
     bRemove.addActionListener(new ActionListener() {
         public void actionPerformed(ActionEvent e) {
+          removeHandler();
         }
     });
     p3.add(bRemove);
@@ -135,6 +160,7 @@ public class ColumnSelectorDialog extends JDialog {
     bRemoveAll = new JButton(">>");
     bRemoveAll.addActionListener(new ActionListener() {
         public void actionPerformed(ActionEvent e) {
+          removeAllHandler();
         }
     });
     p3.add(bRemoveAll);
@@ -157,24 +183,57 @@ public class ColumnSelectorDialog extends JDialog {
     if (lbSelected.getModel().getSize() == 0)
     {
       bRemoveAll.setEnabled(false);
-      bRemove.setEnabled(false);
     }else
     {
       bRemoveAll.setEnabled(true);
+    }
+    int[] lbSelectedSelection = lbSelected.getSelectedIndices();
+    if (lbSelectedSelection.length == 0)
+    {
+      bRemove.setEnabled(false);
+    }else
+    {
       bRemove.setEnabled(true);
     }
     if (lbDeselected.getModel().getSize() == 0)
     {
       bAddAll.setEnabled(false);
-      bAdd.setEnabled(false);
     }else
     {
       bAddAll.setEnabled(true);
+    }
+    int[] lbDeselectedSelection = lbDeselected.getSelectedIndices();
+    if (lbDeselectedSelection.length == 0)
+    {
+      bAdd.setEnabled(false);
+    }else
+    {
       bAdd.setEnabled(true);
     }
   }
+  void okHandler()
+  {
+    dbg.println(9, "ColumnSelectorDialog.okHandler");
+    setVisible(false);
+    DefaultListModel mSelected = (DefaultListModel)lbSelected.getModel();
+    int[] sel = new int[mSelected.size()];
+    for (int i = 0; i < sel.length; i++)
+    {
+      String colName = mSelected.getElementAt(i).toString();
+      sel[i] = colArray.getColIdx(colName);
+      dbg.println(11, "  col["+i+"]=" + sel[i] + " " + colName + "!");
+    }
+    callBackParent.columnSelectorDialogOkHandler(sel);
+  }
   void addHandler()
   {
+    int[] sel = lbDeselected.getSelectedIndices();
+    DefaultListModel mDeselected = (DefaultListModel)lbDeselected.getModel();
+    DefaultListModel mSelected = (DefaultListModel)lbSelected.getModel();
+    for(int i = 0; i < sel.length; i++)
+      mSelected.addElement(mDeselected.getElementAt(sel[i]));
+    for(int i = sel.length - 1; i >= 0; i--)
+      mDeselected.removeElementAt(sel[i]);
     updateButtons();
   }
   void addAllHandler()
@@ -184,6 +243,26 @@ public class ColumnSelectorDialog extends JDialog {
     for(int i = 0; i < mDeselected.getSize(); i++)
       mSelected.addElement(mDeselected.getElementAt(i));
     mDeselected.clear();
+    updateButtons();
+  }
+  void removeHandler()
+  {
+    int[] sel = lbSelected.getSelectedIndices();
+    DefaultListModel mDeselected = (DefaultListModel)lbDeselected.getModel();
+    DefaultListModel mSelected = (DefaultListModel)lbSelected.getModel();
+    for(int i = 0; i < sel.length; i++)
+      mDeselected.addElement(mSelected.getElementAt(sel[i]));
+    for(int i = sel.length - 1; i >= 0; i--)
+      mSelected.removeElementAt(sel[i]);
+    updateButtons();
+  }
+  void removeAllHandler()
+  {
+    DefaultListModel mDeselected = (DefaultListModel)lbDeselected.getModel();
+    DefaultListModel mSelected = (DefaultListModel)lbSelected.getModel();
+    for(int i = 0; i < mSelected.getSize(); i++)
+      mDeselected.addElement(mSelected.getElementAt(i));
+    mSelected.clear();
     updateButtons();
   }
 }

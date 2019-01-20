@@ -341,7 +341,7 @@ public class IgcFileTable extends javax.swing.JTable
     switch(event.getActionCommand())
     {
       case "Add column":
-        ColumnSelectorDialog csd = new ColumnSelectorDialog(IgeViewerUI.mainWindow, columns, colList);
+        ColumnSelectorDialog csd = new ColumnSelectorDialog(IgeViewerUI.mainWindow, this, columns, colList);
         csd.setVisible(true);
         break;
       case "Remove column":
@@ -372,6 +372,22 @@ public class IgcFileTable extends javax.swing.JTable
          dbg.println(1, "popupMenuHandler invalid event="+event.toString());
         break;
     }
+  }
+
+  public void columnSelectorDialogOkHandler(int[] sel)
+  {
+    int[] colListNew = new int[sel.length];
+    for(int i = 0; i < colList.length; i++)
+    {
+      colListNew[i] = sel[i];
+    }
+    colList = colListNew;
+    while(sel.length < this.getColumnModel().getColumnCount())
+      this.removeColumn(this.getColumnModel().getColumn(this.getColumnModel().getColumnCount() - 1));
+    while(sel.length > this.getColumnModel().getColumnCount())
+      this.getColumnModel().addColumn("dummy");
+    setColumnHeader();
+    invalidate();
   }
 
   @Override
