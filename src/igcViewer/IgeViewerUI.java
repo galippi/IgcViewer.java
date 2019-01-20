@@ -256,6 +256,11 @@ public class IgeViewerUI extends javax.swing.JFrame {
 
     jMenuOption.setText("Options");
     jMenuOption.setActionCommand("OptionsMenu");
+    jMenuOption.addActionListener(new java.awt.event.ActionListener() {
+      public void actionPerformed(java.awt.event.ActionEvent evt) {
+        jMenuOptionActionPerformed(evt);
+      }
+    });
     jMenu2.add(jMenuOption);
 
     jMenuBar1.add(jMenu2);
@@ -349,6 +354,10 @@ public class IgeViewerUI extends javax.swing.JFrame {
     private void MenuCloseAllActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_MenuCloseAllActionPerformed
       igcCursor.reinit();
     }//GEN-LAST:event_MenuCloseAllActionPerformed
+
+  private void jMenuOptionActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuOptionActionPerformed
+    new OptionsDialog(this).setVisible(true);
+  }//GEN-LAST:event_jMenuOptionActionPerformed
 
     /**
      * @param args the command line arguments
