@@ -9,24 +9,16 @@ import java.awt.BorderLayout;
 import java.awt.Container;
 import java.awt.Dialog;
 import java.awt.Dimension;
-import java.awt.FlowLayout;
-import java.awt.GridLayout;
 import java.awt.Point;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import javax.swing.BoxLayout;
-import javax.swing.DefaultListModel;
-import javax.swing.GroupLayout;
 import javax.swing.JButton;
 import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
-import javax.swing.JList;
 import javax.swing.JPanel;
-import javax.swing.JScrollPane;
 import javax.swing.JTextField;
-import javax.swing.ListModel;
-import javax.swing.SwingConstants;
 import utils.dbg;
 
 /**
@@ -81,10 +73,18 @@ public class OptionsDialog extends JDialog {
   }
   void okHandler()
   {
-    int level = Integer.parseInt(debugLevel.getText());
-    IgcViewerPrefs.put("Debug level", level);
-    dbg.set(level);
-    setVisible(false);
+    boolean closable = true;
+    try {
+      int level = Integer.parseInt(debugLevel.getText());
+      IgcViewerPrefs.put("Debug level", level);
+      dbg.set(level);
+    }catch (NumberFormatException e)
+    {
+      dbg.println(2, "OptionDialog.okHandler.NumberFormatException="+e.toString());
+      closable = false;
+    }
+    if (closable)
+      setVisible(false);
   }
   void cancelHandler()
   {
