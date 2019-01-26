@@ -38,6 +38,8 @@ public class ColumnSelectorDialog extends JDialog {
   JButton bAdd;
   JButton bRemove;
   JButton bRemoveAll;
+  JButton bUp;
+  JButton bDown;
   IgcFileTable callBackParent;
   IgcFileTableColumnArray colArray;
   ColumnSelectorDialog(JFrame parent, IgcFileTable fileTable, IgcFileTableColumnArray colArray, int[] selected)
@@ -115,12 +117,12 @@ public class ColumnSelectorDialog extends JDialog {
     JPanel pUpDown = new JPanel();
     pUpDown.setLayout(new GridLayout(2, 1));
 
-    JButton bUp = new JButton("Up");
+    bUp = new JButton("Up");
     bUp.addActionListener(new ActionListener() {
         public void actionPerformed(ActionEvent e) {
         }
     });
-    JButton bDown = new JButton("Down");
+    bDown = new JButton("Down");
     bDown.addActionListener(new ActionListener() {
         public void actionPerformed(ActionEvent e) {
         }
@@ -195,6 +197,14 @@ public class ColumnSelectorDialog extends JDialog {
     {
       bRemove.setEnabled(true);
     }
+    if ((lbSelectedSelection.length > 0) && (lbSelectedSelection[0] != 0))
+      bUp.setEnabled(true);
+    else
+      bUp.setEnabled(false);
+    if ((lbSelectedSelection.length > 0) && (lbSelectedSelection[lbSelectedSelection.length - 1] < (lbSelected.getModel().getSize() - 1)))
+      bDown.setEnabled(true);
+    else
+      bDown.setEnabled(false);
     if (lbDeselected.getModel().getSize() == 0)
     {
       bAddAll.setEnabled(false);
