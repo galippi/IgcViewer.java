@@ -12,6 +12,8 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.util.TreeMap;
 import javax.swing.JTable;
+import javax.swing.SwingUtilities;
+import javax.swing.table.TableColumn;
 import javax.swing.table.TableModel;
 import utils.dbg;
 
@@ -87,7 +89,13 @@ class ColumnSet
   }
   int get(String colName)
   {
-    return (int)colIdx.get(colName);
+    try
+    {
+      return (int)colIdx.get(colName);
+    }catch(Exception e)
+    {
+      return -1;
+    }
   }
   int[] getColList()
   {
@@ -145,7 +153,6 @@ public class IgcFileTable extends javax.swing.JTable
     columns = new IgcFileTableColumnArray();
     columnSet = new ColumnSet(columns);
     colList = columnSet.getColList();
-    canEdit = new boolean[colList.length];
     setColumnHeader();
     setEditingColumn(0);
     setEditingRow(0);
@@ -201,6 +208,7 @@ public class IgcFileTable extends javax.swing.JTable
   {
     columnSet.set(colList);
     String[] names = new String[colList.length];
+    canEdit = new boolean[colList.length];
     for (int i = 0; i < colList.length; i++)
     {
       names[i] = columns.get(colList[i]).getColName();
@@ -249,11 +257,11 @@ public class IgcFileTable extends javax.swing.JTable
   }
   void saveColumnSet()
   {
-    int colNum = getColumnCount();
+    int colNum = colList.length;
     IgcViewerPrefs.put("FileTable", "ColNum", colNum);
     for(int i = 0; i < colNum; i++)
     {
-      IgcViewerPrefs.put("FileTable", "ColName" + i, getColumnName(i));
+      IgcViewerPrefs.put("FileTable", "ColName" + i, columns.get(colList[i]).getColName());
     }
   }
   void setupTable()
@@ -376,45 +384,96 @@ public class IgcFileTable extends javax.swing.JTable
 
   public void columnSelectorDialogOkHandler(int[] sel)
   {
-    int[] colListNew = new int[sel.length];
-    for(int i = 0; i < colList.length; i++)
+    //this.setVisible(false);
+    //final JTable table = this;
+          int[] colListNew = new int[sel.length];
+          for(int i = 0; i < colListNew.length; i++)
+          {
+            colListNew[i] = sel[i];
+          }
+          colList = colListNew;
+          //while(sel.length < getColumnModel().getColumnCount())
+            //removeColumn(getColumnModel().getColumn(getColumnModel().getColumnCount() - 1));
+          while(sel.length > getColumnModel().getColumnCount())
+            getColumnModel().addColumn(new TableColumn());
+          for(int i = 0; i < getColumnModel().getColumnCount(); i++)
+          {
+            TableColumn column = getColumnModel().getColumn(i);
+            if (i < colListNew.length)
+            {
+              column.setMinWidth(10);
+              column.setMaxWidth(100);
+              column.setWidth(20);
+            }else
+            {
+              column.setMinWidth(0);
+              column.setMaxWidth(0);
+              column.setWidth(0);
+            }
+          }
+          setColumnHeader();
+          //this.setVisible(true);
+          invalidate();
+          return;
+    try
     {
-      colListNew[i] = sel[i];
+    //SwingUtilities.invokeAndWait(new Runnable() {
+    SwingUtilities.invokeLater(new Runnable() {
+        @Override
+        public void run() {
+
+          int[] colListNew = new int[sel.length];
+          for(int i = 0; i < colListNew.length; i++)
+          {
+            colListNew[i] = sel[i];
+          }
+          colList = colListNew;
+          //while(sel.length < getColumnModel().getColumnCount())
+            //removeColumn(getColumnModel().getColumn(getColumnModel().getColumnCount() - 1));
+          while(sel.length > getColumnModel().getColumnCount())
+            getColumnModel().addColumn(new TableColumn());
+          setColumnHeader();
+          //this.setVisible(true);
+          invalidate();
+        }
+    });
+    }catch (Exception e)
+    {
+      dbg.println(1, "columnSelectorDialogOkHandler exception e="+e.toString());
     }
-    colList = colListNew;
-    while(sel.length < this.getColumnModel().getColumnCount())
-      this.removeColumn(this.getColumnModel().getColumn(this.getColumnModel().getColumnCount() - 1));
-    while(sel.length > this.getColumnModel().getColumnCount())
-      this.getColumnModel().addColumn("dummy");
-    setColumnHeader();
-    invalidate();
   }
 
   @Override
   public Object getValueAt(int row, int column)
   {
     if (column >= 8)
-      System.out.println("getValueAt column="+column);
+      dbg.println(19, "getValueAt column="+column);
     if (column < colList.length)
     {
       return getModel().getValueAt(row, column);
       //return super.getValueAt(row, column);
     }
     else
+    {
+      dbg.println(2, "getValueAt over column="+column);
       return "";
+    }
   }
   @Override
   public void setValueAt(Object data, int row, int column)
   {
     if (column >= 8)
-      System.out.println("setValueAt column="+column);
+      dbg.println(19, "setValueAt column="+column);
     if (column < colList.length)
     {
       getModel().setValueAt(data, row, column);
       return;
     }
     else
+    {
+      dbg.println(2, "setValueAt over column="+column);
       return;
+    }
   }
     
   void updateStaticData()
@@ -446,12 +505,6 @@ public class IgcFileTable extends javax.swing.JTable
       }
       int selRow = getSelectedRow();
       dbg.dprintf(9, "  selRow = %d\n", selRow);
-      IGC_point ptRef;
-      if (selRow >= 0)
-      {
-        igc.igc igcFileRef = igcCursor.get(selRow);
-        ptRef = igcFileRef.getIgcPoint(igcFileRef.getIdx(igcCursor.getTime()));
-      }
       for (int i=0; i < igcCursor.size(); i++)
       {
         igc.igc igcFile = igcCursor.get(i);
