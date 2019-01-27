@@ -265,6 +265,10 @@ public class ColumnSelectorDialog extends JDialog {
   void addHandler()
   {
     int[] sel = lbDeselected.getSelectedIndices();
+    addHandler(sel);
+  }
+  void addHandler(int[] sel)
+  {
     DefaultListModel mDeselected = (DefaultListModel)lbDeselected.getModel();
     DefaultListModel mSelected = (DefaultListModel)lbSelected.getModel();
     Object[] objs = new Object[sel.length];
@@ -293,12 +297,13 @@ public class ColumnSelectorDialog extends JDialog {
   }
   void addAllHandler()
   {
-    DefaultListModel mDeselected = (DefaultListModel)lbDeselected.getModel();
-    DefaultListModel mSelected = (DefaultListModel)lbSelected.getModel();
-    for(int i = 0; i < mDeselected.getSize(); i++)
-      mSelected.addElement(mDeselected.getElementAt(i));
-    mDeselected.clear();
-    updateButtons();
+    int num = lbDeselected.getModel().getSize();
+    int[] sel = new int[num];
+    for(int i = 0; i < num; i++)
+    {
+      sel[i] = i;
+    }
+    addHandler(sel);
   }
   void removeHandler()
   {
