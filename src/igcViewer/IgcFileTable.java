@@ -129,6 +129,7 @@ class ColumnSet
         colList[i] = i;
       }
     }
+    dbg.println(9, "IgcFileTable.load numCols=" + numCols);
   }
   void save()
   {
@@ -208,6 +209,24 @@ public class IgcFileTable extends javax.swing.JTable
   void setColumnHeader()
   {
     columnSet.set(colList);
+    TableColumnModel columnModel = getColumnModel();
+    while(colList.length > columnModel.getColumnCount())
+      columnModel.addColumn(new TableColumn());
+    for(int i = 0; i < columnModel.getColumnCount(); i++)
+    {
+      TableColumn column = columnModel.getColumn(i);
+      if (i < colList.length)
+      {
+        column.setMinWidth(10);
+        column.setMaxWidth(100);
+        column.setWidth(20);
+      }else
+      {
+        column.setMinWidth(0);
+        column.setMaxWidth(0);
+        column.setWidth(0);
+      }
+    }
     String[] names = new String[colList.length];
     canEdit = new boolean[colList.length];
     for (int i = 0; i < colList.length; i++)
@@ -393,24 +412,6 @@ public class IgcFileTable extends javax.swing.JTable
             colListNew[i] = sel[i];
           }
           colList = colListNew;
-          TableColumnModel columnModel = getColumnModel();
-          while(sel.length > columnModel.getColumnCount())
-            columnModel.addColumn(new TableColumn());
-          for(int i = 0; i < columnModel.getColumnCount(); i++)
-          {
-            TableColumn column = columnModel.getColumn(i);
-            if (i < colListNew.length)
-            {
-              column.setMinWidth(10);
-              column.setMaxWidth(100);
-              column.setWidth(20);
-            }else
-            {
-              column.setMinWidth(0);
-              column.setMaxWidth(0);
-              column.setWidth(0);
-            }
-          }
           setColumnHeader();
           //this.setVisible(true);
           repaint(true);
@@ -446,14 +447,10 @@ public class IgcFileTable extends javax.swing.JTable
   @Override
   public Object getValueAt(int row, int column)
   {
-    if (column >= 8)
-      dbg.println(19, "getValueAt column="+column);
-    if (column < colList.length)
+    try
     {
       return getModel().getValueAt(row, column);
-      //return super.getValueAt(row, column);
-    }
-    else
+    }catch (Exception e)
     {
       dbg.println(2, "getValueAt over column="+column);
       return "";
@@ -462,17 +459,12 @@ public class IgcFileTable extends javax.swing.JTable
   @Override
   public void setValueAt(Object data, int row, int column)
   {
-    if (column >= 8)
-      dbg.println(19, "setValueAt column="+column);
-    if (column < colList.length)
+    try
     {
       getModel().setValueAt(data, row, column);
-      return;
-    }
-    else
+    }catch (Exception e)
     {
       dbg.println(2, "setValueAt over column="+column);
-      return;
     }
   }
     
