@@ -207,7 +207,7 @@ public class ColumnSelectorDialog extends JDialog {
       bDown.setEnabled(true);
     else
       bDown.setEnabled(false);
-    if (lbDeselected.getModel().getSize() == 0)
+    if ((lbDeselected.getModel().getSize() == 0) || (lbSelectedSelection.length >= 2))
     {
       bAddAll.setEnabled(false);
     }else
@@ -215,7 +215,7 @@ public class ColumnSelectorDialog extends JDialog {
       bAddAll.setEnabled(true);
     }
     int[] lbDeselectedSelection = lbDeselected.getSelectedIndices();
-    if (lbDeselectedSelection.length == 0)
+    if ((lbDeselectedSelection.length == 0) || (lbSelectedSelection.length >= 2))
     {
       bAdd.setEnabled(false);
     }else
@@ -267,10 +267,28 @@ public class ColumnSelectorDialog extends JDialog {
     int[] sel = lbDeselected.getSelectedIndices();
     DefaultListModel mDeselected = (DefaultListModel)lbDeselected.getModel();
     DefaultListModel mSelected = (DefaultListModel)lbSelected.getModel();
+    Object[] objs = new Object[sel.length];
     for(int i = 0; i < sel.length; i++)
-      mSelected.addElement(mDeselected.getElementAt(sel[i]));
+    {
+      objs[i] = mDeselected.getElementAt(sel[i]);
+      mSelected.addElement(objs[i]);
+    }
     for(int i = sel.length - 1; i >= 0; i--)
       mDeselected.removeElementAt(sel[i]);
+    int[] selectedList = lbSelected.getSelectedIndices();
+    if (selectedList.length == 1)
+    {
+      //moveUp(selectedList[0], );
+      int toIdx = selectedList[0];
+      for(int i = mSelected.getSize() - objs.length - 1; i >= toIdx; i--)
+      {
+        mSelected.setElementAt(mSelected.getElementAt(i), i + objs.length);
+      }
+      for(int i = 0; i < objs.length; i++)
+      {
+        mSelected.setElementAt(objs[i], toIdx + i);
+      }
+    }
     updateButtons();
   }
   void addAllHandler()
