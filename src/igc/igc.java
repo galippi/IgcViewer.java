@@ -49,6 +49,7 @@ class IGC_FileException extends Exception
 
 public class igc {
   boolean valid;
+  String fileName;
   String_ref PilotsName;
   String_ref competitionId;
   String_ref GliderType;
@@ -67,6 +68,7 @@ public class igc {
   public void Reinit()
   {
     valid = false;
+    fileName = null;
     PilotsName = new String_ref("");
     competitionId = new String_ref("");
     GliderType = new String_ref("");
@@ -87,6 +89,10 @@ public class igc {
   public int getIdx(int t)
   {
     return t_2_idx(new IGC_Time(t));
+  }
+  public String getFileName()
+  {
+    return fileName;
   }
   public String getPilotsName()
   {
@@ -143,6 +149,7 @@ public class igc {
   {
     dbg.println(9, "igc.read(" + file + ")");
     Reinit();
+    fileName = file;
     try
     {
       BufferedReader fin = new BufferedReader(new FileReader(file));

@@ -93,6 +93,19 @@ class TrackColor extends IgcFileTableColumnBase
   }
 }
 
+class FileName extends IgcFileTableColumnBase
+{
+  FileName(String colName)
+  {
+    super(colName);
+  }
+  @Override
+  public Object getValue(igc.igc igcFile)
+  {
+    return igcFile.getFileName();
+  }
+}
+
 class Altitude extends IgcFileTableColumnDynamicBase
 {
   Altitude(String colName)
@@ -211,6 +224,7 @@ public class IgcFileTableColumnArray {
   {
     columns = new ArrayList<>();
     colIdx = new TreeMap();
+    add(new FileName("File name"));
     add(new CompetitionId("Competition ID"));
     add(new Pilot("Pilot"));
     add(new GliderId("Glider ID"));
