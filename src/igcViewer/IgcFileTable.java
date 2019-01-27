@@ -14,6 +14,7 @@ import java.util.TreeMap;
 import javax.swing.JTable;
 import javax.swing.SwingUtilities;
 import javax.swing.table.TableColumn;
+import javax.swing.table.TableColumnModel;
 import javax.swing.table.TableModel;
 import utils.dbg;
 
@@ -392,13 +393,12 @@ public class IgcFileTable extends javax.swing.JTable
             colListNew[i] = sel[i];
           }
           colList = colListNew;
-          //while(sel.length < getColumnModel().getColumnCount())
-            //removeColumn(getColumnModel().getColumn(getColumnModel().getColumnCount() - 1));
-          while(sel.length > getColumnModel().getColumnCount())
-            getColumnModel().addColumn(new TableColumn());
-          for(int i = 0; i < getColumnModel().getColumnCount(); i++)
+          TableColumnModel columnModel = getColumnModel();
+          while(sel.length > columnModel.getColumnCount())
+            columnModel.addColumn(new TableColumn());
+          for(int i = 0; i < columnModel.getColumnCount(); i++)
           {
-            TableColumn column = getColumnModel().getColumn(i);
+            TableColumn column = columnModel.getColumn(i);
             if (i < colListNew.length)
             {
               column.setMinWidth(10);
@@ -413,7 +413,7 @@ public class IgcFileTable extends javax.swing.JTable
           }
           setColumnHeader();
           //this.setVisible(true);
-          invalidate();
+          repaint(true);
           return;
     try
     {
