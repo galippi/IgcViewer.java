@@ -120,11 +120,13 @@ public class ColumnSelectorDialog extends JDialog {
     bUp = new JButton("Up");
     bUp.addActionListener(new ActionListener() {
         public void actionPerformed(ActionEvent e) {
+          upHandler();
         }
     });
     bDown = new JButton("Down");
     bDown.addActionListener(new ActionListener() {
         public void actionPerformed(ActionEvent e) {
+          downHandler();
         }
     });
     pUpDown.add(bUp);
@@ -235,6 +237,31 @@ public class ColumnSelectorDialog extends JDialog {
     }
     callBackParent.columnSelectorDialogOkHandler(sel);
   }
+
+  void upHandler()
+  {
+    int[] sel = lbSelected.getSelectedIndices();
+    DefaultListModel mSelected = (DefaultListModel)lbSelected.getModel();
+    for(int i = 0; i < sel.length; i++)
+    {
+      Object selected = mSelected.getElementAt(sel[i]);
+      mSelected.setElementAt(mSelected.getElementAt(sel[i] - 1), sel[i]);
+      mSelected.setElementAt(selected, sel[i] - 1);
+    }
+  }
+
+  void downHandler()
+  {
+    int[] sel = lbSelected.getSelectedIndices();
+    DefaultListModel mSelected = (DefaultListModel)lbSelected.getModel();
+    for(int i = sel.length - 1; i >= 0 ; i--)
+    {
+      Object selected = mSelected.getElementAt(sel[i]);
+      mSelected.setElementAt(mSelected.getElementAt(sel[i] + 1), sel[i]);
+      mSelected.setElementAt(selected, sel[i] + 1);
+    }
+  }
+
   void addHandler()
   {
     int[] sel = lbDeselected.getSelectedIndices();
