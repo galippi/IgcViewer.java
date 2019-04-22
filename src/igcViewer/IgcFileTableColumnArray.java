@@ -200,6 +200,57 @@ class LiftToDrag extends IgcFileTableColumnDynamicBase
     else
       return "oo";
   }
+  @Override
+    public Object getValue(IgcCursor igcCursor, int fileIdx, igc.igc igcFile, int ptIdx)
+  {
+    if (igcCursor.isAuxValid())
+    {
+      int tAux = igcCursor.getTimeAux();
+      IGC_point ptRef = igcFile.getIgcPoint(igcFile.getIdx(tAux));
+      IGC_point pt = igcFile.get(ptIdx);
+      double distance = ptRef.getDistance(pt);
+      int dAltitude = ptRef.Altitude.h - pt.Altitude.h;
+      if (dAltitude != 0)
+      {
+        double ld = distance / dAltitude;
+        return String.format("%.1f", ld);
+      }else
+      return "oo";
+    }else
+      return getValue(igcFile, ptIdx);
+  }
+}
+
+class LD30 extends IgcFileTableColumnDynamicBase
+{
+  LD30(String colName)
+  {
+    super(colName);
+  }
+  @Override
+  public Object getValue(igc.igc igcFile, int ptIdx)
+  {
+    double v = igcFile.getGroundSpeed(ptIdx);
+    double w = igcFile.getVario(ptIdx);
+    if (Math.abs(w) > 1e-3)
+      return String.format("%.1f", (-v / w));
+    else
+      return "oo";
+  }
+}
+        
+class TimeDisplay extends IgcFileTableColumnDynamicBase
+{
+  TimeDisplay(String colName)
+  {
+    super(colName);
+  }
+  @Override
+  public Object getValue(igc.igc igcFile, int ptIdx)
+  {
+    int t = igcFile.getT(ptIdx);
+    return String.format("%02d:%02d:%02d", t / 3600, (t / 60) % 60, t % 60);
+  }
 }
 
 class TimeOffset extends IgcFileTableColumnBase
@@ -238,6 +289,9 @@ public class IgcFileTableColumnArray {
     add(new Distance("Distance"));
     add(new LiftToDrag("L/D"));
     add(new TimeOffset("Time offset"));
+    add(new TimeDisplay("Time"));
+    add(new LD30("LD30"));
+    add(new Vario("Vario30"));
   }
   final void add(IgcFileTableColumnBase newCol)
   {

@@ -439,6 +439,40 @@ public class igc {
     int dh = pt.Altitude.h - ptOther.Altitude.h;
     return (double)dh/(pt.t.t - ptOther.t.t);
   }
+  public double getVario(int idx, int dt)
+  {
+    int idx0 = idx;
+    int idx1 = idx;
+    IGC_point pt0;
+    IGC_point pt1;
+    while(true)
+    {
+        boolean changed = false;
+        if (idx0 != 0)
+        {
+            idx0--;
+            changed = true;
+        }
+        idx1++;
+        if (idx1 >= size())
+            idx1--;
+        else
+            changed = true;
+        if (changed)
+        {
+            pt0 = IGC_points.get(idx0);
+            pt1 = IGC_points.get(idx1);
+            if ((pt1.t.t - pt0.t.t) > dt)
+                break;
+        }
+    }
+    if (pt0 == null)
+    {
+      return 0.0; /* vario is not calculable -> return an invalid value */
+    }
+    int dh = pt1.Altitude.h - pt0.Altitude.h;
+    return (double)dh/(pt1.t.t - pt0.t.t);
+  }
   public double getGroundSpeed(int idx)
   {
     final int SpeedCalcOffset = 5;
