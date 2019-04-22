@@ -12,9 +12,17 @@ package igcViewer;
 public class BaroCursor {
   BaroCursor()
   {
+    m_capture = false;
+    invalidate();
+  }
+  public boolean isValid()
+  {
+    return (timeCursorX >= 0) && (timeCursor >= 0);
+  }
+  public void invalidate()
+  {
     timeCursorX = -1;
     timeCursor = -1;
-    m_capture = false;
   }
   public int timeCursorX = -1;
   public int timeCursor = -1;
