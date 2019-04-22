@@ -126,9 +126,22 @@ class GroundSpeed extends IgcFileTableColumnDynamicBase
     super(colName);
   }
   @Override
-  public Object getValue(igc.igc igcFile, int ptIdx)
+  public Object getValue(IgcCursor igcCursor, int fileIdx, igc.igc igcFile, int ptIdx)
   {
-    return "" + igcFile.getGroundSpeed_km_per_h(ptIdx) + " km/h";
+    double v;
+    if (igcCursor.isAuxValid())
+    {
+      IGC_point ptRef = igcFile.getIgcPoint(igcFile.getIdx(igcCursor.getTimeAux()));
+      IGC_point pt = igcFile.get(ptIdx);
+      double distance = ptRef.getDistance(pt);
+      long dt = ptRef.t.t - pt.t.t;
+      if (dt != 0)
+        v = distance / dt;
+      else
+        v = 0;
+    }else
+      v = igcFile.getGroundSpeed(ptIdx);
+    return "" + (int)(v * 3.6) + " km/h";
   }
 }
 
@@ -152,9 +165,37 @@ class Vario extends IgcFileTableColumnDynamicBase
     super(colName);
   }
   @Override
+  public Object getValue(IgcCursor igcCursor, int fileIdx, igc.igc igcFile, int ptIdx)
+  {
+    double w;
+    if (igcCursor.isAuxValid())
+    {
+      IGC_point ptRef = igcFile.getIgcPoint(igcFile.getIdx(igcCursor.getTimeAux()));
+      IGC_point pt = igcFile.get(ptIdx);
+      long dt = ptRef.t.t - pt.t.t;
+      int dh = ptRef.Altitude.h - pt.Altitude.h;
+      if (dt != 0)
+        w = (double)dh / dt;
+      else
+        w = 0;
+    }else
+      w = igcFile.getVario(ptIdx);
+    return utils.Sprintf.sprintf("%3.1f m/s", w);
+  }
+}
+
+class Vario30 extends IgcFileTableColumnDynamicBase
+{
+  Vario30(String colName)
+  {
+    super(colName);
+  }
+  @Override
   public Object getValue(igc.igc igcFile, int ptIdx)
   {
-    return utils.Sprintf.sprintf("%3.1f m/s", igcFile.getVario(ptIdx));
+    double w;
+    w = igcFile.getVario(ptIdx, 30);
+    return utils.Sprintf.sprintf("%3.1f m/s", w);
   }
 }
 
@@ -167,20 +208,34 @@ class Distance extends IgcFileTableColumnDynamicBase
   @Override
   public Object getValue(IgcCursor igcCursor, int fileIdx, igc.igc igcFile, int ptIdx, int selRow)
   {
-    String distanceStr;
+    double distance;
+    if (igcCursor.isAuxValid())
+    {
+      IGC_point ptRef = igcFile.getIgcPoint(igcFile.getIdx(igcCursor.getTimeAux()));
+      IGC_point pt = igcFile.get(ptIdx);
+      distance = ptRef.getDistance(pt);
+    }else
     if ((selRow >= 0) && (fileIdx != selRow))
     {
       igc.igc igcFileRef = igcCursor.get(selRow);
       IGC_point ptRef = igcFileRef.getIgcPoint(igcFileRef.getIdx(igcCursor.getTime()));
       IGC_point pt = igcFile.get(ptIdx);
-      double distance = ptRef.getDistance(pt);
-      if (distance > 5000)
-        distanceStr = String.format("%.2f", distance / 1000) + "km";
-      else
-        distanceStr = String.format("%.0f", distance) + "m";
-      return distanceStr;
+      distance = ptRef.getDistance(pt);
     }else
-      return "";
+    {
+      distance = -1;
+    }
+    String distanceStr;
+    if (distance > 5000)
+      distanceStr = String.format("%.2f", distance / 1000) + " km";
+    else
+    if (distance > 0)
+      distanceStr = String.format("%.0f", distance) + " m";
+    else
+    {
+      distanceStr = "";
+    }
+    return distanceStr;
   }
 }
 
@@ -213,9 +268,11 @@ class LiftToDrag extends IgcFileTableColumnDynamicBase
       if (dAltitude != 0)
       {
         double ld = distance / dAltitude;
+        if (ptRef.t.t > pt.t.t)
+            ld = -ld;
         return String.format("%.1f", ld);
       }else
-      return "oo";
+        return "oo";
     }else
       return getValue(igcFile, ptIdx);
   }
@@ -231,7 +288,7 @@ class LD30 extends IgcFileTableColumnDynamicBase
   public Object getValue(igc.igc igcFile, int ptIdx)
   {
     double v = igcFile.getGroundSpeed(ptIdx);
-    double w = igcFile.getVario(ptIdx);
+    double w = igcFile.getVario(ptIdx, 30);
     if (Math.abs(w) > 1e-3)
       return String.format("%.1f", (-v / w));
     else
@@ -291,7 +348,7 @@ public class IgcFileTableColumnArray {
     add(new TimeOffset("Time offset"));
     add(new TimeDisplay("Time"));
     add(new LD30("LD30"));
-    add(new Vario("Vario30"));
+    add(new Vario30("Vario30"));
   }
   final void add(IgcFileTableColumnBase newCol)
   {
