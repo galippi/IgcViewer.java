@@ -202,6 +202,7 @@ public class IgeViewerUI extends javax.swing.JFrame {
         return canEdit [columnIndex];
       }
     });
+    jTable1.setAutoResizeMode(javax.swing.JTable.AUTO_RESIZE_NEXT_COLUMN);
     jTable1.setEditingColumn(0);
     jTable1.setEditingRow(0);
     jTable1.setMaximumSize(new java.awt.Dimension(1000, 1000));
