@@ -218,8 +218,9 @@ public class IgcFileTable extends javax.swing.JTable
       if (i < colList.length)
       {
         column.setMinWidth(10);
-        column.setMaxWidth(100);
-        column.setWidth(20);
+        column.setMaxWidth(200);
+        column.setWidth(10);
+        column.setResizable(true);
       }else
       {
         column.setMinWidth(0);
