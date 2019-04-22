@@ -95,9 +95,13 @@ public class IgcCursor {
           repaint(true);
       }
   }
+  public int getTime(BaroCursor cursor)
+  {
+    return cursor != null ? cursor.timeCursor : -1;
+  }
   public int getTime()
   {
-    return cursorMain != null ? cursorMain.timeCursor : -1;
+    return getTime(cursorMain);
   }
   public void setTime(int t)
   {
@@ -106,7 +110,27 @@ public class IgcCursor {
   }
   public int getTimeAux()
   {
-    return cursorAux != null ? cursorAux.timeCursor : -1;
+    return getTime(cursorAux);
+  }
+  public boolean isValid(BaroCursor cursor)
+  {
+    return cursor.isValid();
+  }
+  public boolean isValid()
+  {
+    return cursorMain.isValid();
+  }
+  public boolean isAuxValid()
+  {
+    return cursorAux.isValid();
+  }
+  public BaroCursor getCursor()
+  {
+    return cursorMain;
+  }
+  public BaroCursor getAuxCursor()
+  {
+    return cursorAux;
   }
   public IgcFiles igcFiles;
   ArrayList<Repainter> uiParents;
