@@ -40,6 +40,7 @@ public class IgeViewerUI extends javax.swing.JFrame {
      * Creates new form NumberAdditionUI
      */
     public IgeViewerUI() {
+        setTitle("IGC viewer");
         mainWindow = this;
         igcFiles = new IgcFiles();
         igcCursor = new IgcCursor(igcFiles);
