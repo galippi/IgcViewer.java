@@ -321,9 +321,65 @@ class TimeOffset extends IgcFileTableColumnBase
   {
     return igcFile.getTimeOffset() + " s";
   }
+  @Override
   public boolean isEditable()
   {
     return true;
+  }
+}
+
+class DeltaTime extends IgcFileTableColumnDynamicBase
+{
+  DeltaTime(String colName)
+  {
+    super(colName);
+  }
+  @Override
+  public Object getValue(IgcCursor igcCursor, int fileIdx, igc.igc igcFile, int ptIdx, int selRow)
+  {
+    int timeDiff;
+    if (igcCursor.isAuxValid())
+    {
+      IGC_point ptRef = igcFile.getIgcPoint(igcFile.getIdx(igcCursor.getTimeAux()));
+      IGC_point pt = igcFile.get(ptIdx);
+      timeDiff = (int)(ptRef.t.t - pt.t.t);
+    }else
+    if ((selRow >= 0) && (fileIdx != selRow))
+    {
+      igc.igc igcFileRef = igcCursor.get(selRow);
+      IGC_point ptRef = igcFileRef.getIgcPoint(igcFileRef.getIdx(igcCursor.getTime()));
+      IGC_point pt = igcFile.get(ptIdx);
+      timeDiff = (int)(ptRef.t.t - pt.t.t);
+    }else
+    {
+      timeDiff = 0;
+    }
+    String timeStr;
+    if (timeDiff < 0)
+      timeDiff = -timeDiff;
+    if (timeDiff > 120)
+      timeStr = String.format("%d:%02d", timeDiff / 60, timeDiff % 60);
+    else
+    if (timeDiff > 0)
+      timeStr = String.format("%d", timeDiff) + " s";
+    else
+    {
+      timeStr = "";
+    }
+    return timeStr;
+  }
+}
+
+class Date extends IgcFileTableColumnBase
+{
+  Date(String colName)
+  {
+    super(colName);
+  }
+  @Override
+  public Object getValue(igc.igc igcFile)
+  {
+    return igcFile.getDate() + "";
   }
 }
 
@@ -349,6 +405,8 @@ public class IgcFileTableColumnArray {
     add(new TimeDisplay("Time"));
     add(new LD30("LD30"));
     add(new Vario30("Vario30"));
+    add(new DeltaTime("delta time"));
+    add(new Date("date"));
   }
   final void add(IgcFileTableColumnBase newCol)
   {
