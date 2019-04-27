@@ -65,8 +65,15 @@ public class BaroPanel extends javax.swing.JPanel
       public void mouseMoved(MouseEvent e) {
         mouseHandler(e);
       }
+      long lastClickTime = -1;
       public void mouseClicked(MouseEvent e) {
-        mouseHandler(e);
+        long currTime = System.nanoTime();
+        long deltaTimeMs = (currTime - lastClickTime) / 1000000;
+        if ((lastClickTime != -1) && (deltaTimeMs < 1000))
+          mouseDoubleClickHandler(e);
+        else
+          mouseHandler(e);
+        lastClickTime = currTime;
       }
       public void mousePressed(MouseEvent e) {
         mouseHandler(e);
@@ -103,6 +110,12 @@ public class BaroPanel extends javax.swing.JPanel
     repaint();
   }
   BaroCursor cursorLast;
+  public void mouseDoubleClickHandler(MouseEvent e)
+  {
+    dbg.println(9, "BaroPanel.mouseDoubleClickHandler x=" + e.getX() + " y=" + e.getY() + " button=" + e.getButton() + " e=" + e.toString());
+    cursorAux.invalidate();
+    drawCursor();
+  }
   public void mouseHandler(MouseEvent e) {
     if ((e.getID() != e.MOUSE_MOVED) || (e.getButton() != 0))
       dbg.println(9, "BaroPanel.mouseHandler "+e.toString()+" x=" + e.getX() + " y=" + e.getY() + " button=" + e.getButton());
