@@ -110,6 +110,10 @@ public class igc {
   {
     return GliderId.var;
   }
+  public String getDate()
+  {
+    return DateStr.var;
+  }
 
   boolean keyword(String line, String keyword, String var)
   {
