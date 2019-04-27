@@ -247,7 +247,9 @@ public class ColumnSelectorDialog extends JDialog {
       Object selected = mSelected.getElementAt(sel[i]);
       mSelected.setElementAt(mSelected.getElementAt(sel[i] - 1), sel[i]);
       mSelected.setElementAt(selected, sel[i] - 1);
+      sel[i]--;
     }
+    lbSelected.setSelectedIndices(sel);
   }
 
   void downHandler()
@@ -259,7 +261,9 @@ public class ColumnSelectorDialog extends JDialog {
       Object selected = mSelected.getElementAt(sel[i]);
       mSelected.setElementAt(mSelected.getElementAt(sel[i] + 1), sel[i]);
       mSelected.setElementAt(selected, sel[i] + 1);
+      sel[i]++;
     }
+    lbSelected.setSelectedIndices(sel);
   }
 
   void addHandler()
