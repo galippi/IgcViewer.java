@@ -161,7 +161,7 @@ public class igc {
       boolean FirstTaskRecord = true;
       while ((line = fin.readLine()) != null)
       {
-        dbg.println(11, "  " + line);
+        dbg.println(19, "  " + line);
         if (line.charAt(0) == 'H')
         { /* H-record - not yet processed */
             if (keyword(line, "HFPLTPILOT:", PilotsName)) ;
