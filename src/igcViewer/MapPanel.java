@@ -51,7 +51,11 @@ class RepainterMapPanel extends igc.Repainter {
 
 public class MapPanel extends javax.swing.JPanel
 {
-    RepainterMapPanel repainter;
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = 1118843037333193588L;
+	RepainterMapPanel repainter;
     IgcFiles igcFiles;
     IgcCursor igcCursor;
     int igcFileCnt = 0;
