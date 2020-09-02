@@ -386,8 +386,8 @@ class Date extends IgcFileTableColumnBase
 public class IgcFileTableColumnArray {
   public IgcFileTableColumnArray()
   {
-    columns = new ArrayList<>();
-    colIdx = new TreeMap();
+    columns = new ArrayList<IgcFileTableColumnBase>();
+    colIdx = new TreeMap<String, Integer>();
     add(new FileName("File name"));
     add(new CompetitionId("Competition ID"));
     add(new Pilot("Pilot"));
@@ -430,5 +430,5 @@ public class IgcFileTableColumnArray {
       return obj.intValue();
   }
   ArrayList<IgcFileTableColumnBase> columns;
-  TreeMap colIdx;
+  TreeMap<String, Integer> colIdx;
 }
