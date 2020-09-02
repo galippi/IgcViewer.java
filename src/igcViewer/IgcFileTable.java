@@ -307,13 +307,14 @@ public class IgcFileTable extends javax.swing.JTable
           {
             tableChangedHandler(evt);
           }
-    });
+      });
+    columnSelectorDialogOkHandler(colList);
   }
 
   void tableChangedHandler(javax.swing.event.TableModelEvent evt)
   {
     dbg.println(9, "tableChangedHandler evt=" + evt);
-    if ((evt.getType() == evt.UPDATE) && (evt.getColumn() == columnSet.get("Time offset")))
+    if ((evt.getType() == javax.swing.event.TableModelEvent.UPDATE) && (evt.getColumn() == columnSet.get("Time offset")))
     {
       if ((evt.getFirstRow() >= 0) && (evt.getFirstRow() == evt.getLastRow()))
       {
@@ -338,14 +339,14 @@ public class IgcFileTable extends javax.swing.JTable
   {
     dbg.println(9, "IgcFileTable - MouseClicked " + evt.toString());
     dbg.println(9, "  findComponentAt="+findComponentAt(evt.getX(), evt.getY()).toString());
-    if (evt.getID() == evt.MOUSE_CLICKED)
+    if (evt.getID() == MouseEvent.MOUSE_CLICKED)
     {
       int rowAtPoint = rowAtPoint(evt.getPoint());
       int colAtPoint = columnAtPoint(evt.getPoint());
       dbg.dprintf(9, "  rowAtPoint=%d colAtPoint=%d\n", rowAtPoint, colAtPoint);
       if (rowAtPoint >= 0) {
         setRowSelectionInterval(rowAtPoint, rowAtPoint);
-        if (evt.getButton() == evt.BUTTON3)
+        if (evt.getButton() == MouseEvent.BUTTON3)
         {
           if ((colAtPoint == colTrackColor) || (colAtPoint == colTaskColor))
           {
@@ -396,12 +397,7 @@ public class IgcFileTable extends javax.swing.JTable
               colListNew[i - 1] = colList[i];
           }
           colList = colListNew;
-          //javax.swing.table.DefaultTableModel model = (javax.swing.table.DefaultTableModel)this.getModel();
-          //model.setColumnCount(colList.length);
-          //this.removeColumn(this.getColumnModel().getColumn(colAtPoint));
-          this.removeColumn(this.getColumnModel().getColumn(colList.length));
-          setColumnHeader();
-          invalidate();
+          columnSelectorDialogOkHandler(colList);
         }
         break;
       case "File properties":
