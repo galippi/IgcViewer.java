@@ -1,1 +1,2 @@
-start java -jar dist/igcviewer.jar
+::@set START=start
+%START% java -jar bin/igcviewer.jar

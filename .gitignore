@@ -5,3 +5,4 @@ bin/*
 *.xcm
 nbproject/private/*
 obf/*
+javafiles
