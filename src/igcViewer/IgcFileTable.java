@@ -5,7 +5,6 @@
  */
 package igcViewer;
 
-import igc.IGC_point;
 import igc.IgcCursor;
 import java.awt.Component;
 import java.awt.event.MouseEvent;
@@ -15,7 +14,6 @@ import javax.swing.JTable;
 import javax.swing.SwingUtilities;
 import javax.swing.table.TableColumn;
 import javax.swing.table.TableColumnModel;
-import javax.swing.table.TableModel;
 import utils.dbg;
 
 /**
@@ -31,9 +29,16 @@ class ColorCellRenderer extends javax.swing.table.DefaultTableCellRenderer
 
   @Override
   public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
-    color = (java.awt.Color)value;
     Component component = super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
-    component.setBackground(color);
+    dbg.println(9, "IgcFileTable.getTableCellRendererComponent value="+value);
+    try{
+      color = (java.awt.Color)value;
+      component.setBackground(color);
+      dbg.println(9, "  IgcFileTable.getTableCellRendererComponent - ok value="+value);
+    }catch(Exception e)
+    {
+      dbg.println(9, "IgcFileTable.getTableCellRendererComponent exception value="+value+" e="+e);
+    }
     return component;
   }
   java.awt.Color color;
@@ -228,16 +233,23 @@ public class IgcFileTable extends javax.swing.JTable
         column.setWidth(0);
       }
     }
-    String[] names = new String[colList.length];
-    canEdit = new boolean[colList.length];
-    for (int i = 0; i < colList.length; i++)
+    String[] names = new String[columns.size()];
+    canEdit = new boolean[columns.size()];
+    for (int i = 0; i < columns.size(); i++)
     {
-      names[i] = columns.get(colList[i]).getColName();
-      canEdit[i] = columns.get(colList[i]).isEditable();
+      if (i < colList.length)
+      {
+        names[i] = columns.get(colList[i]).getColName();
+        canEdit[i] = columns.get(colList[i]).isEditable();
+      }else
+      {
+        names[i] = "Column " + i;
+        canEdit[i] = false;
+      }
     }
     if (this.getModel() == null)
     {
-      if (false)
+      if (true)
       {
         javax.swing.table.DefaultTableModel model = new javax.swing.table.DefaultTableModel(
             new Object [][] {
@@ -259,15 +271,15 @@ public class IgcFileTable extends javax.swing.JTable
       //model.setColumnIdentifiers(names);
       //javax.swing.table.DefaultTableModel model = new javax.swing.table.DefaultTableModel(names, 0);
       //setModel(model);
-      model.setColumnCount(colList.length);
+      //model.setColumnCount(colList.length);
       for (int i = 0; i < colList.length; i++)
         this.getTableHeader().getColumnModel().getColumn(i).setHeaderValue(columns.get(colList[i]).getColName());
     }
     colTrackColor = columnSet.get("Track color");
     colTaskColor = columnSet.get("Task color");
     staticDataUpdateIsNeeded = true;
-    //setColorCellRenderer("Track color");
-    //setColorCellRenderer("Task color");
+    setColorCellRenderer("Track color");
+    setColorCellRenderer("Task color");
   }
   void setColorCellRenderer(String colName)
   {
@@ -287,6 +299,7 @@ public class IgcFileTable extends javax.swing.JTable
   }
   void setupTable()
   {
+    setAutoCreateColumnsFromModel(true);
     getModel().addTableModelListener(
       new javax.swing.event.TableModelListener()
       {
@@ -300,8 +313,6 @@ public class IgcFileTable extends javax.swing.JTable
   void tableChangedHandler(javax.swing.event.TableModelEvent evt)
   {
     dbg.println(9, "tableChangedHandler evt=" + evt);
-    dbg.println(9, "  UPDATE=" + evt.UPDATE);
-    return;
     if ((evt.getType() == evt.UPDATE) && (evt.getColumn() == columnSet.get("Time offset")))
     {
       if ((evt.getFirstRow() >= 0) && (evt.getFirstRow() == evt.getLastRow()))
@@ -477,6 +488,7 @@ public class IgcFileTable extends javax.swing.JTable
       javax.swing.table.DefaultTableModel model = (javax.swing.table.DefaultTableModel)getModel();
       model.setNumRows(igcCursor.size());
     }
+    dbg.println(11, "  colTrackColor="+colTrackColor+" colTaskColor="+colTaskColor);
     for (int i=0; i < igcCursor.size(); i++)
     {
       igc.igc igcFile = igcCursor.get(i);
@@ -485,6 +497,8 @@ public class IgcFileTable extends javax.swing.JTable
         if (columns.get(colList[j]).isStaticField())
           setValueAt(columns.get(colList[j]).getValue(igcCursor, i, igcFile, 0), i, j);
       }
+      setValueAt(igcCursor.get(i).color, i, colTrackColor);
+      setValueAt(igcCursor.get(i).color, i, colTaskColor);
     }
   }
   void updateData()
