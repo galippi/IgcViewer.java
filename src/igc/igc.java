@@ -447,7 +447,7 @@ public class igc {
   {
     int idx0 = idx;
     int idx1 = idx;
-    IGC_point pt0;
+    IGC_point pt0 = null;
     IGC_point pt1;
     while(true)
     {
