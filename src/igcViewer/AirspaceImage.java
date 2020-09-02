@@ -27,7 +27,7 @@ public class AirspaceImage extends threadImage
     java.awt.Graphics2D g = img.createGraphics();
     Color baseColor = Color.gray;
     g.setColor(new Color(baseColor.getRed(), baseColor.getGreen(), baseColor.getBlue(), 127));
-    g.fillOval(img.getWidth() / 2, img.getHeight() / 2, img.getWidth() / 2 - 5, img.getHeight() / 2 - 5);
+    //g.fillOval(img.getWidth() / 2, img.getHeight() / 2, img.getWidth() / 2 - 5, img.getHeight() / 2 - 5);
     g.setColor(Color.cyan);
     g.drawString("AirspaceImage!", 40, 100);
     airSpaces.draw(g);
