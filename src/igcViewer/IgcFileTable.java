@@ -428,32 +428,6 @@ public class IgcFileTable extends javax.swing.JTable
           //this.setVisible(true);
           repaint(true);
           return;
-    try
-    {
-    //SwingUtilities.invokeAndWait(new Runnable() {
-    SwingUtilities.invokeLater(new Runnable() {
-        @Override
-        public void run() {
-
-          int[] colListNew = new int[sel.length];
-          for(int i = 0; i < colListNew.length; i++)
-          {
-            colListNew[i] = sel[i];
-          }
-          colList = colListNew;
-          //while(sel.length < getColumnModel().getColumnCount())
-            //removeColumn(getColumnModel().getColumn(getColumnModel().getColumnCount() - 1));
-          while(sel.length > getColumnModel().getColumnCount())
-            getColumnModel().addColumn(new TableColumn());
-          setColumnHeader();
-          //this.setVisible(true);
-          invalidate();
-        }
-    });
-    }catch (Exception e)
-    {
-      dbg.println(1, "columnSelectorDialogOkHandler exception e="+e.toString());
-    }
   }
 
   @Override
