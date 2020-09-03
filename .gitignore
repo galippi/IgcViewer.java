@@ -6,3 +6,4 @@ bin/*
 nbproject/private/*
 obf/*
 javafiles
+src/Version/VersionInfo.java
