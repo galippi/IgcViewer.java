@@ -61,6 +61,7 @@ public class MapPanel extends javax.swing.JPanel
     int igcFileCnt = 0;
     MapImage map;
     AirspaceImage airspaceImage;
+    HgtImage hgtImage;
     void addEventHandler(EventHandler ev)
     {
       
@@ -75,6 +76,7 @@ public class MapPanel extends javax.swing.JPanel
       gu = new GeoUtil();
       ctr = 0;
       igc = new igcImage(this, this.igcFiles);
+      hgtImage = new HgtImage(this, gu);
       map = new MapImage(this, gu);
       airspaceImage = new AirspaceImage(this, gu);
       //Register for mouse-wheel events on the map area.
@@ -191,6 +193,12 @@ public class MapPanel extends javax.swing.JPanel
         g.fillRect(0, 0, getWidth(), getHeight());
         ctr++;
         gu.setSize(getWidth(), getHeight());
+        hgtImage.setGeoUtil(gu);
+        if (hgtImage.isReady())
+        {
+          dbg.dprintf(21, "MapPanel - paintComponent hgtImage(%d, %d)\n", gu.x_offs, gu.y_offs);
+          g.drawImage(hgtImage.getImage(), gu.x_offs, gu.y_offs, null);
+        }
         map.setGeoUtil(gu);
         if (map.isReady())
         {
