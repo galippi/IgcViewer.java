@@ -13,3 +13,6 @@
 [submodule "IgcDataStream"]
 	path = src/IgcDataStream
 	url = S:\\git\\IgcDataStream
+[submodule "hgt"]
+	path = src/hgt
+	url = S:\\git\\hgt.java
