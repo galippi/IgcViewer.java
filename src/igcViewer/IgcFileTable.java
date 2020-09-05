@@ -76,7 +76,7 @@ class ColumnSet
 {
   ColumnSet(IgcFileTableColumnArray columns)
   {
-    colIdx = new TreeMap();
+    colIdx = new TreeMap<String, Integer>();
     this.columns = columns;
     load();
   }
@@ -141,7 +141,7 @@ class ColumnSet
     
   }
   int[] colList;
-  TreeMap colIdx;
+  TreeMap<String, Integer> colIdx;
   IgcFileTableColumnArray columns;
 }
 
@@ -169,8 +169,6 @@ public class IgcFileTable extends javax.swing.JTable
     igcCursor.set(repainter);
     
     addMouseListener(new MouseListener() {
-        public void mouseMoved(MouseEvent e) {
-        }
         public void mouseClicked(MouseEvent e) {
           mouseHandler(e);
         }
