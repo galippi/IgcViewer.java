@@ -227,9 +227,12 @@ public class MapPanel extends javax.swing.JPanel
             drawAircraft(g, igcFile, igcCursor.getTimeAux(), Color.GRAY);
           }
         }
-        g.setColor(Color.BLACK);
-        g.drawString("mapPanel ctr=" + ctr + " size=" + igcFiles.size() + " zoom=" + gu.zoom, 5, 10);
-        g.drawString("gu.x_offs=" + gu.x_offs + " gu.y_offs=" + gu.y_offs, 5, 20);
+        if (dbg.get(13))
+        {
+            g.setColor(Color.BLACK);
+            g.drawString("mapPanel ctr=" + ctr + " size=" + igcFiles.size() + " zoom=" + gu.zoom, 5, 10);
+            g.drawString("gu.x_offs=" + gu.x_offs + " gu.y_offs=" + gu.y_offs, 5, 20);
+        }
     }
     public void drawAircraft(java.awt.Graphics g, igc.igc igcFile, int t, Color c)
     {
