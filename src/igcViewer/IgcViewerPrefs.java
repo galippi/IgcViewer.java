@@ -77,4 +77,17 @@ public class IgcViewerPrefs {
     put("RecentFiles", "RecentFile" + idx, val);
   }
   static final String root = "IgcViewer";
+
+  static String srtmCache;
+  static public String getSrtmCache()
+  {
+      if (srtmCache == null)
+          srtmCache = IgcViewerPrefs.get("SRTM_cache", "C:\\Temp\\SRTM");
+      return srtmCache;
+  }
+  static public void setSrtmCache(String _srtmCache)
+  {
+      srtmCache = _srtmCache;
+      IgcViewerPrefs.put("SRTM_cache", srtmCache);
+  }
 }

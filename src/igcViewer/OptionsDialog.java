@@ -33,6 +33,7 @@ import utils.dbg;
  */
 public class OptionsDialog extends JDialog {
   JTextField debugLevel;
+  JTextField SRTM_cacheFolder;
   OptionsDialog(JFrame parent)
   {
     super(parent, Dialog.ModalityType.APPLICATION_MODAL);
@@ -49,7 +50,14 @@ public class OptionsDialog extends JDialog {
     //jpDebugLevel.setLayout(new GroupLayout(jpDebugLevel));
     jpDebugLevel.add(l2);
     jpDebugLevel.add(debugLevel);
-    
+
+    // SRTM cache
+    JLabel l3 = new JLabel("SRTM cache folder");
+    SRTM_cacheFolder = new JTextField(IgcViewerPrefs.getSrtmCache());
+    JPanel jpSrtm = new JPanel();
+    jpSrtm.add(l3);
+    jpSrtm.add(SRTM_cacheFolder);
+
     JButton bOk = new JButton("Ok");
     //b2.setHorizontalAlignment(SwingConstants.CENTER);
     bOk.addActionListener(new ActionListener() {
@@ -71,7 +79,9 @@ public class OptionsDialog extends JDialog {
     // add label, text field and button one after another into a single column
     cp.setLayout(new BoxLayout(cp, BoxLayout.Y_AXIS));
     cp.add(jpDebugLevel);
+    cp.add(jpSrtm);
     cp.add(bOkCancel, BorderLayout.SOUTH);
+
     Point pt = parent.getLocationOnScreen();
     int pw = parent.getWidth();
     setBounds(pt.x + pw / 2 - 150, pt.y + 200, 400, 400);
@@ -99,7 +109,10 @@ public class OptionsDialog extends JDialog {
       closable = false;
     }
     if (closable)
-      setVisible(false);
+    {
+        IgcViewerPrefs.setSrtmCache(SRTM_cacheFolder.getText());
+        setVisible(false);
+    }
   }
   void cancelHandler()
   {
