@@ -57,10 +57,14 @@ public class HgtImage  extends threadImage {
                             int y0 = gu.getPosY(lat + 1);
                             int dx = x1 - x0;
                             int dy = y1 - y0;
-                            for (int y = y0; y < y1; y++)
+                            int xStart = (x0 < 0 ? 0 : x0);
+                            int xEnd = (x1 >= img.getWidth() ? img.getWidth() - 1 : x1);
+                            int yStart = (y0 < 0 ? 0 : y0);
+                            int yEnd = (y1 >= img.getHeight() ? img.getHeight() - 1 : y1);
+                            for (int y = yStart; y < yEnd; y++)
                             {
                                 double pointLat = lat + (y - y0) / (double)dy;
-                                for(int x = x0; x < x1; x++)
+                                for(int x = xStart; x < xEnd; x++)
                                 {
                                     double pointLon = lon + (x - x0) / (double)dx;
                                     Color c = mapHeightColor.get(hgtFile.get(pointLat, pointLon));
