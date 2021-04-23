@@ -35,13 +35,14 @@ public class HgtImage  extends threadImage {
             while(lat < gu.lat_max)
             {
                 int lon = -(int)gu.lon_min;
-                //while(-lon < gu.lon_max)
+                int lonIdx = -lon;
+                while(lonIdx < gu.lon_max)
                 {
+                    lonIdx++;
                     HgtFile hgtFile = hgtFileCache.get(lat, lon, false);
                     if (hgtFile != null)
                     {
-                        hgtFile.loadAsync();
-                        if (hgtFile.getState() == HgtFileState.HgtFileLoaded)
+                        if (hgtFile.loadAsync() == HgtFileState.HgtFileLoaded)
                         {
                             int x0 = gu.getPosX(-lon);
                             int y1 = gu.getPosY(lat);
