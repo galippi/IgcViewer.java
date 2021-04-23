@@ -81,7 +81,7 @@ public class GeoUtil
     lon_max = lon_min + w / zoom;
     lat_min = lat_max - h / zoom;
     redraw_forced = true;
-    dbg.println(11, dbg.d_format("GeoUtil::Zoom lon_min=%lf lat_min=%lf lon_max=%lf lat_max=%lf zoom=%lf w=%d h=%d", lon_min, lat_min, lon_max, lat_max, zoom, w, h));
+    dbg.println(11, dbg.d_format("GeoUtil::Zoom lon_min=%f lat_min=%f lon_max=%f lat_max=%f zoom=%f w=%d h=%d", lon_min, lat_min, lon_max, lat_max, zoom, w, h));
   }
   public void Move(int dx, int dy)
   {
@@ -95,7 +95,7 @@ public class GeoUtil
       lat_max = getPosLat(-y_offs);
       lon_max = lon_min + w / zoom;
       lat_min = lat_max - h / zoom;
-      dbg.dprintf(9, "lon_min=%lf lat_min=%lf lon_max=%lf lat_max=%lf zoom=%lf w=%d h=%d", lon_min, lat_min, lon_max, lat_max, zoom, w, h);
+      dbg.dprintf(9, "lon_min=%f lat_min=%f lon_max=%f lat_max=%f zoom=%f w=%d h=%d", lon_min, lat_min, lon_max, lat_max, zoom, w, h);
       x_offs = dx;
       y_offs = dy;
       redraw_forced = true;
@@ -113,7 +113,7 @@ public class GeoUtil
     lat_max = lat;
     lon_max = lon_min + w / zoom;
     lat_min = lat_max - h / zoom;
-    dbg.dprintf(9, "Move - double - lon_min=%lf lat_min=%lf lon_max=%lf lat_max=%lf zoom=%lf w=%d h=%d", lon_min, lat_min, lon_max, lat_max, zoom, w, h);
+    dbg.dprintf(9, "Move - double - lon_min=%f lat_min=%f lon_max=%f lat_max=%f zoom=%f w=%d h=%d", lon_min, lat_min, lon_max, lat_max, zoom, w, h);
     x_offs = 0;
     y_offs = 0;
     redraw_forced = true;
