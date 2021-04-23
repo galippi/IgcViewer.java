@@ -1,5 +1,24 @@
 package igc;
 
+import java.awt.Color;
+import java.util.Vector;
+
+import utils.dbg;
+
+class MapHeightColorPoint {
+    MapHeightColorPoint(int h, int r, int g, int b) {
+        this.h = h;
+        this.r = r;
+        this.g = g;
+        this.b = b;
+        c = new Color(r, g, b);
+    }
+    int h;
+    int r;
+    int g;
+    int b;
+    Color c;
+}
 public class MapHeightColor {
     public MapHeightColor()
     {
@@ -20,9 +39,26 @@ public class MapHeightColor {
         add(6000,        0xb7, 0xb9, 0xff);
     }
 
-    void add(int h, int r, int g, int b)
+    public Color get(int h)
     {
-        
+        if (h <= points.get(0).h)
+            return points.get(0).c;
+        for (int i = 1; i < points.size(); i++)
+            if (h < points.get(i).h)
+                return points.get(i - 1).c;
+        return points.get(points.size() - 1).c;
     }
 
+    //@SneakyThrows
+    void add(int h, int r, int g, int b)
+    {
+        if ((points.size() != 0) && (points.get(points.size() - 1).h >= h))
+        {
+            dbg.println(1, "Error: invalid MapHeightColor configuration!");
+            System.exit(1);
+            //throw new Exception("Error: invalid MapHeightColor configuration!");
+        }
+        points.add(new MapHeightColorPoint(h, r, g, b));
+    }
+    Vector<MapHeightColorPoint> points = new Vector();
 }
