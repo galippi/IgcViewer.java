@@ -40,20 +40,18 @@ public class HgtImage  extends threadImage {
             int lat = (int)gu.lat_min;
             while(lat < gu.lat_max)
             {
-                int lon = -(int)gu.lon_min;
-                int lonIdx = -lon;
-                while(lonIdx < gu.lon_max)
+                int lon = (int)gu.lon_min;
+                while(lon < gu.lon_max)
                 {
-                    lonIdx++;
                     HgtFile hgtFile = hgtFileCache.get(lat, lon, false);
                     if (hgtFile != null)
                     {
                         if (hgtFile.loadAsync() == HgtFileState.HgtFileLoaded)
                         {
                             g = img.createGraphics();
-                            int x0 = gu.getPosX(-lon);
+                            int x0 = gu.getPosX(lon);
                             int y1 = gu.getPosY(lat);
-                            int x1 = gu.getPosX(-lon + 1);
+                            int x1 = gu.getPosX(lon + 1);
                             int y0 = gu.getPosY(lat + 1);
                             int dx = x1 - x0;
                             int dy = y1 - y0;
