@@ -1,12 +1,15 @@
 package igcViewer;
 
 import java.awt.Color;
+import java.awt.Image;
+import java.awt.image.BufferedImage;
 
 import hgt.HgtFile;
 import hgt.HgtFileCache;
 import hgt.HgtFileState;
 import igc.GeoUtil;
 import igc.MapHeightColor;
+import utils.dbg;
 import utils.threadImage;
 
 public class HgtImage  extends threadImage {
@@ -22,11 +25,14 @@ public class HgtImage  extends threadImage {
       protected void Drawing()
     { /* drawing function */
         java.awt.Graphics2D g = img.createGraphics();
+        g.setBackground(new Color(0, true));
+        g.clearRect(0, 0, img.getWidth(), img.getHeight());
         Color baseColor = Color.gray;
         g.setColor(new Color(baseColor.getRed(), baseColor.getGreen(), baseColor.getBlue(), 127));
         //g.fillOval(img.getWidth() / 2, img.getHeight() / 2, img.getWidth() / 2 - 5, img.getHeight() / 2 - 5);
         g.setColor(Color.BLUE);
         g.drawString("HgtImage!", 40, 300);
+        g.dispose();
         boolean allFilesAreLoaded = false;
         while(allFilesAreLoaded == false)
         {
@@ -44,6 +50,7 @@ public class HgtImage  extends threadImage {
                     {
                         if (hgtFile.loadAsync() == HgtFileState.HgtFileLoaded)
                         {
+                            g = img.createGraphics();
                             int x0 = gu.getPosX(-lon);
                             int y1 = gu.getPosY(lat);
                             int x1 = gu.getPosX(-lon + 1);
@@ -61,6 +68,14 @@ public class HgtImage  extends threadImage {
                                     g.drawLine(x, y, x, y);
                                 }
                             }
+                            g.dispose();
+                            //BufferedImage tmpImg = img.getScaledInstance(img.getWidth(null), img.getHeight(null), Image.SCALE_DEFAULT);
+                            //BufferedImage tmpImg = new BufferedImage(img.getWidth(), img.getHeight(), img.getType());
+                            //java.awt.Graphics2D g2d = tmpImg.createGraphics();
+                            //g2d.drawImage(img, 0, 0, null);
+                            //g2d.dispose();
+                            //setImg(tmpImg);
+                            setImgTmp(img);
                         }else
                         {
                             if (hgtFile.getState() != HgtFileState.HgtFileError)
@@ -71,8 +86,13 @@ public class HgtImage  extends threadImage {
                 }
                 lat++;
             }
+            if (!allFilesAreLoaded)
+                try {
+                    Thread.sleep(100);
+                } catch (InterruptedException e) {
+                    dbg.println(1, "HgtImage - sleep exception e=" + e.toString());
+                }
         }
-        g.dispose();
     }
 
     public void setGeoUtil(GeoUtil gu)
