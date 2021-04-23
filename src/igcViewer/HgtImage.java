@@ -43,6 +43,8 @@ public class HgtImage  extends threadImage {
                 int lon = (int)gu.lon_min;
                 while(lon < gu.lon_max)
                 {
+                    if (isCancelled())
+                        return;
                     HgtFile hgtFile = hgtFileCache.get(lat, lon, false);
                     if (hgtFile != null)
                     {

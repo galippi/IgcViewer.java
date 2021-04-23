@@ -7,6 +7,7 @@ package igcViewer;
 
 import java.awt.event.MouseWheelEvent;
 import java.awt.event.MouseWheelListener;
+import java.awt.image.BufferedImage;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
@@ -194,10 +195,11 @@ public class MapPanel extends javax.swing.JPanel
         ctr++;
         gu.setSize(getWidth(), getHeight());
         hgtImage.setGeoUtil(gu);
-        if (hgtImage.isReady())
+        BufferedImage img = hgtImage.getImage();
+        if (img != null)
         {
           dbg.dprintf(21, "MapPanel - paintComponent hgtImage(%d, %d)\n", gu.x_offs, gu.y_offs);
-          g.drawImage(hgtImage.getImage(), gu.x_offs, gu.y_offs, null);
+          g.drawImage(img, gu.x_offs, gu.y_offs, null);
         }
         map.setGeoUtil(gu);
         if (map.isReady())
