@@ -60,7 +60,7 @@ public class GeoUtil
     }
     w = (int)(zoom * (lon_max - lon_min) + 0.5);
     h = (int)(zoom * (lat_max - lat_min) + 0.5);
-    dbg.println(11, dbg.d_format("GeoUtil::Set() lon_min=%lf lat_min=%lf lon_max=%lf lat_max=%lf zoom=%lf w=%d h=%d", lon_min, lat_min, lon_max, lat_max, zoom, w, h));
+    dbg.println(11, dbg.d_format("GeoUtil::Set() lon_min=%f lat_min=%f lon_max=%f lat_max=%f zoom=%f w=%d h=%d", lon_min, lat_min, lon_max, lat_max, zoom, w, h));
     redraw = true;
   }
   public void Set(double _lon_min, double _lon_max, double _lat_min, double _lat_max)
@@ -74,7 +74,7 @@ public class GeoUtil
   public void Zoom(int x, int y, double zoom_new)
   {
     Double lon = getPosLon(x), lat = getPosLat(y);
-    dbg.println(11, dbg.d_format("Zoom x=%d y=%d lon=%lf lat=%lf", x, y, lon, lat));
+    dbg.println(11, dbg.d_format("Zoom x=%d y=%d lon=%f lat=%f", x, y, lon, lat));
     lon_min = lon - (x / zoom_new);
     lat_max = lat + (y / zoom_new);
     zoom = zoom_new;
