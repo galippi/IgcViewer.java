@@ -7,6 +7,9 @@ package igcViewer;
 
 import igc.igc;
 import java.awt.Color;
+
+import utils.Sprintf;
+import utils.dbg;
 import utils.threadImage;
 
 import igc.IgcFiles;
@@ -53,13 +56,28 @@ public class BaroImage extends threadImage
           }
         }
       }
+      g.setBackground(Color.WHITE);
+      g.clearRect(0, 0, 20, img.getHeight());
+      g.setColor(Color.BLACK);
+      g.drawString(Sprintf.sprintf("%5d", igcFiles.alt_min), 0, img.getHeight() - 10);
+      g.drawString(Sprintf.sprintf("%5d", igcFiles.alt_max), 0, 10);
     }else
     {
-      g.setColor(Color.RED);
-      g.fillOval(50, 50, 70, 30);
+        if (dbg.get() >= 15)
+        {
+            g.setColor(Color.RED);
+            g.fillOval(50, 50, 70, 30);
+        }else
+        {
+            g.setColor(Color.BLACK);
+            g.drawString("No file is loaded", img.getWidth() / 2, img.getHeight() / 2);
+        }
     }
-    g.setColor(Color.BLACK);
-    g.drawString("BaroImage.Drawing", 0, 20);
+    if (dbg.get() >= 11)
+    {
+        g.setColor(Color.BLACK);
+        g.drawString("BaroImage.Drawing", 0, 20);
+    }
     g.dispose();
   }
 }
