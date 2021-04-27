@@ -11,6 +11,7 @@ import java.awt.event.MouseMotionListener;
 import java.awt.event.MouseWheelEvent;
 import java.awt.event.MouseWheelListener;
 import java.awt.Color;
+import java.awt.FontMetrics;
 
 import igc.IgcCursor;
 import igc.IgcFiles;
@@ -210,11 +211,36 @@ public class BaroPanel extends javax.swing.JPanel
       {
         g.setColor(Color.red);
         g.drawLine(cursorMain.timeCursorX, 0, cursorMain.timeCursorX, getHeight() - 1);
+        // xxx
+        for (int i=0; i < igcCursor.size(); i++)
+        {
+            igc.igc igcFile = igcCursor.get(i);
+            int ptIdx = igcFile.getIdx(igcCursor.getTime());
+            int h = igcFile.getAltitude(ptIdx);
+            String val = "" + h + " m";
+            g.setColor(igcFile.color);
+            FontMetrics metrics = g.getFontMetrics();
+            int fontHgt = metrics.getHeight();
+            int textWidth = metrics.stringWidth(val);
+            //g.setBackground(Color.WHITE);
+            int x = cursorMain.timeCursorX - (textWidth / 2);
+            if (x < 0)
+                x = 0;
+            else if (x > (getWidth() - textWidth))
+                x= (getWidth() - textWidth);
+            int y = baroImage.getY(h) + (fontHgt / 2);
+            if (y > (getHeight() - 10))
+                y = getHeight() - 10;
+            g.clearRect(x, y - fontHgt, textWidth, fontHgt);
+            g.drawRect(x, y - fontHgt, textWidth + 1, fontHgt);
+            g.drawString(val, x + 1, y - 1);
+        }
       }
       if ((cursorAux.timeCursorX >= 0) && (cursorAux.timeCursorX < getWidth()))
       {
         g.setColor(Color.blue);
         g.drawLine(cursorAux.timeCursorX, 0, cursorAux.timeCursorX, getHeight() - 1);
+        // xxx
       }
     }
   }

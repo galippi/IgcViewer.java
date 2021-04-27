@@ -36,7 +36,7 @@ public class BaroImage extends threadImage
     int dH = igcFiles.alt_max - igcFiles.alt_min;
     if ((igcFiles.size() != 0) && (dT != 0) && (dH != 0))
     { /* baro(s) shall be painted */
-      double AltitudeScale = (img.getHeight() - 1) / (double)(dH);
+      AltitudeScale = (img.getHeight() - 1) / (double)(dH);
       double TimeScale = (img.getWidth() -1) / (double)(dT);
       for (int i = 0; i < igcFiles.size(); i++)
       {
@@ -79,5 +79,10 @@ public class BaroImage extends threadImage
         g.drawString("BaroImage.Drawing", 0, 20);
     }
     g.dispose();
+  }
+  double AltitudeScale = -1;
+  public int getY(int h)
+  {
+      return img.getHeight() - (int)((h - igcFiles.alt_min) * AltitudeScale);
   }
 }
