@@ -5,6 +5,9 @@
  */
 package igcViewer;
 
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+
 /**
  *
  * @author liptak
@@ -78,6 +81,11 @@ public class IgcViewerPrefs {
   }
   static final String root = "IgcViewer";
 
+  static ActionListener srtmCacheChangeListener;
+  static void setSrtmCacheChangeListener(ActionListener al)
+  {
+      srtmCacheChangeListener = al;
+  }
   static String srtmCache;
   static public String getSrtmCache()
   {
@@ -85,9 +93,31 @@ public class IgcViewerPrefs {
           srtmCache = IgcViewerPrefs.get("SRTM_cache", "C:\\Temp\\SRTM");
       return srtmCache;
   }
-  static public void setSrtmCache(String _srtmCache)
+  static public void setSrtmCache(String _srtmCache, Object issuer)
   {
       srtmCache = _srtmCache;
       IgcViewerPrefs.put("SRTM_cache", srtmCache);
+      if ((srtmCacheChangeListener != null) && (issuer != null))
+          srtmCacheChangeListener.actionPerformed(new ActionEvent(issuer, ActionEvent.ACTION_PERFORMED, null));
+  }
+
+  static ActionListener xcmFileChangeListener;
+  static void setXcmFileChangeListener(ActionListener al)
+  {
+      xcmFileChangeListener = al;
+  }
+  static String xcmFile;
+  static public String getXcmFile()
+  {
+      if (xcmFile == null)
+          xcmFile = IgcViewerPrefs.get("XCM_file", "Hungary.xcm");
+      return xcmFile;
+  }
+  static public void setXcmFile(String _xcmFile, Object issuer)
+  {
+      xcmFile = _xcmFile;
+      IgcViewerPrefs.put("XCM_file", xcmFile);
+      if ((xcmFileChangeListener != null) && (issuer != null))
+          xcmFileChangeListener.actionPerformed(new ActionEvent(issuer, ActionEvent.ACTION_PERFORMED, null));
   }
 }
