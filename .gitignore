@@ -7,3 +7,4 @@ nbproject/private/*
 obf/*
 javafiles
 src/Version/VersionInfo.java
+_build.bat
