@@ -2,6 +2,8 @@ package igcViewer;
 
 import java.awt.Color;
 import java.awt.Image;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.image.BufferedImage;
 
 import hgt.HgtFile;
@@ -12,12 +14,13 @@ import igc.MapHeightColor;
 import utils.dbg;
 import utils.threadImage;
 
-public class HgtImage  extends threadImage {
+public class HgtImage  extends threadImage implements ActionListener {
     public HgtImage(java.awt.Component parent, GeoUtil gu)
     {
       super(parent);
       this.gu = new GeoUtil(gu);
       mapHeightColor = new MapHeightColor();
+      IgcViewerPrefs.setSrtmCacheChangeListener(this);
     }
     MapHeightColor mapHeightColor;
 
@@ -108,6 +111,14 @@ public class HgtImage  extends threadImage {
         repaint();
       }
     }
+
+    @Override
+    public void actionPerformed(ActionEvent e) {
+        // hgtFileCache is changed
+        hgtFileCache.setCacheFolder(IgcViewerPrefs.getSrtmCache());
+        repaint();
+    }
+
     GeoUtil gu;
     HgtFileCache hgtFileCache = new HgtFileCache(IgcViewerPrefs.getSrtmCache());
 }

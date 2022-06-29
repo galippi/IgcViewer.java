@@ -34,6 +34,7 @@ import utils.dbg;
 public class OptionsDialog extends JDialog {
   JTextField debugLevel;
   JTextField SRTM_cacheFolder;
+  JTextField Xcm_File;
   OptionsDialog(JFrame parent)
   {
     super(parent, Dialog.ModalityType.APPLICATION_MODAL);
@@ -52,11 +53,18 @@ public class OptionsDialog extends JDialog {
     jpDebugLevel.add(debugLevel);
 
     // SRTM cache
-    JLabel l3 = new JLabel("SRTM cache folder");
     SRTM_cacheFolder = new JTextField(IgcViewerPrefs.getSrtmCache());
     JPanel jpSrtm = new JPanel();
-    jpSrtm.add(l3);
+    jpSrtm.add(new JLabel("SRTM cache folder:"));
     jpSrtm.add(SRTM_cacheFolder);
+
+    // XCM file
+    Xcm_File = new JTextField(IgcViewerPrefs.getXcmFile());
+    JPanel jpXcm = new JPanel();
+    jpXcm.add(new JLabel("XCM file:"));
+    jpXcm.add(Xcm_File);
+    JButton bXcmBrowse = new JButton("Browse");
+    jpXcm.add(bXcmBrowse);
 
     JButton bOk = new JButton("Ok");
     //b2.setHorizontalAlignment(SwingConstants.CENTER);
@@ -80,6 +88,7 @@ public class OptionsDialog extends JDialog {
     cp.setLayout(new BoxLayout(cp, BoxLayout.Y_AXIS));
     cp.add(jpDebugLevel);
     cp.add(jpSrtm);
+    cp.add(jpXcm);
     cp.add(bOkCancel, BorderLayout.SOUTH);
 
     Point pt = parent.getLocationOnScreen();
@@ -110,7 +119,8 @@ public class OptionsDialog extends JDialog {
     }
     if (closable)
     {
-        IgcViewerPrefs.setSrtmCache(SRTM_cacheFolder.getText());
+        IgcViewerPrefs.setSrtmCache(SRTM_cacheFolder.getText(), this);
+        IgcViewerPrefs.setXcmFile(Xcm_File.getText(), this);
         setVisible(false);
     }
   }

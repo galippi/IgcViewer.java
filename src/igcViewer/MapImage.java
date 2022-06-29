@@ -5,10 +5,13 @@
  */
 package igcViewer;
 
-import utils.threadImage;
-import igc.GeoUtil;
 import java.awt.Color;
 import java.io.IOException;
+import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
+
+import utils.threadImage;
+import igc.GeoUtil;
 import utils.Sprintf;
 import utils.dbg;
 import xcm.xcm;
@@ -19,19 +22,20 @@ import xcm.Shape;
  *
  * @author liptakok
  */
-public class MapImage extends threadImage
+public class MapImage extends threadImage implements ActionListener
 {
   public MapImage(java.awt.Component parent, GeoUtil gu)
   {
     super(parent);
     this.gu = new GeoUtil(gu);
+    IgcViewerPrefs.setXcmFileChangeListener(this);
   }
   @Override
     protected void Drawing()
   { /* drawing function */
     if (Xcm == null)
     {
-      String filename = "Hungary.xcm";
+      String filename = IgcViewerPrefs.getXcmFile();
       try
       {
         Xcm = new xcm(filename);
@@ -252,6 +256,22 @@ public class MapImage extends threadImage
       repaint();
     }
   }
+
+    @Override
+    public void actionPerformed(ActionEvent e) {
+      // Map file is changed
+      String filename = IgcViewerPrefs.getXcmFile();
+      try
+      {
+        Xcm = new xcm(filename);
+        repaint();
+      }catch (IOException e1)
+      {
+        dbg.dprintf(1, "Error: unable to open xcm file \"%s\" (e1=%s)!", filename, e1.getMessage());
+        Xcm = null;
+      }
+    }
+
   GeoUtil gu;
   xcm Xcm;
 }
