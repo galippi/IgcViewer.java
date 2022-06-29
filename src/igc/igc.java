@@ -245,7 +245,10 @@ public class igc {
           /* C4726318N01854577ETOROKBALINT */
           if (FirstTaskRecord)
           { /* skip it */
-            FirstTaskRecord = false;
+            if (line.substring(0, 18).equalsIgnoreCase("C0000000N00000000E"))
+              FirstTaskRecord = false;
+            else
+                dbg.dprintf(9, "igc skipped task line: %s\n", line);
           }else
           {
             IGC_Coordinate lat = ToDouble(line.substring(1, 1+7), 2);
@@ -268,6 +271,7 @@ public class igc {
             }
             if ((lon.abs() > 1e-9) || (lat.abs() > 1e-9))
             {
+              dbg.dprintf(9, "TaskPoint lon=%lf lat=%lf\n", lon, lat);
               TaskPoint taskPoint = new TaskPoint(line.substring(18), lon, lat);
               TaskPoints.add(taskPoint);
             }
